@@ -6,7 +6,7 @@
             <span>失效的键: {{ invalidKeysCount }}</span>
         </div>
         <div class="editor-area">
-            <el-table-v2 :columns="columns" :data="data" :width="1000" :height="200" fixed />
+            <el-table-v2 :columns="columns" :data="data" :width="1000" :height="250" fixed />
         </div>
     </div>
 </template>
@@ -18,6 +18,16 @@ import {
     ElInput,
 } from 'element-plus';
 import type { Column } from 'element-plus';
+
+const renderCell = (text: string) => {
+    const parts = text.split(/({[^}]+})/g).filter(p => p);
+    return h('div', { class: 'custom-cell-renderer' }, parts.map(part => {
+        if (part.startsWith('{') && part.endsWith('}')) {
+            return h('span', { class: 'placeholder' }, part);
+        }
+        return h('span', part);
+    }));
+};
 
 const translatedCount = ref(3);
 const totalCount = ref(3);
@@ -34,32 +44,57 @@ const data = ref([
     },
     {
         key: '总消费是{amount}元',
-        translated: 'The total expenditure is {amount} CNY.',
+        translated: 'The total expenditure is {amount} CNY',
+    },
+    {
+        key: '今天是{YYYY}年{MM}月{DD}日',
+        translated: 'Today is {DD}/{MM}/{YYYY}',
     }
 ]);
+
+const editingRowIndex = ref<number | null>(null);
 
 const columns: Column[] = [
     {
         key: 'zhCN',
-        title: 'zh-CN',
+        title: '项目原文 (zh-CN)',
         dataKey: 'zhCN',
         width: 500,
-        cellRenderer: ({ rowData }) => h(ElInput, {
-            modelValue: rowData.key,
-            disabled: true,
-        }),
+        cellRenderer: ({ rowData }) => renderCell(rowData.key),
     },
     {
         key: 'enUS',
-        title: 'en-US',
+        title: '目标 (en-US)',
         dataKey: 'enUS',
         width: 500,
-        cellRenderer: ({ rowData, rowIndex }) => h(ElInput, {
-            modelValue: rowData.translated,
-            'onUpdate:modelValue': (value) => {
-                data.value[rowIndex].translated = value;
-            },
-        }),
+        cellRenderer: ({ rowData, rowIndex }) => {
+            if (editingRowIndex.value === rowIndex) {
+                // 模式二：可编辑的输入框
+                return h(ElInput, {
+                    modelValue: rowData.translated,
+                    'onUpdate:modelValue': (value) => {
+                        data.value[rowIndex].translated = value;
+                    },
+                    // 当输入框失去焦点时，退出编辑模式
+                    onBlur: () => {
+                        editingRowIndex.value = null;
+                    },
+                    // 自动聚焦
+                    onVnodeMounted: (vnode) => {
+                        vnode.el?.querySelector('input')?.focus();
+                    },
+                });
+            } else {
+                // 模式一：只读的高亮视图
+                const readOnlyNode = renderCell(rowData.translated);
+                // 添加点击事件，进入编辑模式
+                readOnlyNode.props = readOnlyNode.props || {};
+                readOnlyNode.props.onClick = () => {
+                    editingRowIndex.value = rowIndex;
+                };
+                return readOnlyNode;
+            }
+        },
     },
 ];
 </script>
@@ -105,5 +140,31 @@ const columns: Column[] = [
 
 :deep(.el-input.is-disabled .el-input__wrapper) {
     background-color: var(--input-disabled-bg-color) !important;
+}
+
+
+:deep(.custom-cell-renderer) {
+    padding: 0 11px;
+    line-height: 32px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    width: 500px;
+}
+
+:deep(.placeholder) {
+    background-color: var(--el-color-primary-light-8);
+    color: var(--el-color-primary);
+    border-radius: 4px;
+    padding: 2px 5px;
+    margin: 0 2px;
+    font-weight: bold;
+}
+
+:deep(.el-input__inner) {
+    font-size: 15px;
 }
 </style>
