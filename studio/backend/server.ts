@@ -1,6 +1,6 @@
-import http, { IncomingMessage, ServerResponse } from 'http'
-
+import http, { IncomingMessage, ServerResponse } from 'http';
 import routes from './routes.js';
+import useStatic from './static.js';
 
 class Server {
     private server = http.createServer(this.requestListener.bind(this));
@@ -12,6 +12,12 @@ class Server {
     }
 
     private async requestListener(req: IncomingMessage, res: ServerResponse) {
+        // 访问根路径时，返回前端的 index.html
+        useStatic(req, res);
+        if (res.writableEnded) {
+            return;
+        }
+
         const method = req.method?.toLowerCase() || "get";
         const url = req.url || "/";
         const key = `${method}:${url}`;
