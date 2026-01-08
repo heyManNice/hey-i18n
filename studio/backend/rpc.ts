@@ -12,6 +12,9 @@ export default async function rpc(req: IncomingMessage, res: ServerResponse) {
             let func: any = backend;
             for (const f of funcs) {
                 func = func[f];
+                if (func === undefined) {
+                    throw new Error(`${funcs.join('.')} is not defined`);
+                }
             }
             const result = await func(...args);
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
