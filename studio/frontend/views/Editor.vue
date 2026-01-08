@@ -28,7 +28,7 @@ import { Document } from '@element-plus/icons-vue';
 
 import TranslationCompare from '../components/Editor/TranslationCompare.vue';
 
-const editableTabsValue = ref('2');
+const editableTabsValue = ref('1');
 const editableTabs = ref([
     {
         title: 'en-US.json',

@@ -6,7 +6,7 @@
             <span>失效的键: {{ invalidKeysCount }}</span>
         </div>
         <div class="editor-area">
-            <el-table-v2 :columns="columns" :data="data" :width="800" :height="600" fixed />
+            <el-table-v2 :columns="columns" :data="data" :width="1000" :height="200" fixed />
         </div>
     </div>
 </template>
@@ -16,32 +16,36 @@ import { ref, h } from 'vue';
 import {
     ElTableV2,
     ElInput,
-    ElAutoResizer
 } from 'element-plus';
 import type { Column } from 'element-plus';
 
-const translatedCount = ref(98);
-const totalCount = ref(100);
-const invalidKeysCount = ref(2);
+const translatedCount = ref(3);
+const totalCount = ref(3);
+const invalidKeysCount = ref(0);
 
-const generateData = (count: number) => {
-    return Array.from({ length: count }, (_, i) => ({
-        key: `key_${i}`,
-        zhCN: `你好世界_${i}`,
-        enUS: `Hello World_${i}`,
-    }));
-};
-
-const data = ref(generateData(100));
+const data = ref([
+    {
+        key: '你的名字是{name}, 今年{age}岁了。',
+        translated: 'Your name is {name}, and you are {age} years old.',
+    },
+    {
+        key: '测试数据',
+        translated: 'Test Data',
+    },
+    {
+        key: '总消费是{amount}元',
+        translated: 'The total expenditure is {amount} CNY.',
+    }
+]);
 
 const columns: Column[] = [
     {
         key: 'zhCN',
         title: 'zh-CN',
         dataKey: 'zhCN',
-        width: 400,
+        width: 500,
         cellRenderer: ({ rowData }) => h(ElInput, {
-            modelValue: rowData.zhCN,
+            modelValue: rowData.key,
             disabled: true,
         }),
     },
@@ -49,11 +53,11 @@ const columns: Column[] = [
         key: 'enUS',
         title: 'en-US',
         dataKey: 'enUS',
-        width: 400,
+        width: 500,
         cellRenderer: ({ rowData, rowIndex }) => h(ElInput, {
-            modelValue: rowData.enUS,
+            modelValue: rowData.translated,
             'onUpdate:modelValue': (value) => {
-                data.value[rowIndex].enUS = value;
+                data.value[rowIndex].translated = value;
             },
         }),
     },

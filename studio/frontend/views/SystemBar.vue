@@ -16,7 +16,7 @@
         </div>
         <div class="right">
             <BarItem text="加载中..." :is-loading="true" />
-            <BarItem text="zh-CN">
+            <BarItem text="en-US">
                 <template #icon>
                     <Files />
                 </template>
