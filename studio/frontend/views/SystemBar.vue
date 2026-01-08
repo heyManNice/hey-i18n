@@ -15,10 +15,14 @@
 
         </div>
         <div class="right">
-            <BarItem text="加载中..." :is-loading="true" />
-            <BarItem text="en-US">
+            <BarItem text="zh-CN">
                 <template #icon>
                     <Files />
+                </template>
+            </BarItem>
+            <BarItem text="上次扫描时间: 2024-06-01 12:00">
+                <template #icon>
+                    <Timer />
                 </template>
             </BarItem>
             <BarItem text="v0.0.1">
@@ -35,6 +39,7 @@ import {
     Check,
     FolderOpened,
     Flag,
+    Timer
 } from '@element-plus/icons-vue';
 
 import BarItem from '../components/SystemBar/BarItem.vue';

@@ -8,6 +8,7 @@
             <el-autocomplete v-model="languageInput" :fetch-suggestions="querySearch" placeholder="添加语言资源" />
             <el-button>添加</el-button>
         </div>
+        <el-button>扫描原文</el-button>
         <el-tree style="border-radius: 5px;border: 1px solid var(--border-color);" :data="treeData" :props="treeProps"
             @node-click="handleNodeClick">
             <template #default="{ node }">
@@ -46,7 +47,7 @@ const languageInput = ref('');
 
 const treeData = ref([
     {
-        label: 'STUDIO/i18n (zh-CN)',
+        label: 'STUDIO/i18n (原文 zh-CN)',
         children: [
             { label: 'en-US.json' },
             { label: 'fr-FR.json' },
