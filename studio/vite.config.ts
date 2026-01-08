@@ -6,6 +6,12 @@ export default defineConfig({
     root: './frontend',
     server: {
         port: 8082,
+        proxy: {
+            '/functions': {
+                target: 'http://localhost:3034',
+                changeOrigin: true,
+            },
+        }
     },
     plugins: [vue()],
     build: {
