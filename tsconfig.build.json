@@ -6,6 +6,7 @@
     "exclude": [
         "node_modules",
         "dist",
-        "**/*.test.ts"
+        "**/*.test.ts",
+        "src/hey-i18n-studio/frontend/**/*"
     ]
 }

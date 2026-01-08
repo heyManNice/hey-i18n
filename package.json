@@ -6,7 +6,7 @@
         "dist/"
     ],
     "bin": {
-        "hey-i18n-studio": "dist/studio/backend/main.js"
+        "hey-i18n-studio": "dist/hey-i18n-studio/backend/main.js"
     },
     "scripts": {
         "build": "tsc -p tsconfig.build.json",
