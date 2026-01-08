@@ -40,7 +40,7 @@ import {
     FolderOpened,
 } from '@element-plus/icons-vue';
 import { ref } from 'vue';
-import { languages } from '../languages';
+import { languages } from '../consts/languages';
 
 
 
