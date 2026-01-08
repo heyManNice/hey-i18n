@@ -2,7 +2,7 @@
     <el-container style="height: 100vh">
         <el-main style="padding: 0;">
             <el-splitter>
-                <el-splitter-panel size="250" :min="100" style="background-color: var(--sidebar-bg-color);">
+                <el-splitter-panel size="250px" :min="250" style="background-color: var(--sidebar-bg-color);">
                     <Explorer />
                 </el-splitter-panel>
                 <el-splitter-panel :min="200" style="background-color: var(--panel-bg-color);">
