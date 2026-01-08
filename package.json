@@ -6,11 +6,11 @@
         "dist/"
     ],
     "bin": {
-        "hey-i18n-gui": "dist/gui.js"
+        "hey-i18n-studio": "dist/studio/backend/main.js"
     },
     "scripts": {
         "build": "tsc -p tsconfig.build.json",
-        "start:gui": "tsc && node dist/gui.js"
+        "i18n:studio": "tsc && node dist/gui.js"
     },
     "devDependencies": {
         "typescript": "^5.9.3"
