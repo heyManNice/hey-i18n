@@ -1,3 +1,3 @@
 #!/usr/bin/env node
-
-console.log('test');
+import Server from './server';
+const server = new Server(3034);
