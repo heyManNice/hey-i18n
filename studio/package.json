@@ -3,7 +3,8 @@
         "dev": "vite",
         "build": "vite build",
         "preview": "vite preview",
-        "build:server": "bun backend.build.ts"
+        "build:server": "bun backend.build.ts",
+        "build:all": "npm run build && npm run build:server"
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^6.0.3",
