@@ -7,6 +7,5 @@
         "node_modules",
         "dist",
         "**/*.test.ts",
-        "src/hey-i18n-studio/frontend/**/*"
     ]
 }
