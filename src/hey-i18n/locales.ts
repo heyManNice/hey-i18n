@@ -8,9 +8,9 @@ class Locales {
     // 当前语言包内容
     public messages: Record<string, string> = {};
 
-    constructor(i18nFiles: Record<string, () => Promise<unknown>>) {
+    constructor() {
         // 构建 locale 映射
-        this.locales = Object.entries(i18nFiles).reduce((acc, [path, module]) => {
+        this.locales = Object.entries(config.i18nFiles).reduce((acc, [path, module]) => {
             const locale = path.split('/').pop()?.split('.').shift();
             if (locale) {
                 acc[locale] = module;
@@ -22,7 +22,6 @@ class Locales {
 
         // 确定当前语言
         this.currentLocale = localStorage.getItem('hey-i18n-locale') || (config.defaultLocale === 'system' ? this.getSystemLocale() : config.defaultLocale);
-        console.log('当前语言：', this.currentLocale);
     }
 
     // 获取系统语言
@@ -36,14 +35,51 @@ class Locales {
             default: Record<string, string>;
         }>;
         this.messages = importfunc ? (await importfunc()).default as Record<string, string> : {};
+    }
 
-        console.log('语言内容：', this.messages);
+    // 获取当前可用语言列表
+    public getAvailableLocales(): string[] {
+        return Array.from(new Set([...Object.keys(this.locales), config.sourcesLocale]));
+    }
+
+    // 获取当前语言
+    public getCurrentLocale(): string {
+        return this.currentLocale;
     }
 }
 
-const localesInstance = new Locales(config.i18nFiles);
+const localesInstance = new Locales();
 
 // 等待语言包加载完成
 await localesInstance.loadLocale();
 
+// 当前语言包内容
 export const messages = localesInstance.messages;
+
+// 当前可用语言列表
+export const availableLocales = localesInstance.getAvailableLocales();
+
+// 当前语言
+export const currentLocale = localesInstance.getCurrentLocale();
+
+// 切换语言
+export function switchLocale(locale: string) {
+
+    switch (locale) {
+        case currentLocale:
+            return;
+
+        case 'system':
+            localStorage.removeItem('hey-i18n-locale');
+            location.reload();
+            break;
+
+        default:
+            if (availableLocales.includes(locale)) {
+                localStorage.setItem('hey-i18n-locale', locale);
+                location.reload();
+            } else {
+                console.warn(`Locale "${locale}" is not available.`);
+            }
+    }
+}
