@@ -1,13 +1,5 @@
 import { IncomingMessage, ServerResponse } from 'http'
-
-const backend = {
-    test: {
-        send: function (name: string) {
-            return 'Hello from backend test.a: ' + name;
-        }
-    }
-};
-
+import backend from './rpc-expose.js';
 
 export default async function rpc(req: IncomingMessage, res: ServerResponse) {
     let body = '';

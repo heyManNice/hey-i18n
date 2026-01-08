@@ -10,6 +10,6 @@ import 'element-plus/theme-chalk/dark/css-vars.css';
 createApp(Index).mount(document.body);
 
 import backend from './rpc/backend';
-
-// @ts-ignore
-window.b = backend;
+backend.test.send('Hello World!').then((res) => {
+    console.log(res);
+});

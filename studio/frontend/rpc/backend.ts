@@ -24,5 +24,6 @@ function createBackend(path: string[] = []) {
     });
 }
 
+import type { BackendType } from '../../backend/rpc-expose';
 const backend = createBackend();
-export default backend;
+export default backend as unknown as BackendType;
