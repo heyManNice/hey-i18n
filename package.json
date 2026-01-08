@@ -1,0 +1,18 @@
+{
+    "name": "hey-i18n",
+    "version": "0.0.1",
+    "main": "dist/main.js",
+    "files": [
+        "dist/"
+    ],
+    "bin": {
+        "hey-i18n-gui": "dist/gui.js"
+    },
+    "scripts": {
+        "build": "tsc -p tsconfig.build.json",
+        "start:gui": "tsc && node dist/gui.js"
+    },
+    "devDependencies": {
+        "typescript": "^5.9.3"
+    }
+}
