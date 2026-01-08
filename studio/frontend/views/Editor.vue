@@ -10,7 +10,7 @@
                     <span>{{ item.title }}</span>
                 </span>
             </template>
-            {{ item.content }}
+            <TranslationCompare />
         </el-tab-pane>
     </el-tabs>
 </template>
@@ -25,6 +25,8 @@ import {
 } from 'element-plus';
 
 import { Document } from '@element-plus/icons-vue';
+
+import TranslationCompare from '../components/Editor/TranslationCompare.vue';
 
 const editableTabsValue = ref('2');
 const editableTabs = ref([
