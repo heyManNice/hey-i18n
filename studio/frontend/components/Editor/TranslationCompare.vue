@@ -4,6 +4,19 @@
             <span>已翻译: {{ translatedCount }}</span>
             <span>总计: {{ totalCount }}</span>
             <span>失效的键: {{ invalidKeysCount }}</span>
+            <span>正在修改：{{ editingCount }}</span>
+            <div class="filter">
+                <el-select v-model="filterOption" placeholder="筛选" style="width: 130px;">
+                    <template #prefix>
+                        <el-icon>
+                            <Filter />
+                        </el-icon>
+                    </template>
+                    <el-option v-for="item in filterOptions" :key="item.value" :label="item.label"
+                        :value="item.value" />
+                </el-select>
+            </div>
+            <el-button type="primary" plain>提交</el-button>
         </div>
         <div class="editor-area">
             <el-table-v2 :columns="columns" :data="data" :width="1000" :height="250" fixed />
@@ -16,8 +29,25 @@ import { ref, h } from 'vue';
 import {
     ElTableV2,
     ElInput,
+    ElSelect,
+    ElOption,
+    ElIcon,
+    ElButton
 } from 'element-plus';
+
+import {
+    Filter
+} from '@element-plus/icons-vue';
+
 import type { Column } from 'element-plus';
+
+const filterOption = ref('all');
+const filterOptions = [
+    { value: 'all', label: '全部' },
+    { value: 'untranslated', label: '未翻译' },
+    { value: 'invalid', label: '失效的键' },
+    { value: 'editing', label: '正在修改' },
+];
 
 const renderCell = (text: string) => {
     const parts = text.split(/({[^}]+})/g).filter(p => p);
@@ -29,9 +59,10 @@ const renderCell = (text: string) => {
     }));
 };
 
-const translatedCount = ref(3);
-const totalCount = ref(3);
+const translatedCount = ref(4);
+const totalCount = ref(4);
 const invalidKeysCount = ref(0);
+const editingCount = ref(0);
 
 const data = ref([
     {
@@ -166,5 +197,19 @@ const columns: Column[] = [
 
 :deep(.el-input__inner) {
     font-size: 15px;
+}
+
+
+.summary-bar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 5px 10px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 14px;
+}
+
+.filter {
+    margin-left: auto;
 }
 </style>
