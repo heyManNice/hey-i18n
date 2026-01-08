@@ -46,7 +46,7 @@ const languageInput = ref('');
 
 const treeData = ref([
     {
-        label: 'STUDIO/i18n',
+        label: 'STUDIO/i18n (zh-CN)',
         children: [
             { label: 'en-US.json' },
             { label: 'fr-FR.json' },
