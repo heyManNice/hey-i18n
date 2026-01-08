@@ -14,7 +14,7 @@ export function defineConfig(config: Partial<HeyI18nConfig>) {
 const config = {
     // @ts-ignore
     i18nFiles: configFile.i18nFiles || import.meta.glob('/i18n/*.json') || {},
-    sourcesLocale: configFile.sourcesLocale || 'zh-CN',
+    sourcesLocale: configFile.sourcesLocale || 'en-US',
     defaultLocale: configFile.defaultLocale || 'system',
 };
 
