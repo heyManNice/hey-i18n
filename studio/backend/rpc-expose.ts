@@ -1,7 +1,7 @@
 const backend = {
     test: {
         send: function (name: string) {
-            return 'Hello from backend test.a: ' + name;
+            return 'Hello from backend.test.send: ' + name;
         }
     }
 };
