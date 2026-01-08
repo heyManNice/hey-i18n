@@ -1,12 +1,10 @@
-import { IncomingMessage, ServerResponse } from 'http'
+import { IncomingMessage, ServerResponse } from 'http';
+import rpc from './rpc.js';
 
 type RouteHandler = (req: IncomingMessage, res: ServerResponse) => Promise<void>
 
 const routes: Record<string, RouteHandler> = {
-    "post:/functions": async (req, res) => {
-        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' })
-        res.end(JSON.stringify({ error: null, result: new Date() }))
-    }
+    "post:/rpc": rpc,
 };
 
 export default routes;

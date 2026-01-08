@@ -5,7 +5,7 @@ function createBackend(path: string[] = []) {
             return createBackend(newPath);
         },
         apply(_, __, args) {
-            return fetch('/functions', {
+            return fetch('/rpc', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ funcs: path, args })
@@ -24,5 +24,5 @@ function createBackend(path: string[] = []) {
     });
 }
 
-const backend = createBackend(['backend']);
+const backend = createBackend();
 export default backend;

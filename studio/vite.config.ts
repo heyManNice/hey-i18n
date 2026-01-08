@@ -7,9 +7,14 @@ export default defineConfig({
     server: {
         port: 8082,
         proxy: {
-            '/functions': {
+            '/rpc': {
                 target: 'http://localhost:3034',
                 changeOrigin: true,
+                bypass(req) {
+                    if (req.url != '/rpc') {
+                        return req.url;
+                    }
+                }
             },
         }
     },
