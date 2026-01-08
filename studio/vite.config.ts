@@ -8,4 +8,8 @@ export default defineConfig({
         port: 8082,
     },
     plugins: [vue()],
+    build: {
+        outDir: '../../dist/hey-i18n-studio/frontend',
+        emptyOutDir: true,
+    },
 })
