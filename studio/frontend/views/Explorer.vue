@@ -10,11 +10,12 @@
         </div>
         <el-button>扫描原文</el-button>
         <el-tree style="border-radius: 5px;border: 1px solid var(--border-color);" :data="treeData" :props="treeProps"
-            @node-click="handleNodeClick">
+            @node-click="handleNodeClick" default-expand-all>
             <template #default="{ node }">
                 <span class="custom-tree-node">
                     <el-icon>
-                        <Folder v-if="!node.isLeaf" />
+                        <FolderOpened v-if="!node.isLeaf && node.expanded" />
+                        <Folder v-else-if="!node.isLeaf && !node.expanded" />
                         <Document v-else />
                     </el-icon>
                     <span>{{ node.label }}</span>
@@ -36,6 +37,7 @@ import {
     Search,
     Document,
     Folder,
+    FolderOpened,
 } from '@element-plus/icons-vue';
 import { ref } from 'vue';
 import { languages } from '../languages';
@@ -104,5 +106,11 @@ const querySearch = (queryString: string, cb: any) => {
     display: flex;
     align-items: center;
     gap: 5px;
+    overflow: hidden;
+    margin-left: 10px;
+}
+
+:deep(.el-tree-node__expand-icon) {
+    display: none;
 }
 </style>

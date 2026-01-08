@@ -3,7 +3,7 @@
         <div class="left">
             <BarItem text="hey-i18n-studio">
                 <template #icon>
-                    <FolderOpened />
+                    <Folder />
                 </template>
             </BarItem>
 
@@ -37,7 +37,7 @@
 import {
     Files,
     Check,
-    FolderOpened,
+    Folder,
     Flag,
     Timer
 } from '@element-plus/icons-vue';
