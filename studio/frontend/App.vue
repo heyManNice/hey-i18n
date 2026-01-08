@@ -93,4 +93,12 @@ html.dark {
     --cursor-color: #aeafad;
     --scrollbar-color: #5a5a5a;
 }
+
+/**element */
+:root {
+    --el-bg-color: var(--bg-color) !important;
+    --el-border-color: var(--border-color) !important;
+    --el-text-color-primary: var(--text-color) !important;
+    --el-fill-color-blank: var(--panel-bg-color) !important;
+}
 </style>
