@@ -18,14 +18,16 @@
             </div>
             <el-button type="primary" plain>提交</el-button>
         </div>
-        <div class="editor-area">
-            <el-table-v2 :columns="columns" :data="data" :width="1000" :height="250" fixed />
+        <div class="editor-area" :style="{
+            '--col-width': tableWidth / 2 + 'px'
+        }">
+            <el-table-v2 :columns="columns" :data="data" :width="tableWidth" :height="250" fixed />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, h } from 'vue';
+import { ref, h, onMounted, onUnmounted, computed } from 'vue';
 import {
     ElTableV2,
     ElInput,
@@ -41,6 +43,24 @@ import {
 
 import type { Column } from 'element-plus';
 
+const tableWidth = ref(1000);
+
+const resizeObserver = new ResizeObserver(entries => {
+    const entry = entries[0];
+    const width = entry.contentRect.width;
+    tableWidth.value = width - 56;
+});
+
+onMounted(() => {
+    const containerRef = document.querySelector('.app-editor-panel')
+    if (containerRef) {
+        resizeObserver.observe(containerRef);
+    }
+});
+onUnmounted(() => {
+    resizeObserver.disconnect();
+});
+
 const filterOption = ref('all');
 const filterOptions = [
     { value: 'all', label: '全部' },
@@ -49,15 +69,7 @@ const filterOptions = [
     { value: 'editing', label: '正在修改' },
 ];
 
-const renderCell = (text: string) => {
-    const parts = text.split(/({[^}]+})/g).filter(p => p);
-    return h('div', { class: 'custom-cell-renderer' }, parts.map(part => {
-        if (part.startsWith('{') && part.endsWith('}')) {
-            return h('span', { class: 'placeholder' }, part);
-        }
-        return h('span', part);
-    }));
-};
+
 
 const translatedCount = ref(4);
 const totalCount = ref(4);
@@ -85,19 +97,29 @@ const data = ref([
 
 const editingRowIndex = ref<number | null>(null);
 
-const columns: Column[] = [
+const renderCell = (text: string) => {
+    const parts = text.split(/({[^}]+})/g).filter(p => p);
+    return h('div', { class: 'custom-cell-renderer' }, parts.map(part => {
+        if (part.startsWith('{') && part.endsWith('}')) {
+            return h('span', { class: 'placeholder' }, part);
+        }
+        return h('span', part);
+    }));
+};
+
+const columns = computed<Column[]>(() => ([
     {
         key: 'zhCN',
         title: '项目原文 (zh-CN)',
         dataKey: 'zhCN',
-        width: 500,
+        width: tableWidth.value / 2 - 2,
         cellRenderer: ({ rowData }) => renderCell(rowData.key),
     },
     {
         key: 'enUS',
         title: '目标 (en-US)',
         dataKey: 'enUS',
-        width: 500,
+        width: tableWidth.value / 2,
         cellRenderer: ({ rowData, rowIndex }) => {
             if (editingRowIndex.value === rowIndex) {
                 // 模式二：可编辑的输入框
@@ -127,7 +149,7 @@ const columns: Column[] = [
             }
         },
     },
-];
+]))
 </script>
 
 <style scoped>
@@ -183,7 +205,7 @@ const columns: Column[] = [
     cursor: pointer;
     border: 1px solid var(--border-color);
     border-radius: 5px;
-    width: 500px;
+    width: calc(var(--col-width) - 10px);
 }
 
 :deep(.placeholder) {
