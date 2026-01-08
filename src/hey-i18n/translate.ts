@@ -1,4 +1,4 @@
-import { locale } from './locales';
+import { messages } from './locales';
 
 function formatTranslation(template: string, values: any[]): string {
     return template.replace(/{(\d+)}/g, (match, index) => {
@@ -9,7 +9,7 @@ function formatTranslation(template: string, values: any[]): string {
 export default function translate(strings: TemplateStringsArray, ...values: any[]): string {
     const key = strings.join('{}');
 
-    const translated = locale[key];
+    const translated = messages[key];
     if (translated) {
         return formatTranslation(translated, values);
     }
