@@ -13,6 +13,8 @@
                 </template>
             </BarItem>
 
+            <BarItem :text="progressText" :progress="progress" />
+
         </div>
         <div class="right">
             <BarItem text="zh-CN">
@@ -35,6 +37,10 @@
 </template>
 <script setup lang="ts">
 import {
+    ref,
+    computed
+} from 'vue';
+import {
     Files,
     Check,
     Folder,
@@ -43,6 +49,9 @@ import {
 } from '@element-plus/icons-vue';
 
 import BarItem from '../components/SystemBar/BarItem.vue';
+
+const progress = ref(50);
+const progressText = computed(() => `${progress.value.toFixed(0)}% 已扫描 2/10 文件: src/components/Example.vue`);
 
 </script>
 
