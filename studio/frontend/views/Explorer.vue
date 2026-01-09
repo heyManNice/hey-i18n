@@ -39,7 +39,7 @@ import {
     Folder,
     FolderOpened,
 } from '@element-plus/icons-vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { languages } from '../consts/languages';
 
 import mSystemBar from '../models/SystemBar';
@@ -81,8 +81,50 @@ const querySearch = (queryString: string, cb: any) => {
     cb(results.map(item => ({ value: item })))
 }
 
+const totalFiles = 136;
+const scannedFiles = ref(0);
+
+function randomWord() {
+    const words = [
+        'components',
+        'views',
+        'models',
+        'consts',
+        'utils',
+        'Explorer.vue',
+        'SystemBar.vue',
+        'languages.ts',
+        'i18n.ts',
+        'App.vue',
+        'main.ts',
+        'Cards.vue',
+        'Header.vue',
+        'Footer.vue',
+    ];
+    return words[Math.floor(Math.random() * words.length)];
+}
+
+watch(scannedFiles, (newVal) => {
+    const progress = (newVal / totalFiles) * 100;
+    const scanMsg = `${progress.toFixed(0)}% 已扫描 ${scannedFiles.value}/${totalFiles} 文件：src/${randomWord()}/${randomWord()}.vue`;
+    mSystemBar.status.setProgress(progress, scanMsg);
+});
+
+
 function handleSacnProjectText() {
-    mSystemBar.status.setProgress(63, '63% 已扫描 23/36 文件: src/components/Example.vue');
+    scannedFiles.value = 0;
+    mSystemBar.status.setProgress(1, '初始化扫描...');
+
+    const interval = setInterval(() => {
+        scannedFiles.value += 5;
+        if (scannedFiles.value >= totalFiles) {
+            scannedFiles.value = totalFiles;
+            clearInterval(interval);
+            setTimeout(() => {
+                mSystemBar.status.setComplete(`扫描项目原文：完成，已处理 ${totalFiles} 个文件。新增 0 条，删除 0 条，共有 4 条原文。`);
+            });
+        }
+    }, 100);
 }
 
 </script>
