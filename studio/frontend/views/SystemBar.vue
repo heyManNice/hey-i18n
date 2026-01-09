@@ -23,7 +23,7 @@
                     <Files />
                 </template>
             </BarItem>
-            <BarItem text="上次扫描时间: 2024-06-01 12:00">
+            <BarItem :text="mSystemBar.lastScanTime.m_lastScanTime.value">
                 <template #icon>
                     <Timer />
                 </template>

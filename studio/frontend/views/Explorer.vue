@@ -122,6 +122,7 @@ function handleSacnProjectText() {
             clearInterval(interval);
             setTimeout(() => {
                 mSystemBar.status.setComplete(`扫描项目原文：完成，已处理 ${totalFiles} 个文件。新增 0 条，删除 0 条，共有 4 条原文。`);
+                mSystemBar.lastScanTime.setLastScanTime(Date.now());
             });
         }
     }, 100);

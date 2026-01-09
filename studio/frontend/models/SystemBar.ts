@@ -30,6 +30,19 @@ const mSystemBar = {
         }
     },
 
+    lastScanTime: {
+        m_lastScanTime: ref("上次扫描时间: 2024-06-01 12:00"),
+        setLastScanTime(timestamp: number) {
+            const time = new Date(timestamp);
+            const year = time.getFullYear();
+            const month = String(time.getMonth() + 1).padStart(2, '0');
+            const day = String(time.getDate()).padStart(2, '0');
+            const hours = String(time.getHours()).padStart(2, '0');
+            const minutes = String(time.getMinutes()).padStart(2, '0');
+            this.m_lastScanTime.value = `上次扫描时间: ${year}-${month}-${day} ${hours}:${minutes}`;
+        }
+    },
+
     version: {
         m_version: ref('v0.0.1'),
     }
