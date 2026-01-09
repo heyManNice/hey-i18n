@@ -7,13 +7,14 @@
                 </template>
             </BarItem>
 
-            <BarItem text="就绪">
+            <BarItem v-if="mSystemBar.status.m_isComplete.value" :text="mSystemBar.status.m_completeText.value">
                 <template #icon>
                     <Check />
                 </template>
             </BarItem>
 
-            <BarItem :text="progressText" :progress="progress" />
+            <BarItem v-if="!mSystemBar.status.m_isComplete.value" :text="mSystemBar.status.m_progressText.value"
+                :progress="mSystemBar.status.m_progress.value" />
 
         </div>
         <div class="right">
@@ -37,10 +38,6 @@
 </template>
 <script setup lang="ts">
 import {
-    ref,
-    computed
-} from 'vue';
-import {
     Files,
     Check,
     Folder,
@@ -50,9 +47,7 @@ import {
 
 import BarItem from '../components/SystemBar/BarItem.vue';
 
-const progress = ref(50);
-const progressText = computed(() => `${progress.value.toFixed(0)}% 已扫描 2/10 文件: src/components/Example.vue`);
-
+import mSystemBar from '../models/SystemBar';
 </script>
 
 <style scoped>

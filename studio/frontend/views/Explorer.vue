@@ -8,7 +8,7 @@
             <el-autocomplete v-model="languageInput" :fetch-suggestions="querySearch" placeholder="添加语言资源" />
             <el-button>添加</el-button>
         </div>
-        <el-button>扫描项目原文</el-button>
+        <el-button @click="handleSacnProjectText">扫描项目原文</el-button>
         <el-tree style="border-radius: 5px;border: 1px solid var(--border-color);" :data="treeData" :props="treeProps"
             @node-click="handleNodeClick" default-expand-all>
             <template #default="{ node }">
@@ -42,6 +42,7 @@ import {
 import { ref } from 'vue';
 import { languages } from '../consts/languages';
 
+import mSystemBar from '../models/SystemBar';
 
 
 const searchInput = ref('');
@@ -78,6 +79,10 @@ const querySearch = (queryString: string, cb: any) => {
         : languages
 
     cb(results.map(item => ({ value: item })))
+}
+
+function handleSacnProjectText() {
+    mSystemBar.status.setProgress(63, '63% 已扫描 23/36 文件: src/components/Example.vue');
 }
 
 </script>
