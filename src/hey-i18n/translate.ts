@@ -1,35 +1,26 @@
 import { messages } from './locales';
-import type { MessageValue } from './locales';
 
-function formatTranslation(messageValue: MessageValue, values: any[]): string {
-    const [strs, varIndexes] = messageValue;
-
-    const parts: string[] = [];
-    for (let i = 0; i < strs.length; i++) {
-        parts.push(strs[i]);
-        if (varIndexes && i < varIndexes.length) {
-            parts.push(String(values[varIndexes[i]]));
-        }
-    }
-    return parts.join('');
+function formatTranslation(template: string, values: any[]): string {
+    return template.replace(/{(\d+)}/g, (match, index) => {
+        return typeof values[index] !== 'undefined' ? values[index] : match;
+    });
 }
 
-
 export default function translate(strings: TemplateStringsArray, ...values: any[]): string {
-    const key = strings.join('');
+    const key = strings.join('{}');
 
-    const translatedConfig = messages[key];
-    if (translatedConfig) {
-        return formatTranslation(translatedConfig, values);
+    const translated = messages[key];
+    if (translated) {
+        return formatTranslation(translated, values);
     }
 
     // 匹配不到翻译的时候
-    const parts: string[] = [];
+    let result = '';
     for (let i = 0; i < strings.length; i++) {
-        parts.push(strings[i]);
+        result += strings[i];
         if (i < values.length) {
-            parts.push(String(values[i]));
+            result += values[i];
         }
     }
-    return parts.join('');
+    return result;
 }
