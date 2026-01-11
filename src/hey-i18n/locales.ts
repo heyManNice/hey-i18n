@@ -1,12 +1,18 @@
 import config from './config';
 
+/**
+ * index 0: 字符串数组  
+ * index 1: 变量索引数组
+ */
+export type MessageValue = [string[], number[]];
+
 class Locales {
     // 语言包映射
     private locales: Record<string, () => Promise<unknown>>;
     // 当前语言
     private currentLocale: string;
     // 当前语言包内容
-    public messages: Record<string, string> = {};
+    public messages: Record<string, MessageValue> = {};
 
     constructor() {
         // 构建 locale 映射
@@ -32,9 +38,9 @@ class Locales {
     // 加载语言包
     public async loadLocale() {
         const importfunc = this.locales[this.currentLocale] as () => Promise<{
-            default: Record<string, string>;
+            default: Record<string, MessageValue>;
         }>;
-        this.messages = importfunc ? (await importfunc()).default as Record<string, string> : {};
+        this.messages = importfunc ? (await importfunc()).default as Record<string, MessageValue> : {};
     }
 
     // 获取当前可用语言列表
