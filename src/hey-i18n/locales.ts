@@ -1,4 +1,7 @@
 import config from './config';
+
+import type { Locale } from './languages';
+
 //t: 翻译字符串数组
 //v: 变量索引数组
 export type MessageValue = {
@@ -44,8 +47,8 @@ class Locales {
     }
 
     // 获取当前可用语言列表
-    public getAvailableLocales(): string[] {
-        return Array.from(new Set([...Object.keys(this.locales), config.sourcesLocale]));
+    public getAvailableLocales() {
+        return Array.from(new Set([...Object.keys(this.locales), config.sourcesLocale])) as Locale[];
     }
 
     // 获取当前语言
@@ -84,7 +87,7 @@ export function switchLocale(locale: string) {
             break;
 
         default:
-            if (availableLocales.includes(locale)) {
+            if (availableLocales.includes(locale as Locale)) {
                 localStorage.setItem('hey-i18n-locale', locale);
                 location.reload();
             } else {
