@@ -68,6 +68,9 @@ export const availableLocales = localesInstance.getAvailableLocales();
 // 当前语言
 export const currentLocale = localesInstance.getCurrentLocale();
 
+// 项目原文语言
+export const sourcesLocale = config.sourcesLocale;
+
 // 切换语言
 export function switchLocale(locale: string) {
 
