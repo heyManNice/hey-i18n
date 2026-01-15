@@ -1,17 +1,27 @@
 import { messages } from './locales';
+import type { MessageValue } from './locales';
 
-function formatTranslation(template: string, values: any[]): string {
-    return template.replace(/{(\d+)}/g, (match, index) => {
-        return typeof values[index] !== 'undefined' ? values[index] : match;
-    });
+function formatTranslation(messageValue: MessageValue, values: any[]): string {
+    const strs = messageValue.t;
+    const varIndexes = messageValue.v;
+
+    let result = '';
+    for (let i = 0; i < strs.length; i++) {
+        result += strs[i];
+        if (varIndexes && i < varIndexes.length) {
+            result += values[varIndexes[i]];
+        }
+    }
+    return result;
 }
 
-export default function translate(strings: TemplateStringsArray, ...values: any[]): string {
-    const key = strings.join('{}');
 
-    const translated = messages[key];
-    if (translated) {
-        return formatTranslation(translated, values);
+export default function translate(strings: TemplateStringsArray, ...values: any[]): string {
+    const key = strings.join('');
+
+    const messageValue = messages[key];
+    if (messageValue) {
+        return formatTranslation(messageValue, values);
     }
 
     // 匹配不到翻译的时候
