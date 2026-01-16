@@ -152,6 +152,7 @@ const columns = computed<Column[]>(() => ([
                 readOnlyNode.props.onClick = () => {
                     editingRowIndex.value = rowIndex;
                 };
+                readOnlyNode.props.style = { cursor: 'pointer' };
                 return readOnlyNode;
             }
         },
@@ -213,7 +214,7 @@ const columns = computed<Column[]>(() => ([
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    cursor: pointer;
+    cursor: not-allowed;
     border: 1px solid var(--border-color);
     border-radius: 5px;
     width: calc(var(--col-width) - 10px);
