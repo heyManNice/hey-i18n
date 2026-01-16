@@ -38,7 +38,8 @@ import {
 } from 'element-plus';
 
 import {
-    Filter
+    Filter,
+    Search,
 } from '@element-plus/icons-vue';
 
 import type { Column } from 'element-plus';
@@ -74,14 +75,15 @@ const filterOptions = [
     { value: 'editing', label: '正在修改' },
 ];
 
-
+const sourceSearch = ref('');
+const targetSearch = ref('');
 
 const translatedCount = ref(4);
 const totalCount = ref(4);
 const invalidKeysCount = ref(0);
 const editingCount = ref(0);
 
-const data = ref([
+const originalData = ref([
     {
         key: '你的名字是{name}, 今年{age}岁了。',
         translated: 'Your name is {name}, and you are {age} years old.',
@@ -99,6 +101,14 @@ const data = ref([
         translated: 'Today is {DD}/{MM}/{YYYY}',
     }
 ]);
+
+const data = computed(() => {
+    return originalData.value.filter(item => {
+        const sourceMatch = item.key.toLowerCase().includes(sourceSearch.value.toLowerCase());
+        const targetMatch = item.translated.toLowerCase().includes(targetSearch.value.toLowerCase());
+        return sourceMatch && targetMatch;
+    });
+});
 
 const editingRowIndex = ref<number | null>(null);
 
@@ -119,6 +129,18 @@ const columns = computed<Column[]>(() => ([
         dataKey: 'zhCN',
         width: tableWidth.value / 2 - 2,
         cellRenderer: ({ rowData }) => renderCell(rowData.key),
+        headerCellRenderer: () => h('div', { class: 'custom-header' }, [
+            h('span', '项目原文 (zh-CN)'),
+            h(ElInput, {
+                modelValue: sourceSearch.value,
+                'onUpdate:modelValue': (val) => sourceSearch.value = val,
+                placeholder: '搜索原文',
+                class: 'header-search-input',
+                prefixIcon: Search,
+                clearable: true,
+                size: 'small',
+            })
+        ]),
     },
     {
         key: 'enUS',
@@ -131,7 +153,10 @@ const columns = computed<Column[]>(() => ([
                 return h(ElInput, {
                     modelValue: rowData.translated,
                     'onUpdate:modelValue': (value) => {
-                        data.value[rowIndex].translated = value;
+                        const originalIndex = originalData.value.findIndex(item => item.key === rowData.key);
+                        if (originalIndex !== -1) {
+                            originalData.value[originalIndex].translated = value;
+                        }
                     },
                     // 当输入框失去焦点时，退出编辑模式
                     onBlur: () => {
@@ -156,6 +181,18 @@ const columns = computed<Column[]>(() => ([
                 return readOnlyNode;
             }
         },
+        headerCellRenderer: () => h('div', { class: 'custom-header' }, [
+            h('span', '目标 (en-US)'),
+            h(ElInput, {
+                modelValue: targetSearch.value,
+                'onUpdate:modelValue': (val) => targetSearch.value = val,
+                placeholder: '搜索译文',
+                class: 'header-search-input',
+                prefixIcon: Search,
+                clearable: true,
+                size: 'small',
+            })
+        ]),
     },
 ]))
 </script>
@@ -233,6 +270,16 @@ const columns = computed<Column[]>(() => ([
     font-size: 15px;
 }
 
+:deep(.custom-header) {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 0 10px;
+}
+
+:deep(.custom-header > span) {
+    white-space: nowrap;
+}
 
 .summary-bar {
     display: flex;
