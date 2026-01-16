@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, h, onMounted, onUnmounted, computed } from 'vue';
+import { ref, h, onMounted, onUnmounted, computed, nextTick } from 'vue';
 import {
     ElTableV2,
     ElInput,
@@ -139,7 +139,9 @@ const columns = computed<Column[]>(() => ([
                     },
                     // 自动聚焦
                     onVnodeMounted: (vnode) => {
-                        vnode.el?.querySelector('input')?.focus();
+                        nextTick(() => {
+                            vnode.component?.exposed?.focus();
+                        });
                     },
                 });
             } else {
