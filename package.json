@@ -9,8 +9,7 @@
         "hey-i18n-studio": "dist/hey-i18n-studio/backend/main.js"
     },
     "scripts": {
-        "build": "tsc -p tsconfig.build.json",
-        "i18n:studio": "tsc && node dist/gui.js"
+        "build": "tsc -p tsconfig.build.json"
     },
     "devDependencies": {
         "typescript": "^5.9.3"
