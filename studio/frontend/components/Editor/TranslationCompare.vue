@@ -21,7 +21,7 @@
         <div class="editor-area" :style="{
             '--col-width': tableWidth / 2 + 'px'
         }">
-            <el-table-v2 :columns="columns" :data="data" :width="tableWidth" :height="250" fixed />
+            <el-table-v2 :columns="columns" :data="data" :width="tableWidth" :height="tableHeight" fixed />
         </div>
     </div>
 </template>
@@ -44,11 +44,16 @@ import {
 import type { Column } from 'element-plus';
 
 const tableWidth = ref(1000);
+const tableHeight = ref(400);
 
 const resizeObserver = new ResizeObserver(entries => {
     const entry = entries[0];
     const width = entry.contentRect.width;
+    const height = entry.contentRect.height;
+
+    // 表格大小的魔法数字
     tableWidth.value = width - 56;
+    tableHeight.value = height - 142;
 });
 
 onMounted(() => {
@@ -189,6 +194,10 @@ const columns = computed<Column[]>(() => ([
 
 :deep(.el-table-v2__header-row) {
     border-bottom: 1px solid var(--border-color);
+}
+
+:deep(.el-table-v2__table.el-table-v2__main) {
+    background-color: var(--panel-bg-color);
 }
 
 :deep(.el-input.is-disabled .el-input__wrapper) {
