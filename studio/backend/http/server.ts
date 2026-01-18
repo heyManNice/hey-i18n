@@ -3,7 +3,7 @@ import routes from './routes.js';
 import useStatic from './static.js';
 import chalk from "chalk";
 
-import packageJson from '../../package.json' assert { type: "json" };
+import packageJson from '../../../package.json' assert { type: "json" };
 const { green, blue, bold } = chalk;
 
 function printBoxedMessage(lines: string[]) {

@@ -1,5 +1,5 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import rpc from './rpc.js';
+import rpc from '../rpc/rpc.js';
 
 type RouteHandler = (req: IncomingMessage, res: ServerResponse) => Promise<void>
 

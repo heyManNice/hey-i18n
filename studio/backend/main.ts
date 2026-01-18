@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import Server from './server';
+import Server from './http/server';
 import { Command } from 'commander';
 import packageJson from '../../package.json' assert { type: "json" };
 
