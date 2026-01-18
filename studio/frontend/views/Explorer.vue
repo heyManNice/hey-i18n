@@ -72,13 +72,18 @@ async function addLanguageFile() {
     }
 
     try {
-        await backend.manager.project.addI18nFile(filename + '.json');
-        languageInput.value = '';
-        await updateTreeData();
-        mSystemBar.status.setComplete(`已添加语言文件：${filename}.json`);
+        await backend.manager.project.addI18nFile(`${filename}.json`);
+
     } catch (error) {
+        if (!(error instanceof Error)) {
+            return;
+        }
         mSystemBar.status.setComplete(`添加语言文件失败：${error.message}`);
+        return;
     }
+    languageInput.value = '';
+    await updateTreeData();
+    mSystemBar.status.setComplete(`已添加语言文件：${filename}.json`);
 }
 
 const treeData = ref();
