@@ -54,6 +54,10 @@ async function updateTreeData() {
 
     console.log(info, files);
 
+    if (files.length === 0) {
+        return;
+    }
+
     treeData.value = [
         {
             label: `${info.projectName}/${info.i18nDir} (原文 ${info.sourcesLocale})`,
