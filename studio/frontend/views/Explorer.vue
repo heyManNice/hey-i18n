@@ -6,7 +6,7 @@
         <el-input v-model="searchInput" placeholder="搜索现有资源" :prefix-icon="Search" />
         <div class="add-language-container">
             <el-autocomplete v-model="languageInput" :fetch-suggestions="querySearch" placeholder="添加语言资源" />
-            <el-button>添加</el-button>
+            <el-button @click="addLanguageFile">添加</el-button>
         </div>
         <el-button @click="handleSacnProjectText">扫描项目原文</el-button>
         <el-tree style="border-radius: 5px;border: 1px solid var(--border-color);" :data="treeData" :props="treeProps"
@@ -45,7 +45,9 @@ import { languages } from '../consts/languages';
 import mSystemBar from '../models/SystemBar';
 import backend from '../rpc/backend';
 
-onMounted(async () => {
+onMounted(updateTreeData);
+
+async function updateTreeData() {
     const project = backend.manager.project;
     const info = await project.listProjectInfo();
     const files = await project.listI18nFiles();
@@ -58,10 +60,26 @@ onMounted(async () => {
             children: Array.from(files).map(file => ({ label: file })),
         }
     ]
-});
+}
 
 const searchInput = ref('');
 const languageInput = ref('');
+
+async function addLanguageFile() {
+    const filename = languageInput.value.trim();
+    if (filename === '') {
+        return;
+    }
+
+    try {
+        await backend.manager.project.addI18nFile(filename + '.json');
+        languageInput.value = '';
+        await updateTreeData();
+        mSystemBar.status.setComplete(`已添加语言文件：${filename}.json`);
+    } catch (error) {
+        mSystemBar.status.setComplete(`添加语言文件失败：${error.message}`);
+    }
+}
 
 const treeData = ref();
 

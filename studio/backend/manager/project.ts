@@ -26,6 +26,14 @@ class ProjectManager {
         }
         return fs.readdirSync(i18nPath).filter(file => file.endsWith('.json'));
     }
+
+    public addI18nFile(filename: `${string}.json`) {
+        const filePath = path.join(this.workspacePath, this.i18nDir, filename);
+        if (fs.existsSync(filePath)) {
+            throw new Error(`File ${filename} already exists.`);
+        }
+        fs.writeFileSync(filePath, '{}', 'utf-8');
+    }
 }
 
 export default new ProjectManager();
