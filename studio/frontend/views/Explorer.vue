@@ -47,24 +47,23 @@ import backend from '../rpc/backend';
 
 onMounted(async () => {
     const project = backend.manager.project;
-    const info = await project.getProjectInfo();
-    console.log(info);
-});
+    const info = await project.listProjectInfo();
+    const files = await project.listI18nFiles();
 
+    console.log(info, files);
+
+    treeData.value = [
+        {
+            label: `${info.projectName}/${info.i18nDir} (原文 ${info.sourcesLocale})`,
+            children: Array.from(files).map(file => ({ label: file })),
+        }
+    ]
+});
 
 const searchInput = ref('');
 const languageInput = ref('');
 
-const treeData = ref([
-    {
-        label: 'STUDIO/i18n (原文 zh-CN)',
-        children: [
-            { label: 'en-US.json' },
-            { label: 'fr-FR.json' },
-            { label: 'ja-JP.json' },
-        ],
-    }
-]);
+const treeData = ref();
 
 const treeProps = {
     children: 'children',
