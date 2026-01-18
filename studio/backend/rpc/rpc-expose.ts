@@ -1,8 +1,8 @@
+import project from '../manager/project.js';
+
 const backend = {
-    test: {
-        send: function (name: string) {
-            return 'Hello from backend.test.send: ' + name;
-        }
+    manager: {
+        project
     }
 };
 

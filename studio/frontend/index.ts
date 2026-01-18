@@ -8,10 +8,3 @@ import 'element-plus/dist/index.css';
 import 'element-plus/theme-chalk/dark/css-vars.css';
 
 createApp(Index).mount(document.body);
-
-import backend from './rpc/backend';
-
-
-
-const msg = await backend.test.send('Hello World!');
-console.log(msg);

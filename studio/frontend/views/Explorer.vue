@@ -39,10 +39,17 @@ import {
     Folder,
     FolderOpened,
 } from '@element-plus/icons-vue';
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { languages } from '../consts/languages';
 
 import mSystemBar from '../models/SystemBar';
+import backend from '../rpc/backend';
+
+onMounted(async () => {
+    const project = backend.manager.project;
+    const info = await project.getProjectInfo();
+    console.log(info);
+});
 
 
 const searchInput = ref('');
