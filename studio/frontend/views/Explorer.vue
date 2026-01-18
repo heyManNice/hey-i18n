@@ -76,7 +76,7 @@ async function addLanguageFile() {
 
     } catch (error) {
         if (!(error instanceof Error)) {
-            return;
+            throw error;
         }
         mSystemBar.status.setComplete(`添加语言文件失败：${error.message}`);
         return;
