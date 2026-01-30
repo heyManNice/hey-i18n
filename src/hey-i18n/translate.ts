@@ -19,7 +19,18 @@ function formatTranslation(messageValue: MessageValue, values: any[]): string {
     return result;
 }
 
-
+/**
+ * 此标记字符串为国际化字符串  
+ * 
+ * 使用 `hey-i18n-studio` 命令启动国际化资源编辑器进行翻译资源的编辑和管理。
+ * 
+ * @example
+ * ```ts
+ * import T from 'hey-i18n';
+ * 
+ * const str = T`Hello Hey-I18n!`;
+ * ```
+ */
 export default function translate(strings: TemplateStringsArray, ...values: any[]): string {
     const key = strings.join('');
 
