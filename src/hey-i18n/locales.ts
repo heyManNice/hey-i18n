@@ -98,3 +98,16 @@ export function switchLocale(locale: string) {
 
 // 是否为从右到左书写的语言
 export const isRtlLocale = rtlLocales.has(currentLocale);
+
+// 自动设置HTML的dir属性和添加对应的CSS类名
+if (typeof document !== 'undefined') {
+    if (isRtlLocale) {
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.classList.remove('ltr');
+        document.documentElement.classList.add('rtl');
+    } else {
+        document.documentElement.setAttribute('dir', 'ltr');
+        document.documentElement.classList.remove('rtl');
+        document.documentElement.classList.add('ltr');
+    }
+}
