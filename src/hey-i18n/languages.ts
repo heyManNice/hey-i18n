@@ -155,6 +155,32 @@ export const localeNames = {
     "zu-ZA": "Zulu"
 };
 
+// 从右到左书写的语言代码集合
+export const rtlLocales = new Set([
+    "ar-DZ",
+    "ar-BH",
+    "ar-EG",
+    "ar-IQ",
+    "ar-JO",
+    "ar-KW",
+    "ar-LB",
+    "ar-LY",
+    "ar-MA",
+    "ar-OM",
+    "ar-QA",
+    "ar-SA",
+    "ar-SY",
+    "ar-TN",
+    "ar-AE",
+    "ar-YE",
+    "dv-MV",
+    "fa-IR",
+    "he-IL",
+    "syr-SY",
+    "ur-PK",
+    "yi-DE"
+]);
+
 // 所有支持的语言代码
 export type Locale = keyof typeof localeNames;
 

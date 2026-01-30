@@ -1,6 +1,6 @@
 import config from './config';
 
-import type { Locale } from './languages';
+import { Locale, rtlLocales } from './languages';
 
 //t: 翻译字符串数组
 //v: 变量索引数组
@@ -95,3 +95,6 @@ export function switchLocale(locale: string) {
             }
     }
 }
+
+// 是否为从右到左书写的语言
+export const isRtlLocale = rtlLocales.has(currentLocale);

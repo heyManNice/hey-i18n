@@ -6,7 +6,8 @@ export default translate;
 export {
     availableLocales,
     currentLocale,
-    switchLocale
+    switchLocale,
+    isRtlLocale
 } from './hey-i18n/locales';
 
 export {
