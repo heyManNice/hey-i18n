@@ -10,13 +10,13 @@
                     <span>{{ item.title }}</span>
                 </span>
             </template>
-            <TranslationCompare />
+            <TranslationCompare :target-locale="editableTabsTitle" />
         </el-tab-pane>
     </el-tabs>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import {
     ElTabs,
     ElTabPane,
@@ -31,6 +31,10 @@ import TranslationCompare from '../components/Editor/TranslationCompare.vue';
 import bus from '../utils/bus';
 
 const editableTabsValue = ref('1');
+const editableTabsTitle = computed(() => {
+    const currentTab = editableTabs.value.find(tab => tab.name === editableTabsValue.value);
+    return currentTab ? currentTab.title : 'null';
+});
 const editableTabs = ref([
     {
         title: 'en-US.json',

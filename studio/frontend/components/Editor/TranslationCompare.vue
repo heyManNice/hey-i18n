@@ -44,6 +44,10 @@ import {
 
 import type { Column } from 'element-plus';
 
+const props = defineProps<{
+    targetLocale: string;
+}>();
+
 const tableWidth = ref(1000);
 const tableHeight = ref(400);
 
@@ -122,11 +126,9 @@ const renderCell = (text: string) => {
     }));
 };
 
+
 const columns = computed<Column[]>(() => ([
     {
-        key: 'zhCN',
-        title: '项目原文 (zh-CN)',
-        dataKey: 'zhCN',
         width: tableWidth.value / 2 - 2,
         cellRenderer: ({ rowData }) => renderCell(rowData.key),
         headerCellRenderer: () => h('div', { class: 'custom-header' }, [
@@ -143,9 +145,6 @@ const columns = computed<Column[]>(() => ([
         ]),
     },
     {
-        key: 'enUS',
-        title: '目标 (en-US)',
-        dataKey: 'enUS',
         width: tableWidth.value / 2,
         cellRenderer: ({ rowData, rowIndex }) => {
             if (editingRowIndex.value === rowIndex) {
@@ -182,7 +181,7 @@ const columns = computed<Column[]>(() => ([
             }
         },
         headerCellRenderer: () => h('div', { class: 'custom-header' }, [
-            h('span', '目标 (en-US)'),
+            h('span', `目标 (en-US)`),
             h(ElInput, {
                 modelValue: targetSearch.value,
                 'onUpdate:modelValue': (val) => targetSearch.value = val,
