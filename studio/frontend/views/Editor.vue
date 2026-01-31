@@ -28,33 +28,33 @@ import { Document } from '@element-plus/icons-vue';
 
 import TranslationCompare from '../components/Editor/TranslationCompare.vue';
 
+import bus from '../utils/bus';
+
 const editableTabsValue = ref('1');
 const editableTabs = ref([
     {
         title: 'en-US.json',
         name: '1',
-        content: 'Content of en-US.json',
-    },
-    {
-        title: 'fr-FR.json',
-        name: '2',
-        content: 'Content of fr-FR.json',
-    },
-    {
-        title: 'ja-JP.json',
-        name: '3',
-        content: 'Content of ja-JP.json',
-    },
+    }
 ]);
 
-let tabIndex = 3;
+bus.on('editor-add-tab', ({ filename }) => {
+    addTab(filename);
+});
+
+let tabIndex = 1;
 
 const addTab = (targetName: string) => {
+    // 重复的不添加，并且聚焦
+    const existingTab = editableTabs.value.find(tab => tab.title === targetName);
+    if (existingTab) {
+        editableTabsValue.value = existingTab.name;
+        return;
+    }
     const newTabName = `${++tabIndex}`;
     editableTabs.value.push({
-        title: 'New Tab',
+        title: targetName,
         name: newTabName,
-        content: 'New Tab content',
     });
     editableTabsValue.value = newTabName;
 };

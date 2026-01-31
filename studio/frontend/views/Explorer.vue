@@ -44,6 +44,7 @@ import { languages } from '../consts/languages';
 
 import mSystemBar from '../models/SystemBar';
 import backend from '../rpc/backend';
+import bus from '../utils/bus';
 
 onMounted(updateTreeData);
 
@@ -102,7 +103,9 @@ interface Tree {
 }
 
 const handleNodeClick = (data: Tree) => {
-    console.log(data)
+    bus.emit('editor-add-tab', {
+        filename: data.label
+    });
 };
 
 const querySearch = (queryString: string, cb: any) => {
