@@ -48,9 +48,8 @@ import backend from '../rpc/backend';
 onMounted(updateTreeData);
 
 async function updateTreeData() {
-    const project = backend.manager.project;
-    const info = await project.listProjectInfo();
-    const files = await project.listI18nFiles();
+    const info = await backend.project.listProjectInfo();
+    const files = await backend.project.listI18nFiles();
 
     console.log(info, files);
 
@@ -76,7 +75,7 @@ async function addLanguageFile() {
     }
 
     try {
-        await backend.manager.project.addI18nFile(`${filename}.json`);
+        await backend.project.addI18nFile(`${filename}.json`);
 
     } catch (error) {
         if (!(error instanceof Error)) {

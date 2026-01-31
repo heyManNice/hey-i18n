@@ -1,9 +1,7 @@
-import project from '../manager/project.js';
+import project from '../interface/project.js';
 
 const backend = {
-    manager: {
-        project
-    }
+    project
 };
 
 type Asyncify<T> = {
