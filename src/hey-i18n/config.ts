@@ -5,17 +5,13 @@ type HeyI18nConfig = {
 }
 
 // @ts-ignore
-const configFile = (import.meta.glob('/hey-i18n.config.ts', { eager: true })['/hey-i18n.config.ts'] as { default: HeyI18nConfig })?.default ?? {};
+const configFile = (import.meta.glob('/i18n/.hey-i18n-config', { eager: true })['/i18n/.hey-i18n-config'] as { default: HeyI18nConfig })?.default ?? {};
 
 const config = {
     // @ts-ignore
-    i18nFiles: configFile.i18nFiles || import.meta.glob('/i18n/*.json') || {},
+    i18nFiles: import.meta.glob('/i18n/*.json') || {},
     sourcesLocale: configFile.sourcesLocale || 'en-US',
     defaultLocale: configFile.defaultLocale || 'system',
-};
+} as HeyI18nConfig;
 
 export default config;
-
-export function defineConfig(config: Partial<HeyI18nConfig>) {
-    return config;
-}
