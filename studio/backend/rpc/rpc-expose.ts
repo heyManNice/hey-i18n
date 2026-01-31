@@ -1,7 +1,9 @@
 import project from '../interface/project.js';
+import config from '../interface/config.js';
 
 const backend = {
-    project
+    project,
+    config
 };
 
 type Asyncify<T> = {

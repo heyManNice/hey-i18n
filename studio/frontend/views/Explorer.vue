@@ -50,8 +50,8 @@ onMounted(updateTreeData);
 async function updateTreeData() {
     const info = await backend.project.listProjectInfo();
     const files = await backend.project.listI18nFiles();
+    const config = await backend.config.getConfig();
 
-    console.log(info, files);
 
     if (files.length === 0) {
         return;
@@ -59,7 +59,7 @@ async function updateTreeData() {
 
     treeData.value = [
         {
-            label: `${info.projectName}/${info.i18nDir} (原文 ${info.sourcesLocale})`,
+            label: `${info.projectName}/${info.i18nDir} (原文 ${config.sourcesLocale})`,
             children: Array.from(files).map(file => ({ label: file })),
         }
     ]

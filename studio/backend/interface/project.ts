@@ -1,22 +1,19 @@
 import path from "path";
 import fs from "fs";
 
-class ProjectManager {
+class ProjectInterface {
     private workspacePath: string;
     private projectName: string;
     private i18nDir: string;
-    private sourcesLocale: string;
     constructor() {
         this.workspacePath = process.cwd();
         this.projectName = this.workspacePath.split(path.sep).pop() || 'unknown';
         this.i18nDir = 'i18n';
-        this.sourcesLocale = 'en-US';
     }
     public listProjectInfo() {
         return {
             projectName: this.projectName,
             i18nDir: this.i18nDir,
-            sourcesLocale: this.sourcesLocale
         };
     }
     public listI18nFiles() {
@@ -34,6 +31,10 @@ class ProjectManager {
         }
         fs.writeFileSync(filePath, '{}', 'utf-8');
     }
+
+    public getWorkspacePath() {
+        return this.workspacePath;
+    }
 }
 
-export default new ProjectManager();
+export default new ProjectInterface();
