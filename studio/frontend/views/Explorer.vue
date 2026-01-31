@@ -103,6 +103,10 @@ interface Tree {
 }
 
 const handleNodeClick = (data: Tree) => {
+    // 如果是有子节点的，不处理
+    if (data.children && data.children.length > 0) {
+        return;
+    }
     bus.emit('editor-add-tab', {
         filename: data.label
     });
