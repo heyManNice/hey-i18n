@@ -3,6 +3,7 @@
 import Server from './http/server';
 import { Command } from 'commander';
 import packageJson from '../../package.json' assert { type: "json" };
+import scaner from './interface/scaner';
 
 const program = new Command();
 
@@ -14,6 +15,8 @@ program.command('lint')
     .description('Lint localization files')
     .action(() => {
         console.log('Linting localization files...');
+        const results = scaner.scanI18nStrings(['./src']);
+        scaner.saveI18nStringsToCacheFile(results);
     });
 
 program.command('gui')
