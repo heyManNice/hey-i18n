@@ -35,6 +35,10 @@ class ProjectInterface {
     public getWorkspacePath() {
         return this.workspacePath;
     }
+
+    public getI18nDir() {
+        return this.i18nDir;
+    }
 }
 
 export default new ProjectInterface();

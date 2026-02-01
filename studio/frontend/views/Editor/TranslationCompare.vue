@@ -37,6 +37,8 @@ import {
     ElButton
 } from 'element-plus';
 
+import backend from '../../rpc/backend';
+
 import {
     Filter,
     Search,
@@ -59,6 +61,12 @@ const resizeObserver = new ResizeObserver(entries => {
     // 表格大小的魔法数字
     tableWidth.value = width - 56;
     tableHeight.value = height - 142;
+});
+
+onMounted(async () => {
+    console.log(props.targetLocale);
+    const localAssets = await backend.assets.getI18nFile(props.targetLocale);
+    console.log(localAssets);
 });
 
 onMounted(() => {
