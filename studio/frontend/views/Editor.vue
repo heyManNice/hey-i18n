@@ -26,7 +26,7 @@ import {
 
 import { Document } from '@element-plus/icons-vue';
 
-import TranslationCompare from '../components/Editor/TranslationCompare.vue';
+import TranslationCompare from './Editor/TranslationCompare.vue';
 
 import bus from '../utils/bus';
 

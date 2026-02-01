@@ -45,7 +45,7 @@ import {
     Timer
 } from '@element-plus/icons-vue';
 
-import BarItem from '../components/SystemBar/BarItem.vue';
+import BarItem from './SystemBar/BarItem.vue';
 
 import mSystemBar from '../models/SystemBar';
 </script>
