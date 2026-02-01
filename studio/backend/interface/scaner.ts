@@ -86,6 +86,9 @@ class ScanerInterface {
     }
 
     public saveI18nStringsToCacheFile(scanResults: ReturnType<typeof this.scanI18nStrings>) {
+        if (scanResults.length === 0) {
+            throw new Error('No i18n strings found to save to cache file.');
+        }
         const cacheData = {
             metadata: {
                 timestamp: Date.now(),
