@@ -69,8 +69,50 @@ onMounted(async () => {
     const keyCache = await backend.scaner.getI18nStringsFromCacheFile();
     totalCount.value = keyCache.entries?.length || 0;
 
-    console.log(localAssets);
-    console.log(keyCache);
+    // 表格数据
+    const originalDataList: typeof originalData.value = [];
+
+    function merge(sourceTexts: string[], TargetTexts: string[]) {
+        let result = '';
+        for (let i = 0; i < sourceTexts.length; i++) {
+            result += sourceTexts[i];
+            if (i < TargetTexts.length) {
+                result += `{${TargetTexts[i]}}`;
+            }
+        }
+        return result;
+    }
+
+    // 遍历缓存的键列表，构建表格数据
+    for (const entry of keyCache.entries || []) {
+        const sourceTexts = entry.texts;
+        const sourceVariables = entry.variables || [];
+
+        const assetsKey = entry.texts.join('');
+        const targetEntry = localAssets[assetsKey];
+        if (!targetEntry) {
+            // 如果目标语言文件中没有该条目，使用空字符串作为译文
+            originalDataList.push({
+                key: merge(sourceTexts, sourceVariables),
+                translated: '',
+            });
+            continue;
+        }
+        const targetTexts = targetEntry.t || [];
+        const targetVariables = Array.from({
+            length: targetEntry.v?.length || 0
+        }, (_, i) => {
+            const currutVarIndex = targetEntry.v?.[i];
+            const variableName = sourceVariables[currutVarIndex || 0];
+            return variableName;
+        }) || [];
+
+        originalDataList.push({
+            key: merge(sourceTexts, sourceVariables),
+            translated: merge(targetTexts, targetVariables),
+        });
+    }
+    originalData.value = originalDataList;
 });
 
 onMounted(() => {
@@ -99,23 +141,11 @@ const totalCount = ref(0);
 const invalidKeysCount = ref(0);
 const editingCount = ref(0);
 
-const originalData = ref([
-    {
-        key: '你的名字是{name}, 今年{age}岁了。',
-        translated: 'Your name is {name}, and you are {age} years old.',
-    },
-    {
-        key: '测试数据',
-        translated: 'Test Data',
-    },
-    {
-        key: '总消费是{amount}元',
-        translated: 'The total expenditure is {amount} CNY',
-    },
-    {
-        key: '今天是{YYYY}年{MM}月{DD}日',
-        translated: 'Today is {DD}/{MM}/{YYYY}',
-    }
+const originalData = ref<{
+    key: string
+    translated: string
+}[]>([
+
 ]);
 
 const data = computed(() => {
@@ -258,6 +288,7 @@ const columns = computed<Column[]>(() => ([
 
 :deep(.custom-cell-renderer) {
     padding: 0 11px;
+    height: 32px;
     line-height: 32px;
     white-space: nowrap;
     overflow: hidden;
