@@ -27,7 +27,7 @@ program.command('lint')
         scaner.saveI18nStringsToCacheFile(results);
     });
 
-program.command('gui')
+program.command('gui', { isDefault: true })
     .description('Start the hey-i18n-studio GUI server')
     .option('-p, --port <number>', 'Port to run the server on', '3034')
     .option('-o, --open', 'Open the GUI in the default browser', false)
