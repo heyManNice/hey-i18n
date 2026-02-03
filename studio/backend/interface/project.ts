@@ -39,6 +39,20 @@ class ProjectInterface {
     public getI18nDir() {
         return this.i18nDir;
     }
+
+    // 检测当前项目是否是 vite 项目
+    public isViteProject() {
+        const packageJsonPath = path.join(this.workspacePath, 'package.json');
+        if (!fs.existsSync(packageJsonPath)) {
+            return false;
+        }
+        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+        const dependencies = {
+            ...packageJson.dependencies,
+            ...packageJson.devDependencies
+        };
+        return 'vite' in dependencies;
+    }
 }
 
 export default new ProjectInterface();
