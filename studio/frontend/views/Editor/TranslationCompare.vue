@@ -64,9 +64,13 @@ const resizeObserver = new ResizeObserver(entries => {
 });
 
 onMounted(async () => {
-    console.log(props.targetLocale);
     const localAssets = await backend.assets.getI18nFile(props.targetLocale);
+    translatedCount.value = Object.keys(localAssets).length;
+    const keyCache = await backend.scaner.getI18nStringsFromCacheFile();
+    totalCount.value = keyCache.entries?.length || 0;
+
     console.log(localAssets);
+    console.log(keyCache);
 });
 
 onMounted(() => {
@@ -90,8 +94,8 @@ const filterOptions = [
 const sourceSearch = ref('');
 const targetSearch = ref('');
 
-const translatedCount = ref(4);
-const totalCount = ref(4);
+const translatedCount = ref(0);
+const totalCount = ref(0);
 const invalidKeysCount = ref(0);
 const editingCount = ref(0);
 

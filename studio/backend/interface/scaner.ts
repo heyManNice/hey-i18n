@@ -97,6 +97,16 @@ class ScanerInterface {
             entries: scanResults
         };
         fs.writeFileSync(this.cacheFilePath, JSON.stringify(cacheData, null, 2), 'utf-8');
+        return cacheData;
+    }
+
+    // 获取缓存文件中的内容
+    public getI18nStringsFromCacheFile() {
+        if (!fs.existsSync(this.cacheFilePath)) {
+            throw new Error('Cache file does not exist.');
+        }
+        const cacheContent = fs.readFileSync(this.cacheFilePath, 'utf-8');
+        return JSON.parse(cacheContent) as ReturnType<typeof this.saveI18nStringsToCacheFile>;
     }
 }
 

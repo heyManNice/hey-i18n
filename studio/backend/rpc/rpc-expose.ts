@@ -1,11 +1,13 @@
 import project from '../interface/project.js';
 import config from '../interface/config.js';
 import assets from '../interface/assets.js';
+import scaner from '../interface/scaner.js';
 
 const backend = {
     project,
     config,
-    assets
+    assets,
+    scaner
 };
 
 type Asyncify<T> = {
