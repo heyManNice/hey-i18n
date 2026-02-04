@@ -170,6 +170,13 @@ const columns = computed<Column[]>(() => ([
     background-color: var(--input-disabled-bg-color) !important;
 }
 
+/**
+修复未知原因鼠标移入 headerCellRenderer 时，其中的搜索图标向上移动一点点的问题
+*/
+:deep(.el-input__icon) {
+    display: flex !important;
+}
+
 .summary-bar {
     display: flex;
     align-items: center;
