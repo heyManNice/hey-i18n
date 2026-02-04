@@ -107,8 +107,8 @@ const columns = computed<Column[]>(() => ([
         cellRenderer: ({ rowData }) => {
             return h(EditableCellRenderer, {
                 modelValue: rowData.translated,
+                sourceText: rowData.key,
                 'onUpdate:modelValue': (value: string) => {
-                    console.log(value);
                     rowData.translated = value;
                 }
             });
