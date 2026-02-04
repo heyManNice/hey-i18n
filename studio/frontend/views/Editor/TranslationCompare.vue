@@ -21,13 +21,13 @@
         <div class="editor-area" :style="{
             '--col-width': tableWidth / 2 + 'px'
         }">
-            <el-table-v2 :columns="columns" :data="data" :width="tableWidth" :height="tableHeight" fixed />
+            <el-table-v2 :columns="columns" :data="filteredData" :width="tableWidth" :height="tableHeight" fixed />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, h, onMounted, onUnmounted, computed, nextTick } from 'vue';
+import { ref, h, onMounted, computed, nextTick } from 'vue';
 import {
     ElTableV2,
     ElInput,
@@ -36,95 +36,50 @@ import {
     ElIcon,
     ElButton
 } from 'element-plus';
-
-import backend from '../../rpc/backend';
-
-import {
-    Filter,
-} from '@element-plus/icons-vue';
-
+import { Filter } from '@element-plus/icons-vue';
 import type { Column } from 'element-plus';
+
+import TargetHeaderCellRenderer from './TranslationCompare/TargetHeaderCellRenderer.vue';
+import SourceHeaderCellRenderer from './TranslationCompare/SourceHeaderCellRenderer.vue';
+
+import { useElementResize } from '../../composables/useElementResize';
+import { useTranslationData } from './TranslationCompare/useTranslationData';
+import { splitTextWithPlaceholders } from '../../utils/textUtils';
 
 const props = defineProps<{
     targetLocale: string;
 }>();
 
+// --- Resize Logic ---
 const tableWidth = ref(1000);
 const tableHeight = ref(400);
 
-const resizeObserver = new ResizeObserver(entries => {
-    const entry = entries[0];
+useElementResize('.app-editor-panel', (entry) => {
     const width = entry.contentRect.width;
     const height = entry.contentRect.height;
-
-    // 表格大小的魔法数字
+    // Magic numbers from original code
     tableWidth.value = width - 56;
     tableHeight.value = height - 142;
 });
 
-onMounted(async () => {
-    const localAssets = await backend.assets.getI18nFile(props.targetLocale);
-    translatedCount.value = Object.keys(localAssets).length;
-    const keyCache = await backend.scaner.getI18nStringsFromCacheFile();
-    totalCount.value = keyCache.entries?.length || 0;
-
-    // 表格数据
-    const originalDataList: typeof originalData.value = [];
-
-    function merge(sourceTexts: string[], TargetTexts: string[]) {
-        let result = '';
-        for (let i = 0; i < sourceTexts.length; i++) {
-            result += sourceTexts[i];
-            if (i < TargetTexts.length) {
-                result += `{${TargetTexts[i]}}`;
-            }
-        }
-        return result;
-    }
-
-    // 遍历缓存的键列表，构建表格数据
-    for (const entry of keyCache.entries || []) {
-        const sourceTexts = entry.texts;
-        const sourceVariables = entry.variables || [];
-
-        const assetsKey = entry.texts.join('');
-        const targetEntry = localAssets[assetsKey];
-        if (!targetEntry) {
-            // 如果目标语言文件中没有该条目，使用空字符串作为译文
-            originalDataList.push({
-                key: merge(sourceTexts, sourceVariables),
-                translated: '',
-            });
-            continue;
-        }
-        const targetTexts = targetEntry.t || [];
-        const targetVariables = Array.from({
-            length: targetEntry.v?.length || 0
-        }, (_, i) => {
-            const currutVarIndex = targetEntry.v?.[i];
-            const variableName = sourceVariables[currutVarIndex || 0];
-            return variableName;
-        }) || [];
-
-        originalDataList.push({
-            key: merge(sourceTexts, sourceVariables),
-            translated: merge(targetTexts, targetVariables),
-        });
-    }
-    originalData.value = originalDataList;
-});
+// --- Data Logic ---
+const {
+    originalData,
+    filteredData,
+    loadData,
+    translatedCount,
+    totalCount,
+    invalidKeysCount,
+    editingCount,
+    filterOption,
+    sourceSearch,
+    targetSearch
+} = useTranslationData(props.targetLocale);
 
 onMounted(() => {
-    const containerRef = document.querySelector('.app-editor-panel')
-    if (containerRef) {
-        resizeObserver.observe(containerRef);
-    }
-});
-onUnmounted(() => {
-    resizeObserver.disconnect();
+    loadData();
 });
 
-const filterOption = ref('all');
 const filterOptions = [
     { value: 'all', label: '全部' },
     { value: 'untranslated', label: '未翻译' },
@@ -132,43 +87,18 @@ const filterOptions = [
     { value: 'editing', label: '正在修改' },
 ];
 
-const sourceSearch = ref('');
-const targetSearch = ref('');
-
-const translatedCount = ref(0);
-const totalCount = ref(0);
-const invalidKeysCount = ref(0);
-const editingCount = ref(0);
-
-const originalData = ref<{
-    key: string
-    translated: string
-}[]>([
-
-]);
-
-const data = computed(() => {
-    return originalData.value.filter(item => {
-        const sourceMatch = item.key.toLowerCase().includes(sourceSearch.value.toLowerCase());
-        const targetMatch = item.translated.toLowerCase().includes(targetSearch.value.toLowerCase());
-        return sourceMatch && targetMatch;
-    });
-});
-
+// --- Table Logic ---
 const editingRowIndex = ref<number | null>(null);
 
 const renderCell = (text: string) => {
-    const parts = text.split(/({[^}]+})/g).filter(p => p);
+    const parts = splitTextWithPlaceholders(text);
     return h('div', { class: 'custom-cell-renderer' }, parts.map(part => {
-        if (part.startsWith('{') && part.endsWith('}')) {
-            return h('span', { class: 'placeholder' }, part);
+        if (part.type === 'placeholder') {
+            return h('span', { class: 'placeholder' }, part.content);
         }
-        return h('span', part);
+        return h('span', part.content);
     }));
 };
-
-import TargetHeaderCellRenderer from './TranslationCompare/TargetHeaderCellRenderer.vue';
-import SourceHeaderCellRenderer from './TranslationCompare/SourceHeaderCellRenderer.vue';
 
 const columns = computed<Column[]>(() => ([
     {
