@@ -146,7 +146,7 @@ const updateSuggestionPosition = () => {
 
         // Use fixed positioning
         suggestionStyle.value = {
-            top: `${rect.bottom + 5}px`,
+            top: `${rect.bottom + 7}px`,
             left: `${rect.left}px`,
         };
     }
@@ -281,7 +281,7 @@ const insertVariable = (variableName: string) => {
 .suggestions-list {
     position: fixed;
     z-index: 9999;
-    background: var(--bg-color-overlay, #fff);
+    background: var(--panel-bg-color);
     border: 1px solid var(--border-color);
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
     border-radius: 4px;
