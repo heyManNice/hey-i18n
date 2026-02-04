@@ -4,7 +4,7 @@ import project from './project';
 
 import type { MessageValue } from '../../../src/hey-i18n/locales';
 
-class AssetsInterface {
+class AssetsService {
     private assetsPath: string;
     constructor() {
         this.assetsPath = path.join(project.getWorkspacePath(), project.getI18nDir());
@@ -21,4 +21,4 @@ class AssetsInterface {
 }
 
 
-export default new AssetsInterface();
+export default new AssetsService();

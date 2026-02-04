@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 
-class ProjectInterface {
+class ProjectService {
     private workspacePath: string;
     private projectName: string;
     private i18nDir: string;
@@ -24,7 +24,7 @@ class ProjectInterface {
         return fs.readdirSync(i18nPath).filter(file => file.endsWith('.json'));
     }
 
-    public addI18nFile(filename: `${string}.json`) {
+    public addI18nFile(filename: string) {
         const filePath = path.join(this.workspacePath, this.i18nDir, filename);
         if (fs.existsSync(filePath)) {
             throw new Error(`File ${filename} already exists.`);
@@ -55,4 +55,4 @@ class ProjectInterface {
     }
 }
 
-export default new ProjectInterface();
+export default new ProjectService();

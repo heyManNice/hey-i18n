@@ -26,11 +26,10 @@ export function useTranslationData(targetLocale: string) {
     const targetSearch = ref('');
 
     const loadData = async () => {
-        const localAssets = await backend.assets.getI18nFile(targetLocale);
+        const { localAssets, keyCache } = await backend.editor.getAssetsAndCache(targetLocale);
+
         const keys = Object.keys(localAssets);
         translatedCount.value = keys.length;
-
-        const keyCache = await backend.scaner.getI18nStringsFromCacheFile();
         totalCount.value = keyCache.entries?.length || 0;
 
         const originalDataList: TranslationItem[] = [];

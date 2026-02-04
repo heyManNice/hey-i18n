@@ -5,9 +5,9 @@ import { Command } from 'commander';
 
 // 编译时的版本号
 import packageJson from '../../package.json' assert { type: "json" };
-import scaner from './interface/scaner';
+import scaner from './services/scaner';
 
-import project from './interface/project';
+import project from './services/project';
 
 const program = new Command();
 

@@ -2,7 +2,7 @@ import project from "./project";
 import path from "path";
 import fs from "fs";
 
-class ConfigInterface {
+class ConfigService {
     private configFilePath: string;
     constructor() {
         this.configFilePath = path.join(project.getWorkspacePath(), 'i18n', '.hey-i18n-config');
@@ -25,4 +25,4 @@ class ConfigInterface {
 }
 
 
-export default new ConfigInterface();
+export default new ConfigService();

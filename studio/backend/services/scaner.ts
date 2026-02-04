@@ -55,7 +55,7 @@ function matchI18nStringsInFile(filePath: string) {
     return results;
 }
 
-class ScanerInterface {
+class ScanerService {
     private cacheFilePath: string;
     constructor() {
         this.cacheFilePath = path.join(
@@ -110,4 +110,4 @@ class ScanerInterface {
     }
 }
 
-export default new ScanerInterface();
+export default new ScanerService();

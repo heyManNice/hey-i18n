@@ -49,10 +49,7 @@ import bus from '../utils/bus';
 onMounted(updateTreeData);
 
 async function updateTreeData() {
-    const info = await backend.project.listProjectInfo();
-    const files = await backend.project.listI18nFiles();
-    const config = await backend.config.getConfig();
-
+    const { info, files, config } = await backend.explorer.getTreeData();
 
     if (files.length === 0) {
         return;
@@ -76,7 +73,7 @@ async function addLanguageFile() {
     }
 
     try {
-        await backend.project.addI18nFile(`${filename}.json`);
+        await backend.explorer.addI18nFile(`${filename}.json`);
 
     } catch (error) {
         if (!(error instanceof Error)) {

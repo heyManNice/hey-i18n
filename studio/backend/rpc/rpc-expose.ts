@@ -1,13 +1,9 @@
-import project from '../interface/project.js';
-import config from '../interface/config.js';
-import assets from '../interface/assets.js';
-import scaner from '../interface/scaner.js';
+import * as explorer from '../interface/explorer';
+import * as editor from '../interface/editor';
 
 const backend = {
-    project,
-    config,
-    assets,
-    scaner
+    explorer,
+    editor
 };
 
 type Asyncify<T> = {
