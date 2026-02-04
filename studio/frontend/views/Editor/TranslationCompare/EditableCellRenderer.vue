@@ -5,10 +5,15 @@
 
         <Teleport to="body">
             <ul v-if="showSuggestions" class="suggestions-list" :style="suggestionStyle">
-                <li v-for="(v, index) in filteredVariables" :key="v"
-                    :class="{ active: index === activeSuggestionIndex }" @mousedown.prevent="insertVariable(v)">
-                    {{ '{' + v + '}' }}
-                </li>
+                <template v-if="filteredVariables.length > 0">
+                    <li v-for="(v, index) in filteredVariables" :key="v"
+                        :class="{ active: index === activeSuggestionIndex }" @mousedown.prevent="insertVariable(v)">
+                        <span class="placeholder">
+                            {{ '{' + v + '}' }}
+                        </span>
+                    </li>
+                </template>
+                <li v-else class="no-suggestions">未匹配到变量</li>
             </ul>
         </Teleport>
     </div>
@@ -155,6 +160,10 @@ const onBlur = () => {
 
 const onKeydown = (e: KeyboardEvent) => {
     if (showSuggestions.value) {
+        if (filteredVariables.value.length === 0 && ['ArrowDown', 'ArrowUp', 'Enter'].includes(e.key)) {
+            e.preventDefault();
+            return;
+        }
         if (e.key === 'ArrowDown') {
             e.preventDefault();
             activeSuggestionIndex.value = (activeSuggestionIndex.value + 1) % filteredVariables.value.length;
@@ -285,7 +294,7 @@ const insertVariable = (variableName: string) => {
 }
 
 .suggestions-list li {
-    padding: 8px 12px;
+    padding: 5px;
     cursor: pointer;
     font-size: 14px;
     color: var(--text-color);
@@ -295,5 +304,12 @@ const insertVariable = (variableName: string) => {
 .suggestions-list li.active {
     background-color: var(--el-color-primary-light-9);
     color: var(--el-color-primary);
+}
+
+.no-suggestions {
+    padding: 8px 12px;
+    font-size: 14px;
+    color: var(--text-color-secondary, #909399);
+    cursor: default;
 }
 </style>
