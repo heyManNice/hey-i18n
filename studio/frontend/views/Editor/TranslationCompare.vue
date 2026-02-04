@@ -27,10 +27,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, h, onMounted, computed, nextTick } from 'vue';
+import { ref, h, onMounted, computed } from 'vue';
 import {
     ElTableV2,
-    ElInput,
     ElSelect,
     ElOption,
     ElIcon,
@@ -41,10 +40,11 @@ import type { Column } from 'element-plus';
 
 import TargetHeaderCellRenderer from './TranslationCompare/TargetHeaderCellRenderer.vue';
 import SourceHeaderCellRenderer from './TranslationCompare/SourceHeaderCellRenderer.vue';
+import TextCellRenderer from './TranslationCompare/TextCellRenderer.vue';
+import EditableCellRenderer from './TranslationCompare/EditableCellRenderer.vue';
 
 import { useElementResize } from '../../composables/useElementResize';
 import { useTranslationData } from './TranslationCompare/useTranslationData';
-import { splitTextWithPlaceholders } from '../../utils/textUtils';
 
 const props = defineProps<{
     targetLocale: string;
@@ -90,20 +90,15 @@ const filterOptions = [
 // --- Table Logic ---
 const editingRowIndex = ref<number | null>(null);
 
-const renderCell = (text: string) => {
-    const parts = splitTextWithPlaceholders(text);
-    return h('div', { class: 'custom-cell-renderer' }, parts.map(part => {
-        if (part.type === 'placeholder') {
-            return h('span', { class: 'placeholder' }, part.content);
-        }
-        return h('span', part.content);
-    }));
-};
-
 const columns = computed<Column[]>(() => ([
     {
         width: tableWidth.value / 2 - 2,
-        cellRenderer: ({ rowData }) => renderCell(rowData.key),
+        cellRenderer: ({ rowData }) => h(TextCellRenderer, {
+            text: rowData.key,
+            style: {
+                cursor: 'not-allowed'
+            }
+        }),
         headerCellRenderer: () => h(SourceHeaderCellRenderer, {
             modelValue: sourceSearch.value,
             'onUpdate:modelValue': (value: string) => {
@@ -114,38 +109,23 @@ const columns = computed<Column[]>(() => ([
     {
         width: tableWidth.value / 2,
         cellRenderer: ({ rowData, rowIndex }) => {
-            if (editingRowIndex.value === rowIndex) {
-                // 模式二：可编辑的输入框
-                return h(ElInput, {
-                    modelValue: rowData.translated,
-                    'onUpdate:modelValue': (value) => {
-                        const originalIndex = originalData.value.findIndex(item => item.key === rowData.key);
-                        if (originalIndex !== -1) {
-                            originalData.value[originalIndex].translated = value;
-                        }
-                    },
-                    // 当输入框失去焦点时，退出编辑模式
-                    onBlur: () => {
-                        editingRowIndex.value = null;
-                    },
-                    // 自动聚焦
-                    onVnodeMounted: (vnode) => {
-                        nextTick(() => {
-                            vnode.component?.exposed?.focus();
-                        });
-                    },
-                });
-            } else {
-                // 模式一：只读的高亮视图
-                const readOnlyNode = renderCell(rowData.translated);
-                // 添加点击事件，进入编辑模式
-                readOnlyNode.props = readOnlyNode.props || {};
-                readOnlyNode.props.onClick = () => {
+            return h(EditableCellRenderer, {
+                modelValue: rowData.translated,
+                isEditing: editingRowIndex.value === rowIndex,
+                'onUpdate:modelValue': (value: string) => {
+                    // Update original data directly
+                    const originalIndex = originalData.value.findIndex(item => item.key === rowData.key);
+                    if (originalIndex !== -1) {
+                        originalData.value[originalIndex].translated = value;
+                    }
+                },
+                onEditStart: () => {
                     editingRowIndex.value = rowIndex;
-                };
-                readOnlyNode.props.style = { cursor: 'pointer' };
-                return readOnlyNode;
-            }
+                },
+                onEditEnd: () => {
+                    editingRowIndex.value = null;
+                }
+            });
         },
         headerCellRenderer: () => h(TargetHeaderCellRenderer, {
             modelValue: targetSearch.value,
@@ -154,7 +134,7 @@ const columns = computed<Column[]>(() => ([
             },
         }),
     },
-]))
+]));
 </script>
 
 <style scoped>
@@ -202,29 +182,6 @@ const columns = computed<Column[]>(() => ([
 
 :deep(.el-input.is-disabled .el-input__wrapper) {
     background-color: var(--input-disabled-bg-color) !important;
-}
-
-
-:deep(.custom-cell-renderer) {
-    padding: 0 11px;
-    height: 32px;
-    line-height: 32px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    cursor: not-allowed;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    width: calc(var(--col-width) - 10px);
-}
-
-:deep(.placeholder) {
-    background-color: var(--el-color-primary-light-8);
-    color: var(--el-color-primary);
-    border-radius: 4px;
-    padding: 2px 5px;
-    margin: 0 2px;
-    font-weight: bold;
 }
 
 .summary-bar {
