@@ -88,4 +88,11 @@ const removeTab = (targetName: TabPaneName) => {
     align-items: center;
     gap: 5px;
 }
+
+/* 移除 Tab 切换动画，使其感觉更灵敏 */
+:deep(.el-tabs__item),
+:deep(.el-tabs__active-bar),
+:deep(.el-tabs__nav-wrap) {
+    transition: none !important;
+}
 </style>
