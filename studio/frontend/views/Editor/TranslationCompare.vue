@@ -41,7 +41,6 @@ import backend from '../../rpc/backend';
 
 import {
     Filter,
-    Search,
 } from '@element-plus/icons-vue';
 
 import type { Column } from 'element-plus';
@@ -168,23 +167,19 @@ const renderCell = (text: string) => {
     }));
 };
 
+import TargetHeaderCellRenderer from './TranslationCompare/TargetHeaderCellRenderer.vue';
+import SourceHeaderCellRenderer from './TranslationCompare/SourceHeaderCellRenderer.vue';
 
 const columns = computed<Column[]>(() => ([
     {
         width: tableWidth.value / 2 - 2,
         cellRenderer: ({ rowData }) => renderCell(rowData.key),
-        headerCellRenderer: () => h('div', { class: 'custom-header' }, [
-            h('span', '项目原文 (zh-CN)'),
-            h(ElInput, {
-                modelValue: sourceSearch.value,
-                'onUpdate:modelValue': (val) => sourceSearch.value = val,
-                placeholder: '搜索原文',
-                class: 'header-search-input',
-                prefixIcon: Search,
-                clearable: true,
-                size: 'small',
-            })
-        ]),
+        headerCellRenderer: () => h(SourceHeaderCellRenderer, {
+            modelValue: sourceSearch.value,
+            'onUpdate:modelValue': (value: string) => {
+                sourceSearch.value = value;
+            },
+        }),
     },
     {
         width: tableWidth.value / 2,
@@ -222,18 +217,12 @@ const columns = computed<Column[]>(() => ([
                 return readOnlyNode;
             }
         },
-        headerCellRenderer: () => h('div', { class: 'custom-header' }, [
-            h('span', `目标 (en-US)`),
-            h(ElInput, {
-                modelValue: targetSearch.value,
-                'onUpdate:modelValue': (val) => targetSearch.value = val,
-                placeholder: '搜索译文',
-                class: 'header-search-input',
-                prefixIcon: Search,
-                clearable: true,
-                size: 'small',
-            })
-        ]),
+        headerCellRenderer: () => h(TargetHeaderCellRenderer, {
+            modelValue: targetSearch.value,
+            'onUpdate:modelValue': (value: string) => {
+                targetSearch.value = value;
+            },
+        }),
     },
 ]))
 </script>
@@ -306,21 +295,6 @@ const columns = computed<Column[]>(() => ([
     padding: 2px 5px;
     margin: 0 2px;
     font-weight: bold;
-}
-
-:deep(.el-input__inner) {
-    font-size: 15px;
-}
-
-:deep(.custom-header) {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 0 10px;
-}
-
-:deep(.custom-header > span) {
-    white-space: nowrap;
 }
 
 .summary-bar {
