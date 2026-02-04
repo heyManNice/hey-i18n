@@ -51,8 +51,8 @@ const props = defineProps<{
 }>();
 
 // --- Resize Logic ---
-const tableWidth = ref(1000);
-const tableHeight = ref(400);
+const tableWidth = ref(0);
+const tableHeight = ref(0);
 
 useElementResize('.app-editor-panel', (entry) => {
     const width = entry.contentRect.width;
@@ -64,7 +64,6 @@ useElementResize('.app-editor-panel', (entry) => {
 
 // --- Data Logic ---
 const {
-    originalData,
     filteredData,
     loadData,
     translatedCount,
@@ -87,9 +86,6 @@ const filterOptions = [
     { value: 'editing', label: '正在修改' },
 ];
 
-// --- Table Logic ---
-const editingRowIndex = ref<number | null>(null);
-
 const columns = computed<Column[]>(() => ([
     {
         width: tableWidth.value / 2 - 2,
@@ -108,22 +104,12 @@ const columns = computed<Column[]>(() => ([
     },
     {
         width: tableWidth.value / 2,
-        cellRenderer: ({ rowData, rowIndex }) => {
+        cellRenderer: ({ rowData }) => {
             return h(EditableCellRenderer, {
                 modelValue: rowData.translated,
-                isEditing: editingRowIndex.value === rowIndex,
                 'onUpdate:modelValue': (value: string) => {
-                    // Update original data directly
-                    const originalIndex = originalData.value.findIndex(item => item.key === rowData.key);
-                    if (originalIndex !== -1) {
-                        originalData.value[originalIndex].translated = value;
-                    }
-                },
-                onEditStart: () => {
-                    editingRowIndex.value = rowIndex;
-                },
-                onEditEnd: () => {
-                    editingRowIndex.value = null;
+                    console.log(value);
+                    rowData.translated = value;
                 }
             });
         },

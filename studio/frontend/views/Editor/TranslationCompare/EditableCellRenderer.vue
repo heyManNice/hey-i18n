@@ -6,53 +6,40 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick } from 'vue';
+import { ref, nextTick, onMounted, watch } from 'vue';
 import { ElInput } from 'element-plus';
 import TextCellRenderer from './TextCellRenderer.vue';
 
 const props = defineProps<{
     modelValue: string;
-    isEditing: boolean;
 }>();
+
+const isEditing = ref(false);
+const internalValue = ref(props.modelValue);
+
+onMounted(() => {
+    internalValue.value = props.modelValue;
+});
 
 const emit = defineEmits<{
     (e: 'update:modelValue', value: string): void;
-    (e: 'edit-start'): void;
-    (e: 'edit-end'): void;
 }>();
 
-const internalValue = ref(props.modelValue);
 const inputRef = ref<InstanceType<typeof ElInput> | null>(null);
 
-watch(() => props.modelValue, (newValue) => {
-    internalValue.value = newValue;
-});
-
-
-
-// Auto focus when entering edit mode
-watch(() => props.isEditing, (isEditing) => {
-    if (isEditing) {
-        internalValue.value = props.modelValue;
-        nextTick(() => {
-            inputRef.value?.focus();
-        });
-    }
-});
-
-// Watch internal value changes to emit updates
 watch(internalValue, (newValue) => {
-    if (newValue !== props.modelValue) {
-        emit('update:modelValue', newValue);
-    }
+    emit('update:modelValue', newValue);
 });
 
 const handleClick = () => {
-    emit('edit-start');
+    isEditing.value = true;
+    nextTick(() => {
+        inputRef.value?.focus();
+    });
 };
 
 const handleBlur = () => {
-    emit('edit-end');
+    isEditing.value = false;
 };
 </script>
 
