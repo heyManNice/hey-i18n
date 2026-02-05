@@ -2,7 +2,8 @@
     <div class="editable-cell-renderer" @click.stop>
         <div style="flex: 1;" ref="editorRef" class="editor-content" :contenteditable="true" spellcheck="false"
             @input="onInput" @keydown="onKeydown" @blur="onBlur"></div>
-        <el-button :icon="FullScreen" circle />
+        <el-button :icon="ArrowLeft" circle title="高级选项" />
+        <el-button style="margin-left: 0px;" :icon="FullScreen" circle title="全屏编辑" />
         <Teleport to="body">
             <ul v-if="showSuggestions" class="suggestions-list" :style="suggestionStyle">
                 <template v-if="filteredVariables.length > 0">
@@ -22,7 +23,7 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { splitTextWithPlaceholders } from '../../../utils/textUtils';
 
-import { FullScreen } from '@element-plus/icons-vue';
+import { FullScreen, ArrowLeft } from '@element-plus/icons-vue';
 import { ElButton } from 'element-plus';
 
 const props = defineProps<{

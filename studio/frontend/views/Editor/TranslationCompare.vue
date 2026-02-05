@@ -21,7 +21,7 @@
         <div class="editor-area">
             <div style="position: absolute; width: 100%;">
                 <el-table :data="filteredData">
-                    <el-table-column>
+                    <el-table-column min-width="45">
                         <template #header>
                             <SourceHeaderCellRenderer :model-value="sourceSearch"
                                 @update:modelValue="value => { sourceSearch = value; }" />
@@ -32,7 +32,7 @@
                             }" />
                         </template>
                     </el-table-column>
-                    <el-table-column>
+                    <el-table-column min-width="55">
                         <template #header>
                             <TargetHeaderCellRenderer :model-value="targetSearch"
                                 @update:modelValue="value => { targetSearch = value; }" />
@@ -127,6 +127,7 @@ const filterOptions = [
     padding: 5px 10px;
     border-bottom: 1px solid var(--border-color);
     font-size: 14px;
+    min-width: 550px;
 }
 
 .filter {
