@@ -1,8 +1,8 @@
 <template>
     <div class="editable-cell-renderer" @click.stop>
-        <div ref="editorRef" class="editor-content" :contenteditable="true" spellcheck="false" @input="onInput"
-            @keydown="onKeydown" @blur="onBlur"></div>
-
+        <div style="flex: 1;" ref="editorRef" class="editor-content" :contenteditable="true" spellcheck="false"
+            @input="onInput" @keydown="onKeydown" @blur="onBlur"></div>
+        <el-button :icon="FullScreen" circle />
         <Teleport to="body">
             <ul v-if="showSuggestions" class="suggestions-list" :style="suggestionStyle">
                 <template v-if="filteredVariables.length > 0">
@@ -18,10 +18,12 @@
         </Teleport>
     </div>
 </template>
-
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { splitTextWithPlaceholders } from '../../../utils/textUtils';
+
+import { FullScreen } from '@element-plus/icons-vue';
+import { ElButton } from 'element-plus';
 
 const props = defineProps<{
     modelValue: string;
@@ -230,6 +232,8 @@ const insertVariable = (variableName: string) => {
 .editable-cell-renderer {
     position: relative;
     width: calc(var(--col-width) - 10px);
+    display: flex;
+    gap: 10px;
 }
 
 .editor-content {
