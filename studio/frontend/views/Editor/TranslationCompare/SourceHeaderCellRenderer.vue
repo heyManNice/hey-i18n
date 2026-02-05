@@ -1,8 +1,8 @@
 <template>
     <div>
         <span>项目原文 (zh-CN)</span>
-        <ElInput :model-value="modelValue" :placeholder="`搜索原文`" :prefix-icon="Search" clearable size="small"
-            @update:modelValue="(value: string) => { emits('update:modelValue', value) }" />
+        <ElInput style="width: 200px;" :model-value="modelValue" :placeholder="`搜索原文`" :prefix-icon="Search" clearable
+            size="small" @update:modelValue="(value: string) => { emits('update:modelValue', value) }" />
     </div>
 </template>
 

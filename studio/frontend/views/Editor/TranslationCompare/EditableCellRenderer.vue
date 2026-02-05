@@ -242,7 +242,7 @@ const insertVariable = (variableName: string) => {
     overflow-x: auto;
     overflow-y: hidden;
     outline: none;
-    line-height: 28px;
+    line-height: 24px;
     /* Fit in 32px roughly */
     font-size: 14px;
     color: var(--text-color);
