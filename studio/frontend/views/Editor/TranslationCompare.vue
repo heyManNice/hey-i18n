@@ -27,9 +27,7 @@
                                 @update:modelValue="value => { sourceSearch = value; }" />
                         </template>
                         <template #default="scope">
-                            <TextCellRenderer :text="scope.row.key" :style="{
-                                cursor: 'not-allowed'
-                            }" />
+                            <TextCellRenderer :text="scope.row.untranslated" style="cursor: not-allowed;" />
                         </template>
                     </el-table-column>
                     <el-table-column min-width="55">
@@ -38,7 +36,8 @@
                                 @update:modelValue="value => { targetSearch = value; }" />
                         </template>
                         <template #default="scope">
-                            <EditableCellRenderer :model-value="scope.row.translated" :source-text="scope.row.key"
+                            <EditableCellRenderer :model-value="scope.row.translated"
+                                :source-text="scope.row.untranslated"
                                 @update:modelValue="value => { scope.row.translated = value; }" />
                         </template>
                     </el-table-column>
@@ -49,7 +48,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import {
+    onMounted
+} from 'vue';
 import {
     ElTable,
     ElTableColumn,
@@ -68,7 +69,7 @@ import EditableCellRenderer from './TranslationCompare/EditableCellRenderer.vue'
 import { useTranslationData } from './TranslationCompare/useTranslationData';
 
 const props = defineProps<{
-    targetLocale: string;
+    filename: string;
 }>();
 
 
@@ -82,7 +83,7 @@ const {
     filterOption,
     sourceSearch,
     targetSearch
-} = useTranslationData(props.targetLocale);
+} = useTranslationData(props.filename);
 
 onMounted(() => {
     loadData();

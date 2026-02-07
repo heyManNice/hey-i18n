@@ -1,16 +1,16 @@
 <template>
     <el-tabs v-model="currentTabLable" type="border-card" closable
         style="flex: 1;background-color: var(--panel-bg-color);" @tab-remove="removeTab">
-        <el-tab-pane v-for="item in tabs" :key="item.lable" :label="item.lable" :name="item.lable">
+        <el-tab-pane v-for="item in tabs" :key="item.filename" :label="item.filename" :name="item.filename">
             <template #label>
                 <span class="tab-label">
                     <el-icon>
                         <Document />
                     </el-icon>
-                    <span>{{ item.lable }}</span>
+                    <span>{{ item.filename }}</span>
                 </span>
             </template>
-            <TranslationCompare :target-locale="currentTabLable" />
+            <TranslationCompare :filename="currentTabLable" />
         </el-tab-pane>
     </el-tabs>
 </template>
@@ -33,32 +33,32 @@ import bus from '../utils/bus';
 
 // Tab数据值
 const tabs = ref<{
-    lable: string
+    filename: string
 }[]>([]);
 
 // 当前编辑的 Tab 标签
 const currentTabLable = ref('');
 
 bus.on('editor-add-tab', ({ filename }) => {
-    const existingTab = tabs.value.find(tab => tab.lable === filename);
+    const existingTab = tabs.value.find(tab => tab.filename === filename);
     if (existingTab) {
-        currentTabLable.value = existingTab.lable;
+        currentTabLable.value = existingTab.filename;
         return;
     }
     tabs.value.push({
-        lable: filename
+        filename: filename
     });
     currentTabLable.value = filename;
 });
 
 // 删除标签
-function removeTab(targetName: TabPaneName) {
-    const index = tabs.value.findIndex(tab => tab.lable === targetName);
+function removeTab(filename: TabPaneName) {
+    const index = tabs.value.findIndex(tab => tab.filename === filename);
     if (index !== -1) {
         tabs.value.splice(index, 1);
         // 如果删除的是当前标签，切换到第一个标签
-        if (currentTabLable.value === targetName) {
-            currentTabLable.value = tabs.value.length > 0 ? tabs.value[0].lable : '';
+        if (currentTabLable.value === filename) {
+            currentTabLable.value = tabs.value.length > 0 ? tabs.value[0].filename : '';
         }
     }
 }

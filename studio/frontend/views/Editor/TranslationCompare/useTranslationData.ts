@@ -3,7 +3,7 @@ import backend from '../../../rpc/backend';
 import { mergeTextAndVariables } from '../../../utils/textUtils';
 
 export interface TranslationItem {
-    key: string;
+    untranslated: string;
     translated: string;
 }
 
@@ -13,7 +13,7 @@ export interface FilterOptions {
     targetSearch: Ref<string>;
 }
 
-export function useTranslationData(targetLocale: string) {
+export function useTranslationData(filename: string) {
     const originalData = ref<TranslationItem[]>([]);
 
     const translatedCount = ref(0);
@@ -26,7 +26,7 @@ export function useTranslationData(targetLocale: string) {
     const targetSearch = ref('');
 
     const loadData = async () => {
-        const { localAssets, keyCache } = await backend.editor.getAssetsAndCache(targetLocale);
+        const { localAssets, keyCache } = await backend.editor.getAssetsAndCache(filename);
 
         const keys = Object.keys(localAssets);
         translatedCount.value = keys.length;
@@ -45,7 +45,7 @@ export function useTranslationData(targetLocale: string) {
             if (!targetEntry) {
                 // 如果目标语言文件中没有该条目，使用空字符串作为译文
                 originalDataList.push({
-                    key: mergeTextAndVariables(sourceTexts, sourceVariables),
+                    untranslated: mergeTextAndVariables(sourceTexts, sourceVariables),
                     translated: '',
                 });
                 continue;
@@ -61,7 +61,7 @@ export function useTranslationData(targetLocale: string) {
             }) || [];
 
             originalDataList.push({
-                key: mergeTextAndVariables(sourceTexts, sourceVariables),
+                untranslated: mergeTextAndVariables(sourceTexts, sourceVariables),
                 translated: mergeTextAndVariables(targetTexts, targetVariables),
             });
         }
@@ -71,7 +71,7 @@ export function useTranslationData(targetLocale: string) {
     const filteredData = computed(() => {
         return originalData.value.filter(item => {
             // Apply text search
-            const sourceMatch = item.key.toLowerCase().includes(sourceSearch.value.toLowerCase());
+            const sourceMatch = item.untranslated.toLowerCase().includes(sourceSearch.value.toLowerCase());
             const targetMatch = item.translated.toLowerCase().includes(targetSearch.value.toLowerCase());
 
             if (!sourceMatch || !targetMatch) return false;
