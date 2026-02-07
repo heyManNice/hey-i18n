@@ -1,89 +1,72 @@
 <template>
-    <el-tabs v-model="editableTabsValue" type="border-card" closable @tab-remove="removeTab"
-        style="flex: 1;background-color: var(--panel-bg-color);">
-        <el-tab-pane v-for="item in editableTabs" :key="item.name" :label="item.title" :name="item.name">
+    <el-tabs v-model="currentTabLable" type="border-card" closable
+        style="flex: 1;background-color: var(--panel-bg-color);" @tab-remove="removeTab">
+        <el-tab-pane v-for="item in tabs" :key="item.lable" :label="item.lable" :name="item.lable">
             <template #label>
-                <span class="custom-tab-label">
+                <span class="tab-label">
                     <el-icon>
                         <Document />
                     </el-icon>
-                    <span>{{ item.title }}</span>
+                    <span>{{ item.lable }}</span>
                 </span>
             </template>
-            <TranslationCompare :target-locale="editableTabsTitle" />
+            <TranslationCompare :target-locale="currentTabLable" />
         </el-tab-pane>
     </el-tabs>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import {
+    ref
+} from 'vue';
 import {
     ElTabs,
     ElTabPane,
     ElIcon,
     type TabPaneName
 } from 'element-plus';
-
-import { Document } from '@element-plus/icons-vue';
-
+import {
+    Document
+} from '@element-plus/icons-vue';
 import TranslationCompare from './Editor/TranslationCompare.vue';
-
 import bus from '../utils/bus';
 
-const editableTabsValue = ref('1');
-const editableTabsTitle = computed(() => {
-    const currentTab = editableTabs.value.find(tab => tab.name === editableTabsValue.value);
-    return currentTab ? currentTab.title : 'null';
-});
-const editableTabs = ref([
-    {
-        title: 'en-US.json',
-        name: '1',
-    }
-]);
+// Tab数据值
+const tabs = ref<{
+    lable: string
+}[]>([]);
+
+// 当前编辑的 Tab 标签
+const currentTabLable = ref('');
 
 bus.on('editor-add-tab', ({ filename }) => {
-    addTab(filename);
-});
-
-let tabIndex = 1;
-
-const addTab = (targetName: string) => {
-    // 重复的不添加，并且聚焦
-    const existingTab = editableTabs.value.find(tab => tab.title === targetName);
+    const existingTab = tabs.value.find(tab => tab.lable === filename);
     if (existingTab) {
-        editableTabsValue.value = existingTab.name;
+        currentTabLable.value = existingTab.lable;
         return;
     }
-    const newTabName = `${++tabIndex}`;
-    editableTabs.value.push({
-        title: targetName,
-        name: newTabName,
+    tabs.value.push({
+        lable: filename
     });
-    editableTabsValue.value = newTabName;
-};
+    currentTabLable.value = filename;
+});
 
-const removeTab = (targetName: TabPaneName) => {
-    const tabs = editableTabs.value;
-    let activeName = editableTabsValue.value;
-    if (activeName === targetName) {
-        tabs.forEach((tab, index) => {
-            if (tab.name === targetName) {
-                const nextTab = tabs[index + 1] || tabs[index - 1];
-                if (nextTab) {
-                    activeName = nextTab.name;
-                }
-            }
-        });
+// 删除标签
+function removeTab(targetName: TabPaneName) {
+    const index = tabs.value.findIndex(tab => tab.lable === targetName);
+    if (index !== -1) {
+        tabs.value.splice(index, 1);
+        // 如果删除的是当前标签，切换到第一个标签
+        if (currentTabLable.value === targetName) {
+            currentTabLable.value = tabs.value.length > 0 ? tabs.value[0].lable : '';
+        }
     }
+}
 
-    editableTabsValue.value = activeName;
-    editableTabs.value = tabs.filter((tab) => tab.name !== targetName);
-};
 </script>
 
 <style scoped>
-.custom-tab-label {
+.tab-label {
     display: flex;
     align-items: center;
     gap: 5px;
