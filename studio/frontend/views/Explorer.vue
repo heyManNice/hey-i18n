@@ -44,7 +44,7 @@ import { languages } from '../consts/languages';
 
 import mSystemBar from '../models/SystemBar';
 import backend from '../rpc/backend';
-import bus from '../utils/bus';
+import mEditor from '../models/Editor';
 
 onMounted(updateTreeData);
 
@@ -104,9 +104,8 @@ const handleNodeClick = (data: Tree) => {
     if (data.children && data.children.length > 0) {
         return;
     }
-    bus.emit('editor-add-tab', {
-        filename: data.label
-    });
+    const filename = data.label;
+    mEditor.fAddTab(filename);
 };
 
 const querySearch = (queryString: string, cb: any) => {

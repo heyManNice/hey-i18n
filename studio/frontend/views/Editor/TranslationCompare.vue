@@ -67,11 +67,7 @@ import TextCellRenderer from './TranslationCompare/TextCellRenderer.vue';
 import EditableCellRenderer from './TranslationCompare/EditableCellRenderer.vue';
 
 import { useTranslationData } from './TranslationCompare/useTranslationData';
-
-const props = defineProps<{
-    filename: string;
-}>();
-
+import mEditor from '../../models/Editor';
 
 const {
     filteredData,
@@ -83,7 +79,7 @@ const {
     filterOption,
     sourceSearch,
     targetSearch
-} = useTranslationData(props.filename);
+} = useTranslationData(mEditor.mActiveTab);
 
 onMounted(() => {
     loadData();
