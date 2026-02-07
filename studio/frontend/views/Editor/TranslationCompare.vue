@@ -6,7 +6,9 @@
             <span>失效的键: {{ result.data?.summary.invalidKeysCount }}</span>
             <span>正在修改：{{ result.data?.summary.editingCount }}</span>
             <div class="filter">
-                <el-select v-model="mEditor.cEdit.mFilterOption" placeholder="筛选" style="width: 130px;">
+                <el-select :model-value="result.data?.filter.option" @update:model-value="val => {
+                    if (result.data) { result.data.filter.option = val }
+                }" placeholder="筛选" style="width: 130px;">
                     <template #prefix>
                         <el-icon>
                             <Filter />
@@ -23,8 +25,8 @@
                 <el-table v-loading="result.isLoading" v-if="!result.error" :data="result.data?.filter.result">
                     <el-table-column min-width="45">
                         <template #header>
-                            <SourceHeaderCellRenderer :model-value="mEditor.cEdit.mSouceSearch"
-                                @update:modelValue="value => { mEditor.cEdit.mSouceSearch = value; }" />
+                            <SourceHeaderCellRenderer :model-value="result.data?.filter.sourceSearch"
+                                @update:modelValue="val => { if (result.data) { result.data.filter.sourceSearch = val } }" />
                         </template>
                         <template #default="scope">
                             <TextCellRenderer :text="scope.row.untranslated" style="cursor: not-allowed;" />
@@ -32,13 +34,12 @@
                     </el-table-column>
                     <el-table-column min-width="55">
                         <template #header>
-                            <TargetHeaderCellRenderer :model-value="mEditor.cEdit.mTargetSearch"
-                                @update:modelValue="value => { mEditor.cEdit.mTargetSearch = value; }" />
+                            <TargetHeaderCellRenderer :model-value="result.data?.filter.targetSearch"
+                                @update:modelValue="val => { if (result.data) { result.data.filter.targetSearch = val } }" />
                         </template>
                         <template #default="scope">
-                            <EditableCellRenderer :model-value="scope.row.translated"
-                                :source-text="scope.row.untranslated"
-                                @update:modelValue="value => { scope.row.translated = value; }" />
+                            <EditableCellRenderer v-model="scope.row.translated"
+                                :source-text="scope.row.untranslated" />
                         </template>
                     </el-table-column>
                 </el-table>
@@ -57,7 +58,10 @@ import {
     ElIcon,
     ElButton
 } from 'element-plus';
-import { Filter } from '@element-plus/icons-vue';
+
+import {
+    Filter
+} from '@element-plus/icons-vue';
 
 import TargetHeaderCellRenderer from './TranslationCompare/TargetHeaderCellRenderer.vue';
 import SourceHeaderCellRenderer from './TranslationCompare/SourceHeaderCellRenderer.vue';

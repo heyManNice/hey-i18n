@@ -1,5 +1,6 @@
 import {
-    reactive
+    reactive,
+    computed
 } from 'vue';
 
 import {
@@ -42,9 +43,6 @@ const mEditor = reactive({
 
     // 编辑窗口
     cEdit: {
-        mSouceSearch: '',
-        mTargetSearch: '',
-        mFilterOption: 'all',
         oFilterOptions: [
             { value: 'all', label: '全部' },
             { value: 'untranslated', label: '未翻译' },
@@ -74,13 +72,6 @@ export function useTranslationData(filename: string) {
             invalidKeysCount: 0,
             editingCount: 0
         };
-
-        const filter = reactive({
-            option: 'all',
-            sourceSearch: '',
-            targetSearch: '',
-            result: [] as typeof translationList
-        });
 
         const { localAssets, keyCache } = await backend.editor.getAssetsAndCache(filename);
         summary.translatedCount = Object.keys(localAssets).length;
@@ -117,19 +108,23 @@ export function useTranslationData(filename: string) {
             });
         }
 
-        filter.result = translationList.filter(item => {
-            const matchesSource = item.untranslated.includes(filter.sourceSearch);
-            const matchesTarget = item.translated.includes(filter.targetSearch);
-            if (filter.option === 'all') {
-                return matchesSource && matchesTarget;
-            }
-            if (filter.option === 'translated') {
-                return matchesSource && matchesTarget && item.translated !== '';
-            }
-            if (filter.option === 'untranslated') {
-                return matchesSource && !matchesTarget;
-            }
-            return true;
+        const filter = reactive({
+            option: 'all',
+            sourceSearch: '',
+            targetSearch: '',
+            result: computed(() => {
+                return translationList.filter(item => {
+                    const matchesSource = item.untranslated.includes(filter.sourceSearch);
+                    const matchesTarget = item.translated.includes(filter.targetSearch);
+                    if (filter.option === 'all') {
+                        return matchesSource && matchesTarget;
+                    }
+                    if (filter.option === 'untranslated') {
+                        return matchesSource && (!matchesTarget || item.translated === '');
+                    }
+                    return true;
+                });
+            })
         });
 
         return {

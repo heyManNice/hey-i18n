@@ -11,7 +11,7 @@ import { ElInput } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 
 const props = defineProps<{
-    modelValue: string;
+    modelValue: string | undefined;
 }>();
 
 const emits = defineEmits<{
