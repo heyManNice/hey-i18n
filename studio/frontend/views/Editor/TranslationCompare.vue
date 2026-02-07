@@ -1,18 +1,18 @@
 <template>
     <div class="translation-compare-container">
         <div class="summary-bar">
-            <span>已翻译: {{ translatedCount }}</span>
-            <span>总计: {{ totalCount }}</span>
-            <span>失效的键: {{ invalidKeysCount }}</span>
-            <span>正在修改：{{ editingCount }}</span>
+            <span>已翻译: {{ result.data?.summary.translatedCount }}</span>
+            <span>总计: {{ result.data?.summary.totalCount }}</span>
+            <span>失效的键: {{ result.data?.summary.invalidKeysCount }}</span>
+            <span>正在修改：{{ result.data?.summary.editingCount }}</span>
             <div class="filter">
-                <el-select v-model="filterOption" placeholder="筛选" style="width: 130px;">
+                <el-select v-model="mEditor.cEdit.mFilterOption" placeholder="筛选" style="width: 130px;">
                     <template #prefix>
                         <el-icon>
                             <Filter />
                         </el-icon>
                     </template>
-                    <el-option v-for="item in filterOptions" :key="item.value" :label="item.label"
+                    <el-option v-for="item in mEditor.cEdit.oFilterOptions" :key="item.value" :label="item.label"
                         :value="item.value" />
                 </el-select>
             </div>
@@ -20,11 +20,11 @@
         </div>
         <div class="editor-area">
             <div style="position: absolute; width: 100%;">
-                <el-table :data="filteredData">
+                <el-table v-loading="result.isLoading" v-if="!result.error" :data="result.data?.filter.result">
                     <el-table-column min-width="45">
                         <template #header>
-                            <SourceHeaderCellRenderer :model-value="sourceSearch"
-                                @update:modelValue="value => { sourceSearch = value; }" />
+                            <SourceHeaderCellRenderer :model-value="mEditor.cEdit.mSouceSearch"
+                                @update:modelValue="value => { mEditor.cEdit.mSouceSearch = value; }" />
                         </template>
                         <template #default="scope">
                             <TextCellRenderer :text="scope.row.untranslated" style="cursor: not-allowed;" />
@@ -32,8 +32,8 @@
                     </el-table-column>
                     <el-table-column min-width="55">
                         <template #header>
-                            <TargetHeaderCellRenderer :model-value="targetSearch"
-                                @update:modelValue="value => { targetSearch = value; }" />
+                            <TargetHeaderCellRenderer :model-value="mEditor.cEdit.mTargetSearch"
+                                @update:modelValue="value => { mEditor.cEdit.mTargetSearch = value; }" />
                         </template>
                         <template #default="scope">
                             <EditableCellRenderer :model-value="scope.row.translated"
@@ -42,15 +42,13 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <p v-if="result.error">{{ result.error }}</p>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import {
-    onMounted
-} from 'vue';
 import {
     ElTable,
     ElTableColumn,
@@ -66,31 +64,10 @@ import SourceHeaderCellRenderer from './TranslationCompare/SourceHeaderCellRende
 import TextCellRenderer from './TranslationCompare/TextCellRenderer.vue';
 import EditableCellRenderer from './TranslationCompare/EditableCellRenderer.vue';
 
-import { useTranslationData } from './TranslationCompare/useTranslationData';
 import mEditor from '../../models/Editor';
 
-const {
-    filteredData,
-    loadData,
-    translatedCount,
-    totalCount,
-    invalidKeysCount,
-    editingCount,
-    filterOption,
-    sourceSearch,
-    targetSearch
-} = useTranslationData(mEditor.mActiveTab);
-
-onMounted(() => {
-    loadData();
-});
-
-const filterOptions = [
-    { value: 'all', label: '全部' },
-    { value: 'untranslated', label: '未翻译' },
-    { value: 'invalid', label: '失效的键' },
-    { value: 'editing', label: '正在修改' },
-];
+import { useTranslationData } from '../../models/Editor';
+const result = useTranslationData(mEditor.mActiveTab);
 </script>
 
 <style scoped>

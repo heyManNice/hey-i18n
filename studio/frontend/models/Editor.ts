@@ -2,10 +2,17 @@ import {
     reactive
 } from 'vue';
 
+import {
+    useReactivePromise
+} from '../utils/promise';
+
 const mEditor = reactive({
+    // 编辑器的标签页
     mTabs: [] as {
         filename: string;
     }[],
+
+    // 当前活动的标签页
     mActiveTab: '',
 
     // 添加标签页
@@ -31,7 +38,104 @@ const mEditor = reactive({
                 this.mActiveTab = this.mTabs.length > 0 ? this.mTabs[0].filename : '';
             }
         }
+    },
+
+    // 编辑窗口
+    cEdit: {
+        mSouceSearch: '',
+        mTargetSearch: '',
+        mFilterOption: 'all',
+        oFilterOptions: [
+            { value: 'all', label: '全部' },
+            { value: 'untranslated', label: '未翻译' },
+            { value: 'invalid', label: '失效的键' },
+            { value: 'editing', label: '正在修改' },
+        ]
     }
 });
 
 export default mEditor;
+
+import backend from '../rpc/backend';
+import { mergeTextAndVariables } from '../utils/textUtils';
+
+
+// 编辑器的表单数据
+export function useTranslationData(filename: string) {
+    return useReactivePromise(async function () {
+        const translationList: {
+            untranslated: string;
+            translated: string;
+        }[] = [];
+
+        const summary = {
+            translatedCount: 0,
+            totalCount: 0,
+            invalidKeysCount: 0,
+            editingCount: 0
+        };
+
+        const filter = reactive({
+            option: 'all',
+            sourceSearch: '',
+            targetSearch: '',
+            result: [] as typeof translationList
+        });
+
+        const { localAssets, keyCache } = await backend.editor.getAssetsAndCache(filename);
+        summary.translatedCount = Object.keys(localAssets).length;
+        summary.totalCount = keyCache.entries?.length || 0;
+
+        for (const entry of keyCache.entries || []) {
+            const sourceTexts = entry.texts;
+            const sourceVariables = entry.variables || [];
+
+            const assetsKey = entry.texts.join('');
+            const targetEntry = localAssets[assetsKey];
+
+            if (!targetEntry) {
+                // 如果目标语言文件中没有该条目，使用空字符串作为译文
+                translationList.push({
+                    untranslated: mergeTextAndVariables(sourceTexts, sourceVariables),
+                    translated: '',
+                });
+                continue;
+            }
+
+            const targetTexts = targetEntry.t || [];
+            const targetVariables = Array.from({
+                length: targetEntry.v?.length || 0
+            }, (_, i) => {
+                const currutVarIndex = targetEntry.v?.[i];
+                const variableName = sourceVariables[currutVarIndex || 0];
+                return variableName;
+            }) || [];
+
+            translationList.push({
+                untranslated: mergeTextAndVariables(sourceTexts, sourceVariables),
+                translated: mergeTextAndVariables(targetTexts, targetVariables)
+            });
+        }
+
+        filter.result = translationList.filter(item => {
+            const matchesSource = item.untranslated.includes(filter.sourceSearch);
+            const matchesTarget = item.translated.includes(filter.targetSearch);
+            if (filter.option === 'all') {
+                return matchesSource && matchesTarget;
+            }
+            if (filter.option === 'translated') {
+                return matchesSource && matchesTarget && item.translated !== '';
+            }
+            if (filter.option === 'untranslated') {
+                return matchesSource && !matchesTarget;
+            }
+            return true;
+        });
+
+        return {
+            translationList,
+            summary,
+            filter
+        };
+    });
+}
