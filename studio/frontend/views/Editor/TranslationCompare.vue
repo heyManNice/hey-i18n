@@ -1,13 +1,13 @@
 <template>
     <div class="container">
         <div class="summary">
-            <span>已翻译: {{ result.data?.summary.translatedCount ?? '-' }}</span>
-            <span>总计: {{ result.data?.summary.totalCount ?? '-' }}</span>
-            <span>失效的键: {{ result.data?.summary.invalidKeysCount ?? '-' }}</span>
-            <span>正在修改：{{ result.data?.summary.editingCount ?? '-' }}</span>
+            <span>已翻译: {{ r.d?.summary.translatedCount ?? '-' }}</span>
+            <span>总计: {{ r.d?.summary.totalCount ?? '-' }}</span>
+            <span>失效的键: {{ r.d?.summary.invalidKeysCount ?? '-' }}</span>
+            <span>正在修改：{{ r.d?.summary.editingCount ?? '-' }}</span>
             <div class="filter">
-                <el-select :model-value="result.data?.filter.option" @update:model-value="val => {
-                    if (result.data) { result.data.filter.option = val }
+                <el-select :model-value="r.d?.filter.option" @update:model-value="val => {
+                    if (r.d) { r.d.filter.option = val }
                 }" placeholder="筛选" style="width: 130px;">
                     <template #prefix>
                         <el-icon>
@@ -20,13 +20,13 @@
             </div>
             <el-button type="primary" plain>提交</el-button>
         </div>
-        <div class="editor-area">
+        <div class="table">
             <div style="position: absolute; width: 100%;">
-                <el-table v-loading="result.isLoading" v-if="!result.error" :data="result.data?.filter.result">
+                <el-table v-loading="r.l" v-if="!r.e" :data="r.d?.filter.result">
                     <el-table-column min-width="45">
                         <template #header>
-                            <SourceHeaderCellRenderer :model-value="result.data?.filter.sourceSearch"
-                                @update:modelValue="val => { if (result.data) { result.data.filter.sourceSearch = val } }" />
+                            <SourceHeaderCellRenderer :model-value="r.d?.filter.sourceSearch"
+                                @update:modelValue="val => { if (r.d) { r.d.filter.sourceSearch = val } }" />
                         </template>
                         <template #default="scope">
                             <TextCellRenderer :text="scope.row.untranslated" style="cursor: not-allowed;" />
@@ -34,8 +34,8 @@
                     </el-table-column>
                     <el-table-column min-width="55">
                         <template #header>
-                            <TargetHeaderCellRenderer :model-value="result.data?.filter.targetSearch"
-                                @update:modelValue="val => { if (result.data) { result.data.filter.targetSearch = val } }" />
+                            <TargetHeaderCellRenderer :model-value="r.d?.filter.targetSearch"
+                                @update:modelValue="val => { if (r.d) { r.d.filter.targetSearch = val } }" />
                         </template>
                         <template #default="scope">
                             <EditableCellRenderer v-model="scope.row.translated"
@@ -43,7 +43,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <p v-if="result.error">{{ result.error }}</p>
+                <p v-if="r.e">{{ r.e }}</p>
             </div>
         </div>
     </div>
@@ -71,7 +71,7 @@ import EditableCellRenderer from './TranslationCompare/EditableCellRenderer.vue'
 import mEditor from '../../models/Editor';
 
 import { useTranslationData } from '../../models/Editor';
-const result = useTranslationData(mEditor.mActiveTab);
+const r = useTranslationData(mEditor.mActiveTab);
 </script>
 
 <style scoped>
@@ -85,7 +85,7 @@ const result = useTranslationData(mEditor.mActiveTab);
     color: var(--text-color);
 }
 
-.editor-area {
+.table {
     flex-grow: 1;
     position: relative;
 }

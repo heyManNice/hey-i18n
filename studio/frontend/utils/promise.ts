@@ -6,26 +6,26 @@ import {
 
 // vue 响应式的承诺
 export function useReactivePromise<T>(promiseFn: () => Promise<T>) {
-    const result = reactive({
-        data: null as T | null,
-        error: null as Error | null,
-        isLoading: false
+    const r = reactive({
+        d: null as T | null, // data
+        e: null as Error | null, // error
+        l: false // is loading
     });
 
     async function run() {
-        result.isLoading = true;
+        r.l = true;
 
         try {
             // 此时 Awaited<T> 可以安全地赋值给 UnwrapRef<T>
             // @ts-ignore
-            result.data = await promiseFn();
+            r.d = await promiseFn();
         } catch (err: any) {
-            return result.error = err instanceof Error ? err : new Error(String(err))
+            return r.e = err instanceof Error ? err : new Error(String(err))
         } finally {
-            result.isLoading = false;
+            r.l = false;
         }
     }
 
     run()
-    return result;
+    return r;
 }
