@@ -79,12 +79,12 @@ async function addLanguageFile() {
         if (!(error instanceof Error)) {
             throw error;
         }
-        mSystemBar.status.setComplete(`添加语言文件失败：${error.message}`);
+        mSystemBar.status.fSetComplete(`添加语言文件失败：${error.message}`);
         return;
     }
     languageInput.value = '';
     await updateTreeData();
-    mSystemBar.status.setComplete(`已添加语言文件：${filename}.json`);
+    mSystemBar.status.fSetComplete(`已添加语言文件：${filename}.json`);
 }
 
 const treeData = ref();
@@ -142,13 +142,13 @@ function randomWord() {
 watch(scannedFiles, (newVal) => {
     const progress = (newVal / totalFiles) * 100;
     const scanMsg = `${progress.toFixed(0)}% 已扫描 ${scannedFiles.value}/${totalFiles} 文件：src/${randomWord()}/${randomWord()}.vue`;
-    mSystemBar.status.setProgress(progress, scanMsg);
+    mSystemBar.status.fSetProgress(progress, scanMsg);
 });
 
 
 function handleSacnProjectText() {
     scannedFiles.value = 0;
-    mSystemBar.status.setProgress(1, '初始化扫描...');
+    mSystemBar.status.fSetProgress(1, '初始化扫描...');
 
     const interval = setInterval(() => {
         scannedFiles.value += 5;
@@ -156,8 +156,8 @@ function handleSacnProjectText() {
             scannedFiles.value = totalFiles;
             clearInterval(interval);
             setTimeout(() => {
-                mSystemBar.status.setComplete(`扫描项目原文：完成，已处理 ${totalFiles} 个文件。新增 0 条，删除 0 条，共有 4 条原文。`);
-                mSystemBar.lastScanTime.setLastScanTime(Date.now());
+                mSystemBar.status.fSetComplete(`扫描项目原文：完成，已处理 ${totalFiles} 个文件。新增 0 条，删除 0 条，共有 4 条原文。`);
+                mSystemBar.lastScanTime.fSetLastScanTime(Date.now());
             });
         }
     }, 100);

@@ -7,14 +7,14 @@
                 </template>
             </BarItem>
 
-            <BarItem v-if="mSystemBar.status.m_isComplete.value" :text="mSystemBar.status.m_completeText.value">
+            <BarItem v-if="mSystemBar.status.mIsComplete" :text="mSystemBar.status.mCompleteText">
                 <template #icon>
                     <Check />
                 </template>
             </BarItem>
 
-            <BarItem v-if="!mSystemBar.status.m_isComplete.value" :text="mSystemBar.status.m_progressText.value"
-                :progress="mSystemBar.status.m_progress.value" />
+            <BarItem v-if="!mSystemBar.status.mIsComplete" :text="mSystemBar.status.mProgressText"
+                :progress="mSystemBar.status.mProgress" />
 
         </div>
         <div class="right">
@@ -23,7 +23,7 @@
                     <Files />
                 </template>
             </BarItem>
-            <BarItem :text="mSystemBar.lastScanTime.m_lastScanTime.value">
+            <BarItem :text="mSystemBar.lastScanTime.mLastScanTime">
                 <template #icon>
                     <Timer />
                 </template>
