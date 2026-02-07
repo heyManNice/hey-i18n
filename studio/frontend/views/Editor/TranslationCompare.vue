@@ -1,10 +1,10 @@
 <template>
-    <div class="translation-compare-container">
-        <div class="summary-bar">
-            <span>已翻译: {{ result.data?.summary.translatedCount }}</span>
-            <span>总计: {{ result.data?.summary.totalCount }}</span>
-            <span>失效的键: {{ result.data?.summary.invalidKeysCount }}</span>
-            <span>正在修改：{{ result.data?.summary.editingCount }}</span>
+    <div class="container">
+        <div class="summary">
+            <span>已翻译: {{ result.data?.summary.translatedCount ?? '-' }}</span>
+            <span>总计: {{ result.data?.summary.totalCount ?? '-' }}</span>
+            <span>失效的键: {{ result.data?.summary.invalidKeysCount ?? '-' }}</span>
+            <span>正在修改：{{ result.data?.summary.editingCount ?? '-' }}</span>
             <div class="filter">
                 <el-select :model-value="result.data?.filter.option" @update:model-value="val => {
                     if (result.data) { result.data.filter.option = val }
@@ -75,7 +75,7 @@ const result = useTranslationData(mEditor.mActiveTab);
 </script>
 
 <style scoped>
-.translation-compare-container {
+.container {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -85,20 +85,12 @@ const result = useTranslationData(mEditor.mActiveTab);
     color: var(--text-color);
 }
 
-.summary-bar {
-    display: flex;
-    gap: 20px;
-    padding: 5px 10px;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 14px;
-}
-
 .editor-area {
     flex-grow: 1;
     position: relative;
 }
 
-.summary-bar {
+.summary {
     display: flex;
     align-items: center;
     gap: 20px;
