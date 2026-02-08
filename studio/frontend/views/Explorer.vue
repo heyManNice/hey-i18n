@@ -14,7 +14,8 @@
         </div>
         <el-button @click="handleSacnProject">扫描项目原文</el-button>
         <!-- 资源文件列表 -->
-        <el-tree class="tree" :data="r.d?.treeData" :props="treeProps" @node-click="handleNodeClick" default-expand-all>
+        <el-tree v-loading="r.l" class="tree" :data="r.d?.treeData" :props="treeProps" @node-click="handleNodeClick"
+            default-expand-all>
             <template #default="{ node }">
                 <span class="tree-node">
                     <el-icon>
@@ -26,6 +27,7 @@
                 </span>
             </template>
         </el-tree>
+        <p v-if="r.e">{{ r.e }}</p>
     </div>
 </template>
 
