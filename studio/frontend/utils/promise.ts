@@ -9,7 +9,8 @@ export function useReactivePromise<T>(promiseFn: () => Promise<T>) {
     const r = reactive({
         d: null as T | null, // data
         e: null as Error | null, // error
-        l: false // is loading
+        l: false, // is loading
+        update: () => { } // 重发数据
     });
 
     async function run() {
@@ -24,6 +25,9 @@ export function useReactivePromise<T>(promiseFn: () => Promise<T>) {
         } finally {
             r.l = false;
         }
+    }
+    r.update = () => {
+        run();
     }
 
     run()

@@ -1,18 +1,22 @@
 <template>
     <div class="container">
+        <!-- logo -->
         <div class="brand">
             hey-i18n-studio
         </div>
-        <el-input v-model="searchInput" placeholder="搜索现有资源" :prefix-icon="Search" />
-        <div class="add-language-container">
-            <el-autocomplete v-model="languageInput" :fetch-suggestions="querySearch" placeholder="添加语言资源" />
-            <el-button @click="addLanguageFile">添加</el-button>
+        <!-- 筛选搜索框 -->
+        <el-input v-model="mExplorer.mTreeSearch" placeholder="搜索现有资源" :prefix-icon="Search" />
+        <!-- 添加语言资源文件框 -->
+        <div class="add-lang-container">
+            <el-autocomplete v-model="mExplorer.mAddLangInput" :fetch-suggestions="mExplorer.fFetchLangSug"
+                placeholder="添加语言资源" />
+            <el-button @click="addLangFile">添加</el-button>
         </div>
-        <el-button @click="handleSacnProjectText">扫描项目原文</el-button>
-        <el-tree style="border-radius: 5px;border: 1px solid var(--border-color);" :data="treeData" :props="treeProps"
-            @node-click="handleNodeClick" default-expand-all>
+        <el-button @click="handleSacnProject">扫描项目原文</el-button>
+        <!-- 资源文件列表 -->
+        <el-tree class="tree" :data="r.d?.treeData" :props="treeProps" @node-click="handleNodeClick" default-expand-all>
             <template #default="{ node }">
-                <span class="custom-tree-node">
+                <span class="tree-node">
                     <el-icon>
                         <FolderOpened v-if="!node.isLeaf && node.expanded" />
                         <Folder v-else-if="!node.isLeaf && !node.expanded" />
@@ -39,68 +43,39 @@ import {
     Folder,
     FolderOpened,
 } from '@element-plus/icons-vue';
-import { ref, watch, onMounted } from 'vue';
-import { languages } from '../consts/languages';
 
 import mSystemBar from '../models/SystemBar';
 import backend from '../rpc/backend';
 import mEditor from '../models/Editor';
+import mExplorer from '../models/Explorer';
 
-onMounted(updateTreeData);
+import { useExplorerData } from '../models/Explorer';
 
-async function updateTreeData() {
-    const { info, files, config } = await backend.explorer.getTreeData();
+const r = useExplorerData();
 
-    if (files.length === 0) {
-        return;
-    }
-
-    treeData.value = [
-        {
-            label: `${info.projectName}/${info.i18nDir} (原文 ${config.sourcesLocale})`,
-            children: Array.from(files).map(file => ({ label: file })),
-        }
-    ]
-}
-
-const searchInput = ref('');
-const languageInput = ref('');
-
-async function addLanguageFile() {
-    const filename = languageInput.value.trim();
+async function addLangFile() {
+    const filename = mExplorer.mAddLangInput.trim();
     if (filename === '') {
         return;
     }
-
-    try {
-        await backend.explorer.addI18nFile(`${filename}.json`);
-
-    } catch (error) {
+    backend.explorer.addI18nFile(`${filename}.json`).then(() => {
+        mExplorer.mAddLangInput = '';
+        r.update();
+        mSystemBar.status.fSetComplete(`已添加语言文件：${filename}.json`);
+    }).catch((error) => {
         if (!(error instanceof Error)) {
             throw error;
         }
         mSystemBar.status.fSetComplete(`添加语言文件失败：${error.message}`);
-        return;
-    }
-    languageInput.value = '';
-    await updateTreeData();
-    mSystemBar.status.fSetComplete(`已添加语言文件：${filename}.json`);
+    });
 }
-
-const treeData = ref();
 
 const treeProps = {
     children: 'children',
     label: 'label',
 };
 
-interface Tree {
-    label: string
-    children?: Tree[]
-}
-
-const handleNodeClick = (data: Tree) => {
-    // 如果是有子节点的，不处理
+function handleNodeClick(data: typeof treeProps) {
     if (data.children && data.children.length > 0) {
         return;
     }
@@ -108,59 +83,8 @@ const handleNodeClick = (data: Tree) => {
     mEditor.fAddTab(filename);
 };
 
-const querySearch = (queryString: string, cb: any) => {
-    const results = queryString
-        ? languages.filter((language: string) => (language.indexOf(queryString) != -1))
-        : languages
-
-    cb(results.map(item => ({ value: item })))
-}
-
-const totalFiles = 136;
-const scannedFiles = ref(0);
-
-function randomWord() {
-    const words = [
-        'components',
-        'views',
-        'models',
-        'consts',
-        'utils',
-        'Explorer.vue',
-        'SystemBar.vue',
-        'languages.ts',
-        'i18n.ts',
-        'App.vue',
-        'main.ts',
-        'Cards.vue',
-        'Header.vue',
-        'Footer.vue',
-    ];
-    return words[Math.floor(Math.random() * words.length)];
-}
-
-watch(scannedFiles, (newVal) => {
-    const progress = (newVal / totalFiles) * 100;
-    const scanMsg = `${progress.toFixed(0)}% 已扫描 ${scannedFiles.value}/${totalFiles} 文件：src/${randomWord()}/${randomWord()}.vue`;
-    mSystemBar.status.fSetProgress(progress, scanMsg);
-});
-
-
-function handleSacnProjectText() {
-    scannedFiles.value = 0;
+function handleSacnProject() {
     mSystemBar.status.fSetProgress(1, '初始化扫描...');
-
-    const interval = setInterval(() => {
-        scannedFiles.value += 5;
-        if (scannedFiles.value >= totalFiles) {
-            scannedFiles.value = totalFiles;
-            clearInterval(interval);
-            setTimeout(() => {
-                mSystemBar.status.fSetComplete(`扫描项目原文：完成，已处理 ${totalFiles} 个文件。新增 0 条，删除 0 条，共有 4 条原文。`);
-                mSystemBar.lastScanTime.fSetLastScanTime(Date.now());
-            });
-        }
-    }, 100);
 }
 
 </script>
@@ -180,12 +104,17 @@ function handleSacnProjectText() {
     color: var(--text-color);
 }
 
-.add-language-container {
+.tree {
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+}
+
+.add-lang-container {
     display: flex;
     gap: 10px;
 }
 
-.custom-tree-node {
+.tree-node {
     display: flex;
     align-items: center;
     gap: 5px;
