@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <!-- 总结的数据 -->
         <div class="summary">
             <span>已翻译: {{ r.d?.summary.translatedCount ?? '-' }}</span>
             <span>总计: {{ r.d?.summary.totalCount ?? '-' }}</span>
@@ -20,9 +21,11 @@
             </div>
             <el-button type="primary" plain>提交</el-button>
         </div>
+        <!-- 编辑内容的表格 -->
         <div class="table">
             <div style="position: absolute; width: 100%;">
                 <el-table v-loading="r.l" v-if="!r.e" :data="r.d?.filter.result">
+                    <!-- 项目原来的翻译列 -->
                     <el-table-column min-width="45">
                         <template #header>
                             <SourceHeaderCellRenderer :model-value="r.d?.filter.sourceSearch"
@@ -32,6 +35,7 @@
                             <TextCellRenderer :text="scope.row.untranslated" style="cursor: not-allowed;" />
                         </template>
                     </el-table-column>
+                    <!-- 目标翻译的列 -->
                     <el-table-column min-width="55">
                         <template #header>
                             <TargetHeaderCellRenderer :model-value="r.d?.filter.targetSearch"
