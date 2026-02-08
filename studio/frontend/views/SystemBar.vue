@@ -1,19 +1,29 @@
 <template>
     <div class="system-bar">
         <div class="left">
+            <!-- 一些文字 -->
             <BarItem text="hey-i18n-studio">
                 <template #icon>
                     <Folder />
                 </template>
             </BarItem>
 
-            <BarItem v-if="mSystemBar.status.mIsComplete" :text="mSystemBar.status.mCompleteText">
+            <!-- 完成提示条 -->
+            <BarItem v-if="mSystemBar.status.mStatus === 'complete'" :text="mSystemBar.status.mMessage">
                 <template #icon>
                     <Check />
                 </template>
             </BarItem>
 
-            <BarItem v-if="!mSystemBar.status.mIsComplete" :text="mSystemBar.status.mProgressText"
+            <!-- 错误提示 -->
+            <BarItem v-if="mSystemBar.status.mStatus === 'error'" :text="mSystemBar.status.mMessage">
+                <template #icon>
+                    <Close />
+                </template>
+            </BarItem>
+
+            <!-- 进度条提示 -->
+            <BarItem v-if="mSystemBar.status.mStatus === 'progress'" :text="mSystemBar.status.mMessage"
                 :progress="mSystemBar.status.mProgress" />
 
         </div>
@@ -42,7 +52,8 @@ import {
     Check,
     Folder,
     Flag,
-    Timer
+    Timer,
+    Close
 } from '@element-plus/icons-vue';
 
 import BarItem from './SystemBar/BarItem.vue';

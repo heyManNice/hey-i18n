@@ -4,28 +4,34 @@ import {
 
 const mSystemBar = reactive({
     status: {
-        // 就绪
-        mIsComplete: true,
-        // 就绪文字
-        mCompleteText: '就绪',
+        // 状态
+        mStatus: 'complete' as 'complete' | 'error' | 'progress',
+
+        // 信息文字
+        mMessage: '就绪',
+
         // 进度
         mProgress: 0,
-        // 进度文字
-        mProgressText: '',
 
         // 设置进度
         fSetProgress(progress: number, progressText: string) {
-            this.mIsComplete = false;
+            this.mStatus = 'progress';
             this.mProgress = progress;
-            this.mProgressText = progressText;
+            this.mMessage = progressText;
         },
 
         // 设置就绪
         fSetComplete(text?: string) {
-            this.mIsComplete = true;
+            this.mStatus = 'complete';
             if (text) {
-                this.mCompleteText = text;
+                this.mMessage = text;
             }
+        },
+
+        // 设置错误
+        fSetError(text: string) {
+            this.mStatus = 'error';
+            this.mMessage = text;
         }
     },
 

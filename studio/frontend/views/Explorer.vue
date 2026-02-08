@@ -67,7 +67,7 @@ async function addLangFile() {
         if (!(error instanceof Error)) {
             throw error;
         }
-        mSystemBar.status.fSetComplete(`添加语言文件失败：${error.message}`);
+        mSystemBar.status.fSetError(`添加语言文件失败：${error.message}`);
     });
 }
 
