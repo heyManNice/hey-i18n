@@ -5,7 +5,7 @@ import {
 const mSystemBar = reactive({
     cStatus: {
         // 状态
-        mStatus: 'complete' as 'complete' | 'error' | 'progress',
+        mStatus: 'complete' as 'complete' | 'error' | 'progress' | 'loading',
 
         // 信息文字
         mMessage: '就绪',
@@ -31,6 +31,12 @@ const mSystemBar = reactive({
         // 设置错误
         fSetError(text: string) {
             this.mStatus = 'error';
+            this.mMessage = text;
+        },
+
+        // 设置加载中
+        fSetLoading(text: string) {
+            this.mStatus = 'loading';
             this.mMessage = text;
         }
     },

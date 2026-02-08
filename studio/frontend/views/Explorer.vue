@@ -9,13 +9,13 @@
         <!-- 添加语言资源文件框 -->
         <div class="add-lang-container">
             <el-autocomplete v-model="mExplorer.mAddLangInput" :fetch-suggestions="mExplorer.fFetchLangSug"
-                placeholder="添加语言资源" />
-            <el-button @click="addLangFile">添加</el-button>
+                placeholder="创建语言资源" />
+            <el-button @click="addLangFile">创建</el-button>
         </div>
         <el-button @click="handleSacnProject">扫描项目原文</el-button>
         <!-- 资源文件列表 -->
-        <el-tree v-loading="r.l" class="tree" :data="r.d?.treeData" :props="treeProps" @node-click="handleNodeClick"
-            default-expand-all>
+        <el-tree v-if="!r.e" v-loading="r.l" class="tree" :data="r.d?.treeData" :props="treeProps"
+            @node-click="handleNodeClick" default-expand-all>
             <template #default="{ node }">
                 <span class="tree-node">
                     <el-icon>
@@ -61,15 +61,16 @@ async function addLangFile() {
     if (filename === '') {
         return;
     }
+    mSystemBar.cStatus.fSetLoading(`正在创建语言文件：${filename}.json...`);
     backend.explorer.addI18nFile(`${filename}.json`).then(() => {
         mExplorer.mAddLangInput = '';
         r.update();
-        mSystemBar.cStatus.fSetComplete(`已添加语言文件：${filename}.json`);
+        mSystemBar.cStatus.fSetComplete(`已创建语言文件：${filename}.json`)
     }).catch((error) => {
         if (!(error instanceof Error)) {
             throw error;
         }
-        mSystemBar.cStatus.fSetError(`添加语言文件失败：${error.message}`);
+        mSystemBar.cStatus.fSetError(`创建语言文件失败：${error.message}`);
     });
 }
 

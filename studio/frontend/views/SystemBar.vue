@@ -26,6 +26,11 @@
             <BarItem v-if="mSystemBar.cStatus.mStatus === 'progress'" :text="mSystemBar.cStatus.mMessage"
                 :progress="mSystemBar.cStatus.mProgress" />
 
+            <!-- 加载提示 -->
+            <BarItem v-if="mSystemBar.cStatus.mStatus === 'loading'" :is-loading="true"
+                :text="mSystemBar.cStatus.mMessage">
+            </BarItem>
+
         </div>
         <div class="right">
             <BarItem text="zh-CN">
