@@ -14,8 +14,8 @@
         </div>
         <el-button @click="handleSacnProject">扫描项目原文</el-button>
         <!-- 资源文件列表 -->
-        <el-tree v-if="!r.e" v-loading="r.l" class="tree" :data="r.d?.treeData" :props="treeProps"
-            @node-click="handleNodeClick" default-expand-all>
+        <el-tree v-if="!r.e" v-loading="r.l" class="tree" :data="r.d?.treeData" @node-click="handleNodeClick"
+            default-expand-all>
             <template #default="{ node }">
                 <span class="tree-node">
                     <el-icon>
@@ -74,13 +74,7 @@ async function addLangFile() {
     });
 }
 
-const treeProps = {
-    children: 'children',
-    label: 'label',
-    isDir: false,
-};
-
-function handleNodeClick(data: typeof treeProps) {
+function handleNodeClick(data: NonNullable<typeof r.d>["treeData"][number]) {
     if (data.isDir) {
         return;
     }
