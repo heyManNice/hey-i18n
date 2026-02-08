@@ -59,7 +59,7 @@ const r = useExplorerData();
 async function addLangFile() {
     const filename = mExplorer.mAddLangInput.trim();
     if (filename === '') {
-        return;
+        return mSystemBar.cStatus.fSetError('请输入语言名称');
     }
     mSystemBar.cStatus.fSetLoading(`正在创建语言文件：${filename}.json...`);
     backend.explorer.addI18nFile(`${filename}.json`).then(() => {
