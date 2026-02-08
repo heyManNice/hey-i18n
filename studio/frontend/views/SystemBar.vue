@@ -1,5 +1,5 @@
 <template>
-    <div class="system-bar">
+    <div class="bar">
         <div class="left">
             <!-- 一些文字 -->
             <BarItem text="hey-i18n-studio">
@@ -62,7 +62,7 @@ import mSystemBar from '../models/SystemBar';
 </script>
 
 <style scoped>
-.system-bar {
+.bar {
     --system-bar-height: 20px;
     height: var(--system-bar-height);
     line-height: var(--system-bar-height);
