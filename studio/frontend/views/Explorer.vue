@@ -44,8 +44,9 @@ import {
     FolderOpened,
 } from '@element-plus/icons-vue';
 
-import mSystemBar from '../models/SystemBar';
 import backend from '../rpc/backend';
+
+import mSystemBar from '../models/SystemBar';
 import mEditor from '../models/Editor';
 import mExplorer from '../models/Explorer';
 
