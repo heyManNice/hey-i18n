@@ -18,8 +18,8 @@
             <template #default="{ node }">
                 <span class="tree-node">
                     <el-icon>
-                        <FolderOpened v-if="!node.isLeaf && node.expanded" />
-                        <Folder v-else-if="!node.isLeaf && !node.expanded" />
+                        <FolderOpened v-if="node.data.isDir && node.expanded" />
+                        <Folder v-else-if="node.data.isDir && !node.expanded" />
                         <Document v-else />
                     </el-icon>
                     <span>{{ node.label }}</span>
@@ -74,10 +74,11 @@ async function addLangFile() {
 const treeProps = {
     children: 'children',
     label: 'label',
+    isDir: false,
 };
 
 function handleNodeClick(data: typeof treeProps) {
-    if (data.children && data.children.length > 0) {
+    if (data.isDir) {
         return;
     }
     const filename = data.label;

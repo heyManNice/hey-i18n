@@ -30,9 +30,15 @@ export default mExplorer;
 export function useExplorerData() {
     return useReactivePromise(async function () {
         const { info, files, config } = await backend.explorer.getTreeData();
+
         const treeData = [{
+            isDir: true,
             label: `${info.projectName}/${info.i18nDir} (原文 ${config.sourcesLocale})`,
-            children: Array.from(files).map(file => ({ label: file })),
+            children: computed(() => {
+                return Array.from(files)
+                    .map(file => ({ label: file }))
+                    .filter(file => file.label.indexOf(mExplorer.mTreeSearch) !== -1);
+            })
         }];
         return {
             treeData
