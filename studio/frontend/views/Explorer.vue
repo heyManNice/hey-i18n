@@ -62,12 +62,12 @@ async function addLangFile() {
     backend.explorer.addI18nFile(`${filename}.json`).then(() => {
         mExplorer.mAddLangInput = '';
         r.update();
-        mSystemBar.status.fSetComplete(`已添加语言文件：${filename}.json`);
+        mSystemBar.cStatus.fSetComplete(`已添加语言文件：${filename}.json`);
     }).catch((error) => {
         if (!(error instanceof Error)) {
             throw error;
         }
-        mSystemBar.status.fSetError(`添加语言文件失败：${error.message}`);
+        mSystemBar.cStatus.fSetError(`添加语言文件失败：${error.message}`);
     });
 }
 
@@ -85,7 +85,7 @@ function handleNodeClick(data: typeof treeProps) {
 };
 
 function handleSacnProject() {
-    mSystemBar.status.fSetProgress(1, '初始化扫描...');
+    mSystemBar.cStatus.fSetProgress(30, '初始化扫描...');
 }
 
 </script>

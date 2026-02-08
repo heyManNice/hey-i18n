@@ -9,22 +9,22 @@
             </BarItem>
 
             <!-- 完成提示条 -->
-            <BarItem v-if="mSystemBar.status.mStatus === 'complete'" :text="mSystemBar.status.mMessage">
+            <BarItem v-if="mSystemBar.cStatus.mStatus === 'complete'" :text="mSystemBar.cStatus.mMessage">
                 <template #icon>
                     <Check />
                 </template>
             </BarItem>
 
             <!-- 错误提示 -->
-            <BarItem v-if="mSystemBar.status.mStatus === 'error'" :text="mSystemBar.status.mMessage">
+            <BarItem v-if="mSystemBar.cStatus.mStatus === 'error'" :text="mSystemBar.cStatus.mMessage">
                 <template #icon>
                     <Close />
                 </template>
             </BarItem>
 
             <!-- 进度条提示 -->
-            <BarItem v-if="mSystemBar.status.mStatus === 'progress'" :text="mSystemBar.status.mMessage"
-                :progress="mSystemBar.status.mProgress" />
+            <BarItem v-if="mSystemBar.cStatus.mStatus === 'progress'" :text="mSystemBar.cStatus.mMessage"
+                :progress="mSystemBar.cStatus.mProgress" />
 
         </div>
         <div class="right">
@@ -33,12 +33,12 @@
                     <Files />
                 </template>
             </BarItem>
-            <BarItem :text="mSystemBar.lastScanTime.mLastScanTime">
+            <BarItem :text="mSystemBar.cScanTime.mLastScanTime">
                 <template #icon>
                     <Timer />
                 </template>
             </BarItem>
-            <BarItem text="v0.0.1">
+            <BarItem :text="mSystemBar.CVersion.mVersion">
                 <template #icon>
                     <Flag />
                 </template>

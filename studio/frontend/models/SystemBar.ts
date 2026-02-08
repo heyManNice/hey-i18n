@@ -3,7 +3,7 @@ import {
 } from 'vue';
 
 const mSystemBar = reactive({
-    status: {
+    cStatus: {
         // 状态
         mStatus: 'complete' as 'complete' | 'error' | 'progress',
 
@@ -35,7 +35,7 @@ const mSystemBar = reactive({
         }
     },
 
-    lastScanTime: {
+    cScanTime: {
         mLastScanTime: "上次扫描时间: 2024-06-01 12:00",
 
         // 设置上次扫描时间
@@ -50,7 +50,7 @@ const mSystemBar = reactive({
         }
     },
 
-    version: {
+    CVersion: {
         mVersion: 'v0.0.1',
     }
 });
