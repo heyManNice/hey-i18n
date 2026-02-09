@@ -62,3 +62,26 @@ const mSystemBar = reactive({
 });
 
 export default mSystemBar;
+
+// 状态通知对象
+export const Notify = {
+    // 成功
+    ok(msg: string) {
+        mSystemBar.cStatus.fSetComplete(msg);
+    },
+
+    // 失败
+    fail(msg: string) {
+        mSystemBar.cStatus.fSetError(msg);
+    },
+
+    // 进度
+    progress(progress: number, msg: string = '正在初始化...') {
+        mSystemBar.cStatus.fSetProgress(progress, msg);
+    },
+
+    // 加载
+    loading(msg: string) {
+        mSystemBar.cStatus.fSetLoading(msg);
+    }
+}

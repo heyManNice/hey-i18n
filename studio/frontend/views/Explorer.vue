@@ -12,9 +12,9 @@
                 placeholder="创建语言资源" />
             <el-button @click="addLangFile">创建</el-button>
         </div>
-        <el-button @click="handleSacnProject">扫描项目原文</el-button>
+        <el-button @click="scanProject">扫描项目原文</el-button>
         <!-- 资源文件列表 -->
-        <el-tree v-if="!r.e" v-loading="r.l" class="tree" :data="r.d?.treeData" @node-click="handleNodeClick"
+        <el-tree v-if="!r.e" v-loading="r.l" class="tree" :data="r.d?.treeData" @node-click="nodeClick"
             default-expand-all>
             <template #default="{ node }">
                 <span class="tree-node">
@@ -48,7 +48,7 @@ import {
 
 import backend from '../rpc/backend';
 
-import mSystemBar from '../models/SystemBar';
+import { Notify } from '../models/SystemBar';
 import mEditor from '../models/Editor';
 import mExplorer from '../models/Explorer';
 
@@ -59,22 +59,22 @@ const r = useExplorerData();
 async function addLangFile() {
     const filename = mExplorer.mAddLangInput.trim();
     if (filename === '') {
-        return mSystemBar.cStatus.fSetError('请输入语言名称');
+        return Notify.fail('请输入语言名称');
     }
-    mSystemBar.cStatus.fSetLoading(`正在创建语言文件：${filename}.json...`);
+    Notify.loading(`正在创建语言文件：${filename}.json...`);
     backend.explorer.addI18nFile(`${filename}.json`).then(() => {
         mExplorer.mAddLangInput = '';
         r.update();
-        mSystemBar.cStatus.fSetComplete(`已创建语言文件：${filename}.json`)
+        Notify.ok(`已创建语言文件：${filename}.json`)
     }).catch((error) => {
         if (!(error instanceof Error)) {
             throw error;
         }
-        mSystemBar.cStatus.fSetError(`创建语言文件失败：${error.message}`);
+        Notify.fail(`创建语言文件失败：${error.message}`);
     });
 }
 
-function handleNodeClick(data: NonNullable<typeof r.d>["treeData"][number]) {
+function nodeClick(data: NonNullable<typeof r.d>["treeData"][number]) {
     if (data.isDir) {
         return;
     }
@@ -82,10 +82,9 @@ function handleNodeClick(data: NonNullable<typeof r.d>["treeData"][number]) {
     mEditor.fAddTab(filename);
 };
 
-function handleSacnProject() {
-    mSystemBar.cStatus.fSetProgress(30, '初始化扫描...');
+function scanProject() {
+    Notify.progress(30);
 }
-
 </script>
 
 <style scoped>
