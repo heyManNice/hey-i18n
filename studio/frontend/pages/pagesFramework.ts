@@ -6,7 +6,7 @@ import {
 import Loading from './Loading.vue';
 import Error from './Error.vue';
 
-class Settings {
+class PagesFramework {
     private backdrop;
     private window;
     private component;
@@ -57,4 +57,4 @@ class Settings {
     }
 }
 
-export default Settings;
+export default PagesFramework;
