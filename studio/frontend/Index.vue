@@ -143,6 +143,16 @@ html.dark {
     }
 }
 
+@keyframes backdrop-fade-out {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
 @keyframes window-scale-in {
     from {
         transform: translate(-50%, -50%) scaleY(0);
@@ -150,6 +160,16 @@ html.dark {
 
     to {
         transform: translate(-50%, -50%) scaleY(1);
+    }
+}
+
+@keyframes window-scale-out {
+    from {
+        transform: translate(-50%, -50%) scaleY(1);
+    }
+
+    to {
+        transform: translate(-50%, -50%) scaleY(0);
     }
 }
 </style>
