@@ -23,7 +23,7 @@ class Settings {
         this.component = useAsyncComponent(() => import('./Settings.vue'));
     }
 
-    public init() {
+    public open() {
         this.vueApp = createApp(this.component);
         this.vueApp.mount(this.window);
 

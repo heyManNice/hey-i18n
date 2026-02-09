@@ -5,7 +5,7 @@
             <span>
                 hey-i18n-studio
             </span>
-            <el-button @click="settings.init()" :icon="Setting"></el-button>
+            <el-button @click="settings.open()" :icon="Setting"></el-button>
         </div>
         <!-- 筛选搜索框 -->
         <el-input v-model="mExplorer.mTreeSearch" placeholder="搜索现有资源" :prefix-icon="Search" />
