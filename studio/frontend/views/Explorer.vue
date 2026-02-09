@@ -2,7 +2,10 @@
     <div class="container">
         <!-- logo -->
         <div class="brand">
-            hey-i18n-studio
+            <span>
+                hey-i18n-studio
+            </span>
+            <el-button @click="settings.init()" :icon="Setting"></el-button>
         </div>
         <!-- 筛选搜索框 -->
         <el-input v-model="mExplorer.mTreeSearch" placeholder="搜索现有资源" :prefix-icon="Search" />
@@ -44,7 +47,10 @@ import {
     Document,
     Folder,
     FolderOpened,
+    Setting
 } from '@element-plus/icons-vue';
+
+import settings from '../pages/settings/settings';
 
 import backend from '../rpc/backend';
 
@@ -100,6 +106,8 @@ function scanProject() {
     font-size: 18px;
     font-weight: bold;
     color: var(--text-color);
+    display: flex;
+    justify-content: space-between;
 }
 
 .tree {
