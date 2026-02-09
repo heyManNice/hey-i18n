@@ -28,8 +28,9 @@
                     <!-- 项目原来的翻译列 -->
                     <el-table-column min-width="45">
                         <template #header>
-                            <SourceHeaderCellRenderer :model-value="r.d?.filter.sourceSearch"
-                                @update:modelValue="val => { if (r.d) { r.d.filter.sourceSearch = val } }" />
+                            <HeaderCellRenderer :search-input="r.d?.filter.sourceSearch"
+                                :label="`项目原文 (${mExplorer.mSourceLocale})`" search-placeholder="搜索原文"
+                                @update:searchInput="val => { if (r.d) { r.d.filter.sourceSearch = val } }" />
                         </template>
                         <template #default="scope">
                             <TextCellRenderer :text="scope.row.untranslated" style="cursor: not-allowed;" />
@@ -38,8 +39,9 @@
                     <!-- 目标翻译的列 -->
                     <el-table-column min-width="55">
                         <template #header>
-                            <TargetHeaderCellRenderer :model-value="r.d?.filter.targetSearch"
-                                @update:modelValue="val => { if (r.d) { r.d.filter.targetSearch = val } }" />
+                            <HeaderCellRenderer :search-input="r.d?.filter.targetSearch"
+                                :label="`目标译文 (${targetLocalName})`" search-placeholder="搜索译文"
+                                @update:searchInput="val => { if (r.d) { r.d.filter.targetSearch = val } }" />
                         </template>
                         <template #default="scope">
                             <EditableCellRenderer v-model="scope.row.translated"
@@ -67,15 +69,20 @@ import {
     Filter
 } from '@element-plus/icons-vue';
 
-import TargetHeaderCellRenderer from './TranslationCompare/TargetHeaderCellRenderer.vue';
-import SourceHeaderCellRenderer from './TranslationCompare/SourceHeaderCellRenderer.vue';
+import HeaderCellRenderer from './TranslationCompare/HeaderCellRenderer.vue';
 import TextCellRenderer from './TranslationCompare/TextCellRenderer.vue';
 import EditableCellRenderer from './TranslationCompare/EditableCellRenderer.vue';
 
 import mEditor from '../../models/Editor';
+import mExplorer from '../../models/Explorer';
 
 import { useTranslationData } from '../../models/Editor';
-const r = useTranslationData(mEditor.mActiveTab);
+
+const fileName = mEditor.mActiveTab;
+const r = useTranslationData(fileName);
+
+// local.json中获取local
+const targetLocalName = fileName.split('.')[0];
 </script>
 
 <style scoped>

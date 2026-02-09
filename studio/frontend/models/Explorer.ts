@@ -21,8 +21,10 @@ const mExplorer = reactive({
     fFetchLangSug(input: string, callback: any) {
         const suggestions = languages.filter(lang => lang.indexOf(input) !== -1).map(lang => ({ value: lang }));
         callback(suggestions);
-    }
+    },
 
+    // 项目原文
+    mSourceLocale: 'null'
 });
 
 export default mExplorer;
@@ -30,6 +32,8 @@ export default mExplorer;
 export function useExplorerData() {
     return useReactivePromise(async function () {
         const { info, files, config } = await backend.explorer.getTreeData();
+
+        mExplorer.mSourceLocale = config.sourcesLocale;
 
         const treeData = [{
             isDir: true,
