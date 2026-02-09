@@ -103,4 +103,53 @@ html.dark {
     --el-text-color-primary: var(--text-color) !important;
     --el-fill-color-blank: var(--panel-bg-color) !important;
 }
+
+/* 子窗口样式 */
+.pages-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    animation: backdrop-fade-in 0.3s ease-out forwards;
+    z-index: 999;
+}
+
+.pages-window {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scaleY(0);
+    transform-origin: center;
+    background-color: var(--bg-color);
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    animation: window-scale-in 0.1s ease-out forwards;
+    z-index: 1000;
+    width: min(800px, 90vw);
+    height: min(600px, 80vh);
+}
+
+@keyframes backdrop-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes window-scale-in {
+    from {
+        transform: translate(-50%, -50%) scaleY(0);
+    }
+
+    to {
+        transform: translate(-50%, -50%) scaleY(1);
+    }
+}
 </style>
