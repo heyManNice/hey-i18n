@@ -41,5 +41,7 @@ const prop = withDefaults(defineProps<{
     display: flex;
     align-items: center;
     gap: 5px;
+    padding: 0px 5px;
+    border-radius: 5px;
 }
 </style>

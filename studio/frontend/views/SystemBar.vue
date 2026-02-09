@@ -16,7 +16,8 @@
             </BarItem>
 
             <!-- 错误提示 -->
-            <BarItem v-if="mSystemBar.cStatus.mStatus === 'error'" :text="mSystemBar.cStatus.mMessage">
+            <BarItem v-if="mSystemBar.cStatus.mStatus === 'error'" :text="mSystemBar.cStatus.mMessage"
+                style="background-color: color-mix(in srgb, red 50%, var(--bg-color));">
                 <template #icon>
                     <Close />
                 </template>
@@ -71,7 +72,7 @@ import mSystemBar from '../models/SystemBar';
     --system-bar-height: 20px;
     height: var(--system-bar-height);
     line-height: var(--system-bar-height);
-    padding: 0px 10px;
+    padding: 0px 5px;
     background-color: var(--bg-color);
     border: 1px solid var(--border-color);
     color: var(--text-color);
@@ -83,7 +84,10 @@ import mSystemBar from '../models/SystemBar';
 .left,
 .right {
     display: flex;
-    gap: 10px;
     align-items: center;
+}
+
+.error-bg {
+    background-color: color-mix(in srgb, red 50%, var(--bg-color));
 }
 </style>
