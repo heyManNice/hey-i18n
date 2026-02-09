@@ -1,6 +1,5 @@
 import {
-    createApp,
-    type App
+    createApp
 } from 'vue'
 
 import { useAsyncComponent } from '../AsyncComponent';
@@ -11,7 +10,7 @@ class Settings {
     private window;
     private component;
 
-    private vueApp: App<Element> | null = null;
+    private vueApp: ReturnType<typeof createApp> | null = null;
 
     constructor() {
         this.backdrop = document.createElement('div');
