@@ -1,7 +1,7 @@
 <template>
     <div class="text-cell-renderer" title="原文只能让开发者在源代码中修改">
         <template v-for="(part, index) in parts" :key="index">
-            <span v-if="part.type === 'variable'" class="variable">&#123;{{ part.content }}&#125;</span>
+            <span v-if="part.type === 'variable'" class="variable">{{ '{' + part.content + '}' }}</span>
             <span v-else>{{ part.content }}</span>
         </template>
     </div>
