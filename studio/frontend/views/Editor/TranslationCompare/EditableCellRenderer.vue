@@ -93,11 +93,13 @@ onMounted(() => {
 });
 
 function getEditorContent() {
-    if (!editorRef.value) return '';
     const content: typeof props.item = {
         texts: [],
         variables: []
     };
+    if (!editorRef.value) return content;
+
+    editorRef.value.normalize(); // 合并文本节点，确保结构清晰
     editorRef.value.childNodes.forEach(node => {
         if (node.nodeType === Node.TEXT_NODE && node.textContent) {
             content.texts.push(node.textContent || '');
