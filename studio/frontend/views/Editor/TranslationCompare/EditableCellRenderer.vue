@@ -252,19 +252,7 @@ function insertVariable(variableName: string) {
     border-color: var(--el-color-primary);
 }
 
-:deep(.variable) {
-    background-color: var(--el-color-primary-light-8);
-    color: var(--el-color-primary);
-    border-radius: 4px;
-    padding: 2px 5px;
-    margin: 0 2px;
-    font-weight: bold;
-    display: inline;
-    line-height: 1.2;
-    cursor: default;
-    user-select: all;
-    -webkit-user-select: all;
-}
+
 
 .suggestions-list {
     position: fixed;
