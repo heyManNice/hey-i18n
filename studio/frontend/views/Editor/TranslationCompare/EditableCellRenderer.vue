@@ -65,7 +65,7 @@ function renderContent() {
     editorRef.value.innerHTML = '';
     parts.forEach(part => {
         if (part.type === 'variable') {
-            const span = createPlaceholderElement(`{${part.content}}`);
+            const span = createVariableElement(part.content);
             editorRef.value!.appendChild(span);
         } else {
             editorRef.value!.appendChild(document.createTextNode(part.content));
@@ -73,9 +73,9 @@ function renderContent() {
     });
 };
 
-function createPlaceholderElement(text: string) {
+function createVariableElement(text: string) {
     const span = document.createElement('span');
-    span.textContent = text;
+    span.textContent = `{${text}}`;
     span.className = 'variable';
     span.contentEditable = 'false';
     return span;
@@ -197,7 +197,7 @@ function insertVariable(variableName: string) {
             range.setEnd(node, offset);
             range.deleteContents();
 
-            const placeholder = createPlaceholderElement(`{${variableName}}`);
+            const placeholder = createVariableElement(variableName);
             range.insertNode(placeholder);
 
             range.setStartAfter(placeholder);
