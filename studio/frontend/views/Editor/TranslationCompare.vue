@@ -19,7 +19,8 @@
                         :value="item.value" />
                 </el-select>
             </div>
-            <el-button type="primary" plain>提交</el-button>
+            <el-button plain>AI 翻译</el-button>
+            <el-button style="margin-left: 0px;" type="primary" plain>保存</el-button>
         </div>
         <!-- 编辑内容的表格 -->
         <div class="table">
@@ -91,7 +92,7 @@ const targetLocal = filename.split('.')[0];
     flex-direction: column;
     height: 100%;
     gap: 10px;
-    padding: 10px;
+    padding: 0px 10px;
     background-color: var(--panel-bg-color);
     color: var(--text-color);
 }
@@ -105,7 +106,7 @@ const targetLocal = filename.split('.')[0];
     display: flex;
     align-items: center;
     gap: 20px;
-    padding: 5px 10px;
+    padding: 10px 0px;
     border-bottom: 1px solid var(--border-color);
     font-size: 14px;
     min-width: 550px;
