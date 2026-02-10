@@ -40,7 +40,7 @@
                     <el-table-column min-width="55">
                         <template #header>
                             <HeaderCellRenderer :search-input="r.d?.filter.targetSearch"
-                                :label="`目标译文 (${targetLocalName})`" search-placeholder="搜索译文"
+                                :label="`目标译文 (${targetLocal})`" search-placeholder="搜索译文"
                                 @update:searchInput="val => { if (r.d) { r.d.filter.targetSearch = val } }" />
                         </template>
                         <template #default="scope">
@@ -78,11 +78,11 @@ import mExplorer from '../../models/Explorer';
 
 import { useTranslationData } from '../../models/Editor';
 
-const fileName = mEditor.mActiveTab;
-const r = useTranslationData(fileName);
+const filename = mEditor.mActiveTab;
+const r = useTranslationData(filename);
 
 // local.json中获取local
-const targetLocalName = fileName.split('.')[0];
+const targetLocal = filename.split('.')[0];
 </script>
 
 <style scoped>
