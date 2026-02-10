@@ -2,8 +2,9 @@
     <div class="editable-cell-renderer" @click.stop>
         <div style="flex: 1;" ref="editorRef" class="editor-content" :contenteditable="true" spellcheck="false"
             @input="onInput" @keydown="onKeydown" @blur="onBlur"></div>
-        <el-button :icon="ArrowLeft" circle title="高级选项" />
+        <el-button :icon="MagicStick" circle title="AI填充" />
         <el-button style="margin-left: 0px;" :icon="FullScreen" circle title="全屏编辑" />
+        <el-button style="margin-left: 0px;" :icon="ArrowLeft" circle title="高级选项" />
         <Teleport to="body">
             <ul v-if="showSuggestions" class="suggestions-list" :style="suggestionStyle">
                 <template v-if="filteredVariables.length > 0">
@@ -20,10 +21,19 @@
     </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import {
+    ref,
+    computed,
+    onMounted,
+    watch
+} from 'vue';
 import { splitTextWithVariables } from '../../../utils/textUtils';
 
-import { FullScreen, ArrowLeft } from '@element-plus/icons-vue';
+import {
+    FullScreen,
+    ArrowLeft,
+    MagicStick
+} from '@element-plus/icons-vue';
 import { ElButton } from 'element-plus';
 
 const props = defineProps<{
