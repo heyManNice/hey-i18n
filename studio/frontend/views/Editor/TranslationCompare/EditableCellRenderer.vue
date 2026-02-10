@@ -49,6 +49,8 @@ const props = defineProps<{
     },
 }>();
 
+// 未编辑时候的内容
+let originalContent = '';
 const isEditing = ref(false);
 
 const editorRef = ref<HTMLDivElement | null>(null);
@@ -87,6 +89,7 @@ function createVariableElement(text: string) {
 
 onMounted(() => {
     renderContent();
+    originalContent = editorRef.value?.innerText || '';
 });
 
 function getEditorContent() {
@@ -111,7 +114,11 @@ function onInput(e: Event) {
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return;
 
-    isEditing.value = true;
+    if (originalContent === editorRef.value?.innerText) {
+        isEditing.value = false;
+    } else {
+        isEditing.value = true;
+    }
 
     const range = selection.getRangeAt(0);
     const node = range.startContainer;
