@@ -28,7 +28,6 @@ const parts = computed(() => splitTextWithVariables(props.text));
     text-overflow: ellipsis;
     border: 1px solid var(--border-color);
     border-radius: 5px;
-    width: calc(var(--col-width) - 16px);
     box-sizing: border-box;
     display: flex;
     align-items: center;

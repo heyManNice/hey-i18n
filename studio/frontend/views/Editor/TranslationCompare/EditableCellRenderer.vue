@@ -232,7 +232,6 @@ const insertVariable = (variableName: string) => {
 <style scoped>
 .editable-cell-renderer {
     position: relative;
-    width: calc(var(--col-width) - 10px);
     display: flex;
     gap: 10px;
 }
