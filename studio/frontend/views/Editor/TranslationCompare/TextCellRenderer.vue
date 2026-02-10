@@ -24,8 +24,8 @@ const parts = computed(() => mergeTextAndVariables(props.item.texts, props.item.
 <style scoped>
 .text-cell-renderer {
     padding: 0 11px;
-    height: 32px;
-    line-height: 32px;
+    min-height: 32px;
+    line-height: 24px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -34,5 +34,6 @@ const parts = computed(() => mergeTextAndVariables(props.item.texts, props.item.
     box-sizing: border-box;
     display: flex;
     align-items: center;
+    user-select: text;
 }
 </style>

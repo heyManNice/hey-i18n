@@ -147,4 +147,8 @@ const targetLocal = filename.split('.')[0];
     user-select: all;
     -webkit-user-select: all;
 }
+
+:deep(.el-table__row .el-table__cell) {
+    vertical-align: top;
+}
 </style>
