@@ -112,15 +112,20 @@ function getEditorContent() {
     return content;
 };
 
-function onInput(e: Event) {
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return;
-
+// 更新编辑状态
+function updateEditingState() {
     if (originalContent === editorRef.value?.innerText) {
         isEditing.value = false;
     } else {
         isEditing.value = true;
     }
+}
+
+function onInput(e: Event) {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+
+    updateEditingState();
 
     const range = selection.getRangeAt(0);
     const node = range.startContainer;
@@ -228,6 +233,7 @@ function insertVariable(variableName: string) {
     }
 
     showSuggestions.value = false;
+    updateEditingState();
 };
 
 </script>
