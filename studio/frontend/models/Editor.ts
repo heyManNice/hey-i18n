@@ -55,8 +55,6 @@ const mEditor = reactive({
 export default mEditor;
 
 import backend from '../rpc/backend';
-import { mergeTextAndVariables } from '../utils/text-utils';
-
 
 // 编辑器的表单数据
 export function useTranslationData(filename: string) {
