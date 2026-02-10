@@ -1,7 +1,7 @@
 <template>
     <div class="text-cell-renderer" title="原文只能让开发者在源代码中修改">
         <template v-for="(part, index) in parts" :key="index">
-            <span v-if="part.type === 'placeholder'" class="placeholder">{{ part.content }}</span>
+            <span v-if="part.type === 'variable'" class="variable">{{ part.content }}</span>
             <span v-else>{{ part.content }}</span>
         </template>
     </div>
@@ -9,13 +9,13 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { splitTextWithPlaceholders } from '../../../utils/textUtils';
+import { splitTextWithVariables } from '../../../utils/textUtils';
 
 const props = defineProps<{
     text: string;
 }>();
 
-const parts = computed(() => splitTextWithPlaceholders(props.text));
+const parts = computed(() => splitTextWithVariables(props.text));
 </script>
 
 <style scoped>
@@ -34,7 +34,7 @@ const parts = computed(() => splitTextWithPlaceholders(props.text));
     align-items: center;
 }
 
-.placeholder {
+.variable {
     background-color: var(--el-color-primary-light-8);
     color: var(--el-color-primary);
     border-radius: 4px;

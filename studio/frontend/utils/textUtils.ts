@@ -9,11 +9,11 @@ export function mergeTextAndVariables(texts: string[], variables: string[]): str
     return result;
 }
 
-export function splitTextWithPlaceholders(text: string): { type: 'text' | 'placeholder', content: string }[] {
+export function splitTextWithVariables(text: string): { type: 'text' | 'variable', content: string }[] {
     const parts = text.split(/({[^}]+})/g).filter(p => p);
     return parts.map(part => {
         if (part.startsWith('{') && part.endsWith('}')) {
-            return { type: 'placeholder', content: part };
+            return { type: 'variable', content: part };
         }
         return { type: 'text', content: part };
     });

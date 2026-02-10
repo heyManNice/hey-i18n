@@ -21,7 +21,7 @@
 </template>
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
-import { splitTextWithPlaceholders } from '../../../utils/textUtils';
+import { splitTextWithVariables } from '../../../utils/textUtils';
 
 import { FullScreen, ArrowLeft } from '@element-plus/icons-vue';
 import { ElButton } from 'element-plus';
@@ -59,10 +59,10 @@ const filteredVariables = computed(() => {
 
 const renderContent = () => {
     if (!editorRef.value) return;
-    const parts = splitTextWithPlaceholders(props.modelValue);
+    const parts = splitTextWithVariables(props.modelValue);
     editorRef.value.innerHTML = '';
     parts.forEach(part => {
-        if (part.type === 'placeholder') {
+        if (part.type === 'variable') {
             const span = createPlaceholderElement(part.content);
             editorRef.value!.appendChild(span);
         } else {
@@ -74,7 +74,7 @@ const renderContent = () => {
 const createPlaceholderElement = (text: string) => {
     const span = document.createElement('span');
     span.textContent = text;
-    span.className = 'placeholder';
+    span.className = 'variable';
     span.contentEditable = 'false';
     return span;
 };
@@ -269,7 +269,7 @@ const insertVariable = (variableName: string) => {
     border-color: var(--el-color-primary);
 }
 
-:deep(.placeholder) {
+:deep(.variable) {
     background-color: var(--el-color-primary-light-8);
     color: var(--el-color-primary);
     border-radius: 4px;
