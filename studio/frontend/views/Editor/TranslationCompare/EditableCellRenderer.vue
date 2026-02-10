@@ -91,17 +91,20 @@ onMounted(() => {
 
 function getEditorContent() {
     if (!editorRef.value) return '';
-    let text = '';
+    const content: typeof props.item = {
+        texts: [],
+        variables: []
+    };
     editorRef.value.childNodes.forEach(node => {
         if (node.nodeType === Node.TEXT_NODE) {
-            text += node.textContent;
-        } else if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).classList.contains('placeholder')) {
-            text += node.textContent;
+            content.texts.push(node.textContent || '');
+        } else if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).classList.contains('variable')) {
+            content.variables.push((node.textContent || '').slice(1, -1));
         } else if (node.nodeName === 'BR') {
             // text += '\n'; // Handle newlines if needed, but for now single line mostly
         }
     });
-    return text;
+    return content;
 };
 
 function onInput(e: Event) {
@@ -159,6 +162,7 @@ function onBlur() {
     setTimeout(() => {
         showSuggestions.value = false;
     }, 200);
+    console.log(getEditorContent());
 };
 
 // 显示推荐的时候的键盘操作
