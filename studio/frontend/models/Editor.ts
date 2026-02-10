@@ -55,15 +55,21 @@ const mEditor = reactive({
 export default mEditor;
 
 import backend from '../rpc/backend';
-import { mergeTextAndVariables } from '../utils/textUtils';
+import { mergeTextAndVariables } from '../utils/text-utils';
 
 
 // 编辑器的表单数据
 export function useTranslationData(filename: string) {
     return useReactivePromise(async function () {
         const translationList: {
-            untranslated: string;
-            translated: string;
+            untranslated: {
+                texts: string[];
+                variables: string[];
+            };
+            translated: {
+                texts: string[];
+                variables: string[];
+            };
         }[] = [];
 
         const summary = {
@@ -87,8 +93,14 @@ export function useTranslationData(filename: string) {
             if (!targetEntry) {
                 // 如果目标语言文件中没有该条目，使用空字符串作为译文
                 translationList.push({
-                    untranslated: mergeTextAndVariables(sourceTexts, sourceVariables),
-                    translated: '',
+                    untranslated: {
+                        texts: sourceTexts,
+                        variables: sourceVariables
+                    },
+                    translated: {
+                        texts: [],
+                        variables: []
+                    },
                 });
                 continue;
             }
@@ -103,8 +115,14 @@ export function useTranslationData(filename: string) {
             }) || [];
 
             translationList.push({
-                untranslated: mergeTextAndVariables(sourceTexts, sourceVariables),
-                translated: mergeTextAndVariables(targetTexts, targetVariables)
+                untranslated: {
+                    texts: sourceTexts,
+                    variables: sourceVariables
+                },
+                translated: {
+                    texts: targetTexts,
+                    variables: targetVariables
+                }
             });
         }
 
@@ -114,13 +132,13 @@ export function useTranslationData(filename: string) {
             targetSearch: '',
             result: computed(() => {
                 return translationList.filter(item => {
-                    const matchesSource = item.untranslated.includes(filter.sourceSearch);
-                    const matchesTarget = item.translated.includes(filter.targetSearch);
+                    const matchesSource = item.untranslated.texts.join('').includes(filter.sourceSearch);
+                    const matchesTarget = item.translated.texts.join('').includes(filter.targetSearch);
                     if (filter.option === 'all') {
                         return matchesSource && matchesTarget;
                     }
                     if (filter.option === 'untranslated') {
-                        return matchesSource && (!matchesTarget || item.translated === '');
+                        return matchesSource && (!matchesTarget || item.translated.texts.length === 0);
                     }
                     return true;
                 });

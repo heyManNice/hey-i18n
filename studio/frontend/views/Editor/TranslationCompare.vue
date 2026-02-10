@@ -34,7 +34,7 @@
                                 @update:searchInput="val => { if (r.d) { r.d.filter.sourceSearch = val } }" />
                         </template>
                         <template #default="scope">
-                            <TextCellRenderer :text="scope.row.untranslated" style="cursor: not-allowed;" />
+                            <TextCellRenderer :item="scope.row.untranslated" style="cursor: not-allowed;" />
                         </template>
                     </el-table-column>
                     <!-- 目标翻译的列 -->
@@ -45,8 +45,7 @@
                                 @update:searchInput="val => { if (r.d) { r.d.filter.targetSearch = val } }" />
                         </template>
                         <template #default="scope">
-                            <EditableCellRenderer v-model="scope.row.translated"
-                                :source-text="scope.row.untranslated" />
+                            <EditableCellRenderer :item="scope.row.translated" :source-item="scope.row.untranslated" />
                         </template>
                     </el-table-column>
                 </el-table>

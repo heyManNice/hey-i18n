@@ -10,7 +10,7 @@
                 <template v-if="filteredVariables.length > 0">
                     <li v-for="(v, index) in filteredVariables" :key="v"
                         :class="{ active: index === activeSuggestionIndex }" @mousedown.prevent="insertVariable(v)">
-                        <span class="placeholder">
+                        <span class="variable">
                             {{ '{' + v + '}' }}
                         </span>
                     </li>
@@ -24,10 +24,10 @@
 import {
     ref,
     computed,
-    onMounted,
-    watch
+    onMounted
 } from 'vue';
-import { splitTextWithVariables } from '../../../utils/textUtils';
+
+import { mergeTextAndVariables } from '../../../utils/text-utils';
 
 import {
     FullScreen,
@@ -37,12 +37,14 @@ import {
 import { ElButton } from 'element-plus';
 
 const props = defineProps<{
-    modelValue: string;
-    sourceText: string;
-}>();
-
-const emit = defineEmits<{
-    (e: 'update:modelValue', value: string): void;
+    item: {
+        texts: string[];
+        variables: string[];
+    },
+    sourceItem: {
+        texts: string[];
+        variables: string[];
+    },
 }>();
 
 const editorRef = ref<HTMLDivElement | null>(null);
@@ -50,30 +52,20 @@ const showSuggestions = ref(false);
 const suggestionStyle = ref({ top: '0px', left: '0px' });
 const activeSuggestionIndex = ref(0);
 
-// Extract variables from source text
-const variables = computed(() => {
-    const vars: string[] = [];
-    const regex = /{([^}]+)}/g;
-    let match;
-    while ((match = regex.exec(props.sourceText)) !== null) {
-        vars.push(match[1]);
-    }
-    return [...new Set(vars)];
-});
 
 const filterQuery = ref('');
 const filteredVariables = computed(() => {
-    if (!filterQuery.value) return variables.value;
-    return variables.value.filter(v => v.toLowerCase().startsWith(filterQuery.value.toLowerCase()));
+    if (!filterQuery.value) return props.sourceItem.variables;
+    return props.sourceItem.variables.filter(v => v.toLowerCase().startsWith(filterQuery.value.toLowerCase()));
 });
 
-const renderContent = () => {
+function renderContent() {
     if (!editorRef.value) return;
-    const parts = splitTextWithVariables(props.modelValue);
+    const parts = mergeTextAndVariables(props.item.texts, props.item.variables);
     editorRef.value.innerHTML = '';
     parts.forEach(part => {
         if (part.type === 'variable') {
-            const span = createPlaceholderElement(part.content);
+            const span = createPlaceholderElement(`{${part.content}}`);
             editorRef.value!.appendChild(span);
         } else {
             editorRef.value!.appendChild(document.createTextNode(part.content));
@@ -81,7 +73,7 @@ const renderContent = () => {
     });
 };
 
-const createPlaceholderElement = (text: string) => {
+function createPlaceholderElement(text: string) {
     const span = document.createElement('span');
     span.textContent = text;
     span.className = 'variable';
@@ -93,13 +85,7 @@ onMounted(() => {
     renderContent();
 });
 
-watch(() => props.modelValue, (newVal) => {
-    if (editorRef.value && getEditorContent() !== newVal) {
-        renderContent();
-    }
-});
-
-const getEditorContent = () => {
+function getEditorContent() {
     if (!editorRef.value) return '';
     let text = '';
     editorRef.value.childNodes.forEach(node => {
@@ -114,9 +100,7 @@ const getEditorContent = () => {
     return text;
 };
 
-const onInput = (e: Event) => {
-    emit('update:modelValue', getEditorContent());
-
+function onInput(e: Event) {
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return;
 
@@ -146,7 +130,7 @@ const onInput = (e: Event) => {
     showSuggestions.value = false;
 };
 
-const updateSuggestionPosition = () => {
+function updateSuggestionPosition() {
     const selection = window.getSelection();
     if (selection && selection.rangeCount > 0) {
         const range = selection.getRangeAt(0);
@@ -165,13 +149,14 @@ const updateSuggestionPosition = () => {
     }
 };
 
-const onBlur = () => {
+function onBlur() {
     setTimeout(() => {
         showSuggestions.value = false;
     }, 200);
 };
 
-const onKeydown = (e: KeyboardEvent) => {
+// 显示推荐的时候的键盘操作
+function onKeydown(e: KeyboardEvent) {
     if (showSuggestions.value) {
         if (filteredVariables.value.length === 0 && ['ArrowDown', 'ArrowUp', 'Enter'].includes(e.key)) {
             e.preventDefault();
@@ -194,7 +179,7 @@ const onKeydown = (e: KeyboardEvent) => {
     }
 };
 
-const insertVariable = (variableName: string) => {
+function insertVariable(variableName: string) {
     const selection = window.getSelection();
     if (!selection) return;
 
@@ -218,23 +203,12 @@ const insertVariable = (variableName: string) => {
             range.setStartAfter(placeholder);
             range.setEndAfter(placeholder);
 
-            // Insert ZWSP usually helps, but nbsp (\u00A0) is visible. 
-            // \u200B is zero width space, might be tricky for deletion.
-            // Let's use \u00A0 (nbsp) for safety or nothing if browser handles it.
-            // Chrome handles cursor after contentEditable=false block okay usually if there is text node.
-            // Inserting an empty text node might needed.
-            const spacer = document.createTextNode('\u200B');
-            range.insertNode(spacer);
-            range.setStartAfter(spacer);
-            range.setEndAfter(spacer);
-
             selection.removeAllRanges();
             selection.addRange(range);
         }
     }
 
     showSuggestions.value = false;
-    emit('update:modelValue', getEditorContent());
 };
 
 </script>
