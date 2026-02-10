@@ -1,5 +1,7 @@
 <template>
-    <div class="editable-cell-renderer" @click.stop>
+    <div :class="{
+        'is-editing': isEditing
+    }" class="editable-cell-renderer" @click.stop>
         <div style="flex: 1;" ref="editorRef" class="editor-content" @dragstart.prevent :contenteditable="true"
             spellcheck="false" @input="onInput" @keydown="onKeydown" @blur="onBlur"></div>
         <el-button :icon="MagicStick" circle title="AI 翻译" />
@@ -46,6 +48,8 @@ const props = defineProps<{
         variables: string[];
     },
 }>();
+
+const isEditing = ref(false);
 
 const editorRef = ref<HTMLDivElement | null>(null);
 const showSuggestions = ref(false);
@@ -103,6 +107,8 @@ function getEditorContent() {
 function onInput(e: Event) {
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return;
+
+    isEditing.value = true;
 
     const range = selection.getRangeAt(0);
     const node = range.startContainer;
@@ -218,6 +224,13 @@ function insertVariable(variableName: string) {
     position: relative;
     display: flex;
     gap: 10px;
+}
+
+.editable-cell-renderer.is-editing::before {
+    content: '*';
+    position: absolute;
+    left: -12px;
+    font-size: 1rem;
 }
 
 .editor-content {
