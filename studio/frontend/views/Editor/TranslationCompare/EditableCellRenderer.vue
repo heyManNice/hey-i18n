@@ -96,7 +96,7 @@ function getEditorContent() {
         variables: []
     };
     editorRef.value.childNodes.forEach(node => {
-        if (node.nodeType === Node.TEXT_NODE) {
+        if (node.nodeType === Node.TEXT_NODE && node.textContent) {
             content.texts.push(node.textContent || '');
         } else if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).classList.contains('variable')) {
             content.variables.push((node.textContent || '').slice(1, -1));
