@@ -1,7 +1,7 @@
 <template>
     <div class="editable-cell-renderer" @click.stop>
-        <div style="flex: 1;" ref="editorRef" class="editor-content" :contenteditable="true" spellcheck="false"
-            @input="onInput" @keydown="onKeydown" @blur="onBlur"></div>
+        <div style="flex: 1;" ref="editorRef" class="editor-content" @dragstart.prevent :contenteditable="true"
+            spellcheck="false" @input="onInput" @keydown="onKeydown" @blur="onBlur"></div>
         <el-button :icon="MagicStick" circle title="AI 翻译" />
         <el-button style="margin-left: 0px;" :icon="FullScreen" circle title="全屏编辑" />
         <el-button style="margin-left: 0px;" :icon="ArrowLeft" circle title="高级选项" />
