@@ -38,16 +38,13 @@ import {
 } from '@element-plus/icons-vue';
 import { ElButton } from 'element-plus';
 import mEditor from '../../../models/Editor';
+import type {
+    TranslationItem
+} from '../../../models/Editor';
 
 const props = defineProps<{
-    item: {
-        texts: string[];
-        variables: string[];
-    },
-    sourceItem: {
-        texts: string[];
-        variables: string[];
-    },
+    item: TranslationItem,
+    sourceItem: TranslationItem,
 }>();
 
 // 未编辑时候的内容
