@@ -42,13 +42,13 @@ import type {
     TranslationItem
 } from '../../../models/Editor';
 
+import { useDebounceFn } from '@vueuse/core';
+
 const props = defineProps<{
     item: TranslationItem,
     sourceItem: TranslationItem,
 }>();
 
-// 未编辑时候的内容
-let originalContent = '';
 const isEditing = ref(false);
 
 const editorRef = ref<HTMLDivElement | null>(null);
@@ -87,7 +87,6 @@ function createVariableElement(text: string) {
 
 onMounted(() => {
     renderContent();
-    originalContent = editorRef.value?.innerText || '';
 });
 
 function getEditorContent() {
@@ -111,24 +110,23 @@ function getEditorContent() {
 };
 
 // 更新编辑状态
-function updateEditingState() {
-    // 修复当删除输入框为空时内容自动变成br的问题
-    if (editorRef.value?.innerText === '\n') {
-        editorRef.value.innerText = '';
-    }
+const debouncedUpdateEditingState = useDebounceFn(() => {
+    const newContent = getEditorContent();
 
-    if (originalContent === editorRef.value?.innerText) {
-        isEditing.value = false;
-    } else {
+    if (newContent.texts.join('') !== props.item.texts.join('') || newContent.variables.join(',') !== props.item.variables.join(',')) {
         isEditing.value = true;
+        recordChange();
+    } else {
+        isEditing.value = false;
+        deleteChange();
     }
-}
+}, 300);
 
 function onInput(e: Event) {
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return;
 
-    updateEditingState();
+    debouncedUpdateEditingState();
 
     const range = selection.getRangeAt(0);
     const node = range.startContainer;
@@ -199,13 +197,6 @@ function onBlur() {
     setTimeout(() => {
         showSuggestions.value = false;
     }, 200);
-    // 失去焦点时如果有修改的话记录修改
-    if (isEditing.value) {
-        recordChange();
-    } else {
-        deleteChange();
-    }
-    console.log(mEditor.mChangeData[mEditor.mActiveTab]);
 };
 
 // 显示推荐的时候的键盘操作
@@ -262,7 +253,7 @@ function insertVariable(variableName: string) {
     }
 
     showSuggestions.value = false;
-    updateEditingState();
+    debouncedUpdateEditingState();
 };
 
 </script>
