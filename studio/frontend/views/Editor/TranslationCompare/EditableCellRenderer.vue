@@ -115,6 +115,11 @@ function getEditorContent() {
 
 // 更新编辑状态
 function updateEditingState() {
+    // 修复当删除输入框为空时内容自动变成br的问题
+    if (editorRef.value?.innerText === '\n') {
+        editorRef.value.innerText = '';
+    }
+
     if (originalContent === editorRef.value?.innerText) {
         isEditing.value = false;
     } else {
