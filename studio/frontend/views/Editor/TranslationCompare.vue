@@ -20,7 +20,8 @@
                 </el-select>
             </div>
             <el-button plain>AI 翻译</el-button>
-            <el-button style="margin-left: 0px;" type="primary" plain>保存</el-button>
+            <el-button :disabled="r.d?.summary.editingCount === 0" style="margin-left: 0px;" type="primary"
+                plain>保存</el-button>
         </div>
         <!-- 编辑内容的表格 -->
         <div class="table">
