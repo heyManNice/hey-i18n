@@ -8,7 +8,10 @@
                     <el-icon>
                         <Document />
                     </el-icon>
-                    <span>{{ item.filename }}</span>
+                    <span>
+                        <span v-if="Object.keys(mEditor.mChangeData[item.filename] || {}).length > 0">*</span>
+                        {{ item.filename }}
+                    </span>
                 </span>
             </template>
             <TranslationCompare />
