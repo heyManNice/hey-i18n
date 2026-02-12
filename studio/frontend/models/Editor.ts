@@ -81,7 +81,10 @@ export function useTranslationData(filename: string) {
             translatedCount: 0,
             totalCount: 0,
             invalidKeysCount: 0,
-            editingCount: 0
+            editingCount: computed(() => {
+                const changeData = mEditor.mChangeData[filename] || {};
+                return Object.keys(changeData).length;
+            })
         };
 
         const { localAssets, keyCache } = await backend.editor.getAssetsAndCache(filename);
