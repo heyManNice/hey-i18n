@@ -135,7 +135,7 @@ const targetLocal = filename.split('.')[0];
     background-color: var(--panel-bg-color);
 }
 
-:deep(.variable) {
+:global(.variable) {
     background-color: var(--el-color-primary-light-8);
     color: var(--el-color-primary);
     border-radius: 4px;
