@@ -37,6 +37,7 @@ import {
     MagicStick
 } from '@element-plus/icons-vue';
 import { ElButton } from 'element-plus';
+import mEditor from '../../../models/Editor';
 
 const props = defineProps<{
     item: {
@@ -172,11 +173,37 @@ function updateSuggestionPosition() {
     }
 };
 
+// 记录当前组件修改的数据
+function recordChange() {
+    const newContent = getEditorContent();
+    const filename = mEditor.mActiveTab;
+    const key = props.sourceItem.texts.join('');
+    if (!mEditor.mChangeData[filename]) {
+        mEditor.mChangeData[filename] = {};
+    }
+    mEditor.mChangeData[filename][key] = newContent;
+};
+
+// 删除记录当前组件修改的数据
+function deleteChange() {
+    const filename = mEditor.mActiveTab;
+    const key = props.sourceItem.texts.join('');
+    if (mEditor.mChangeData[filename]) {
+        delete mEditor.mChangeData[filename][key];
+    }
+};
+
 function onBlur() {
     setTimeout(() => {
         showSuggestions.value = false;
     }, 200);
-    console.log(getEditorContent());
+    // 失去焦点时如果有修改的话记录修改
+    if (isEditing.value) {
+        recordChange();
+    } else {
+        deleteChange();
+    }
+    console.log(mEditor.mChangeData[mEditor.mActiveTab]);
 };
 
 // 显示推荐的时候的键盘操作

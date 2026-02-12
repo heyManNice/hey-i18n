@@ -7,6 +7,12 @@ import {
     useReactivePromise
 } from '../utils/promise';
 
+// 翻译资源词条的项目
+export type TranslationItem = {
+    texts: string[];
+    variables: string[];
+}
+
 const mEditor = reactive({
     // 编辑器的标签页
     mTabs: [] as {
@@ -49,6 +55,13 @@ const mEditor = reactive({
             { value: 'invalid', label: '失效的键' },
             { value: 'editing', label: '正在修改' },
         ]
+    },
+
+    // 修改的新数据
+    mChangeData: {} as {
+        [filename: string]: {
+            [key: string]: TranslationItem
+        };
     }
 });
 
@@ -60,14 +73,8 @@ import backend from '../rpc/backend';
 export function useTranslationData(filename: string) {
     return useReactivePromise(async function () {
         const translationList: {
-            untranslated: {
-                texts: string[];
-                variables: string[];
-            };
-            translated: {
-                texts: string[];
-                variables: string[];
-            };
+            untranslated: TranslationItem;
+            translated: TranslationItem;
         }[] = [];
 
         const summary = {
