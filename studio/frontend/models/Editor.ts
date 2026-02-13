@@ -56,7 +56,7 @@ const mEditor = reactive({
             { value: 'untranslated', label: '未翻译' },
             { value: 'invalid', label: '失效的键' },
             { value: 'editing', label: '正在修改' },
-        ]
+        ] as const
     },
 
     // 修改的新数据
@@ -141,7 +141,7 @@ export function useTranslationData(filename: string) {
         }
 
         const filter = reactive({
-            option: 'all',
+            option: 'all' as typeof mEditor.cEdit.oFilterOptions[number]['value'],
             sourceSearch: '',
             targetSearch: '',
             result: [] as typeof translationList
@@ -163,12 +163,13 @@ export function useTranslationData(filename: string) {
 
                 // 目标匹配
                 const matchesTarget = targetItem.texts.join('').includes(filter.targetSearch);
-                if (filter.option === 'all') {
-                    return matchesSource && matchesTarget;
+                switch (filter.option) {
+                    case 'all':
+                        return matchesSource && matchesTarget;
+                    case 'untranslated':
+                        return matchesSource && (targetItem.texts.length === 0);
                 }
-                if (filter.option === 'untranslated') {
-                    return matchesSource && (targetItem.texts.length === 0);
-                }
+
                 return true;
             });
         }, { immediate: true });
