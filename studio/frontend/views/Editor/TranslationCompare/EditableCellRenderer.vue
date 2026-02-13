@@ -65,7 +65,15 @@ const filteredVariables = computed(() => {
 
 function renderContent() {
     if (!editorRef.value) return;
-    const parts = mergeTextAndVariables(props.item.texts, props.item.variables);
+    // 诸如筛选时候
+    // 该组件卸载并重新挂载时，查看内存里是否有修改的数据
+    const filename = mEditor.mActiveTab;
+    const existingChange = mEditor.mChangeData[filename]?.[props.sourceItem.key];
+    if (existingChange) {
+        isEditing.value = true;
+    }
+    const item = existingChange || props.item;
+    const parts = mergeTextAndVariables(item.texts, item.variables);
     editorRef.value.innerHTML = '';
     parts.forEach(part => {
         if (part.type === 'variable') {
@@ -91,6 +99,7 @@ onMounted(() => {
 
 function getEditorContent() {
     const content: typeof props.item = {
+        key: props.sourceItem.key,
         texts: [],
         variables: []
     };
@@ -177,7 +186,7 @@ function updateSuggestionPosition() {
 function recordChange() {
     const newContent = getEditorContent();
     const filename = mEditor.mActiveTab;
-    const key = props.sourceItem.texts.join('');
+    const key = props.sourceItem.key;
     if (!mEditor.mChangeData[filename]) {
         mEditor.mChangeData[filename] = {};
     }
@@ -187,7 +196,7 @@ function recordChange() {
 // 删除记录当前组件修改的数据
 function deleteChange() {
     const filename = mEditor.mActiveTab;
-    const key = props.sourceItem.texts.join('');
+    const key = props.sourceItem.key;
     if (mEditor.mChangeData[filename]) {
         delete mEditor.mChangeData[filename][key];
     }

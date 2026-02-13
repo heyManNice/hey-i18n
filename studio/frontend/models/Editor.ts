@@ -9,6 +9,7 @@ import {
 
 // 翻译资源词条的项目
 export type TranslationItem = {
+    key: string;
     texts: string[];
     variables: string[];
 }
@@ -95,17 +96,19 @@ export function useTranslationData(filename: string) {
             const sourceTexts = entry.texts;
             const sourceVariables = entry.variables || [];
 
-            const assetsKey = entry.texts.join('');
-            const targetEntry = localAssets[assetsKey];
+            const key = entry.texts.join('');
+            const targetEntry = localAssets[key];
 
             if (!targetEntry) {
                 // 如果目标语言文件中没有该条目，使用空字符串作为译文
                 translationList.push({
                     untranslated: {
+                        key,
                         texts: sourceTexts,
                         variables: sourceVariables
                     },
                     translated: {
+                        key,
                         texts: [],
                         variables: []
                     },
@@ -124,10 +127,12 @@ export function useTranslationData(filename: string) {
 
             translationList.push({
                 untranslated: {
+                    key,
                     texts: sourceTexts,
                     variables: sourceVariables
                 },
                 translated: {
+                    key,
                     texts: targetTexts,
                     variables: targetVariables
                 }
