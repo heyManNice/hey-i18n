@@ -66,7 +66,7 @@ import { useExplorerData } from '../models/Explorer';
 const r = useExplorerData();
 
 // 点击添加语言文件
-async function addLangFile() {
+function addLangFile() {
     const filename = mExplorer.mAddLangInput.trim();
     if (filename === '') {
         return Notify.fail('请输入语言名称');
