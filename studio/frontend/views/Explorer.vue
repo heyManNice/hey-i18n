@@ -26,7 +26,10 @@
                         <Folder v-else-if="node.data.isDir && !node.expanded" />
                         <Document v-else />
                     </el-icon>
-                    <span>{{ node.label }}</span>
+                    <span>
+                        {{ node.label }}
+                        <span v-if="Object.keys(mEditor.mChangeData[node.label] || {}).length > 0">*</span>
+                    </span>
                 </span>
             </template>
         </el-tree>
