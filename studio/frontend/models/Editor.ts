@@ -168,6 +168,8 @@ export function useTranslationData(filename: string) {
                         return matchesSource && matchesTarget;
                     case 'untranslated':
                         return matchesSource && (targetItem.texts.length === 0);
+                    case 'editing':
+                        return matchesSource && Object.prototype.hasOwnProperty.call(changeData, item.untranslated.key);
                 }
 
                 return true;
