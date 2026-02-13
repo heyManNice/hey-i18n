@@ -1,6 +1,7 @@
 import {
     reactive,
-    computed
+    computed,
+    watch
 } from 'vue';
 
 import {
@@ -143,27 +144,34 @@ export function useTranslationData(filename: string) {
             option: 'all',
             sourceSearch: '',
             targetSearch: '',
-            result: computed(() => {
-                return translationList.filter(item => {
-                    // 原匹配
-                    const matchesSource = item.untranslated.texts.join('').includes(filter.sourceSearch);
-
-                    // 看看内存中有没有目标修改数据
-                    const changeData = mEditor.mChangeData[filename] || {};
-                    const targetItem = changeData[item.untranslated.key] || item.translated;
-
-                    // 目标匹配
-                    const matchesTarget = targetItem.texts.join('').includes(filter.targetSearch);
-                    if (filter.option === 'all') {
-                        return matchesSource && matchesTarget;
-                    }
-                    if (filter.option === 'untranslated') {
-                        return matchesSource && (!matchesTarget || targetItem.texts.length === 0);
-                    }
-                    return true;
-                });
-            })
+            result: [] as typeof translationList
         });
+
+        // 监听筛选条件和搜索框的变化，更新筛选结果
+        watch(() => [
+            filter.option,
+            filter.sourceSearch,
+            filter.targetSearch
+        ], () => {
+            filter.result = translationList.filter(item => {
+                // 原匹配
+                const matchesSource = item.untranslated.texts.join('').includes(filter.sourceSearch);
+
+                // 看看内存中有没有目标修改数据
+                const changeData = mEditor.mChangeData[filename] || {};
+                const targetItem = changeData[item.untranslated.key] || item.translated;
+
+                // 目标匹配
+                const matchesTarget = targetItem.texts.join('').includes(filter.targetSearch);
+                if (filter.option === 'all') {
+                    return matchesSource && matchesTarget;
+                }
+                if (filter.option === 'untranslated') {
+                    return matchesSource && (targetItem.texts.length === 0);
+                }
+                return true;
+            });
+        }, { immediate: true });
 
         return {
             translationList,
