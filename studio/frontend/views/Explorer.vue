@@ -65,6 +65,7 @@ import { useExplorerData } from '../models/Explorer';
 
 const r = useExplorerData();
 
+// 点击添加语言文件
 async function addLangFile() {
     const filename = mExplorer.mAddLangInput.trim();
     if (filename === '') {
@@ -83,6 +84,7 @@ async function addLangFile() {
     });
 }
 
+// 点击树节点
 function nodeClick(data: NonNullable<typeof r.d>["treeData"][number]) {
     if (data.isDir) {
         return;
@@ -91,6 +93,7 @@ function nodeClick(data: NonNullable<typeof r.d>["treeData"][number]) {
     mEditor.fAddTab(filename);
 };
 
+// 点击扫描项目原文
 function scanProject() {
     Notify.progress(30);
 }
