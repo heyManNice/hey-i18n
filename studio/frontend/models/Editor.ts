@@ -8,6 +8,10 @@ import {
     useReactivePromise
 } from '../utils/promise';
 
+import {
+    confirm
+} from '../dialogs/dialogs';
+
 // 翻译资源词条的项目
 export type TranslationItem = {
     key: string;
@@ -38,7 +42,18 @@ const mEditor = reactive({
     },
 
     // 删除标签页
-    fRemoveTab(filename: string) {
+    async fRemoveTab(filename: string) {
+        // 检查是否有未保存的修改
+        const changeData = this.mChangeData[filename] || {};
+        const hasUnsavedChanges = Object.keys(changeData).length > 0;
+        if (hasUnsavedChanges) {
+            const userConfirmed = await confirm(`确认关闭 ${filename}？`, `有未保存的修改，如果直接关闭，你的修改将会丢失。`);
+            if (!userConfirmed) {
+                return;
+            }
+            // 确认删除
+            delete this.mChangeData[filename];
+        }
         const index = this.mTabs.findIndex(tab => tab.filename === filename);
         if (index !== -1) {
             this.mTabs.splice(index, 1);
