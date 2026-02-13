@@ -145,13 +145,20 @@ export function useTranslationData(filename: string) {
             targetSearch: '',
             result: computed(() => {
                 return translationList.filter(item => {
+                    // 原匹配
                     const matchesSource = item.untranslated.texts.join('').includes(filter.sourceSearch);
-                    const matchesTarget = item.translated.texts.join('').includes(filter.targetSearch);
+
+                    // 看看内存中有没有目标修改数据
+                    const changeData = mEditor.mChangeData[filename] || {};
+                    const targetItem = changeData[item.untranslated.key] || item.translated;
+
+                    // 目标匹配
+                    const matchesTarget = targetItem.texts.join('').includes(filter.targetSearch);
                     if (filter.option === 'all') {
                         return matchesSource && matchesTarget;
                     }
                     if (filter.option === 'untranslated') {
-                        return matchesSource && (!matchesTarget || item.translated.texts.length === 0);
+                        return matchesSource && (!matchesTarget || targetItem.texts.length === 0);
                     }
                     return true;
                 });
