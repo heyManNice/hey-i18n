@@ -25,8 +25,9 @@
         </div>
         <!-- 编辑内容的表格 -->
         <div class="table">
-            <div style="position: absolute; width: 100%;">
-                <el-table v-loading="r.l" v-if="!r.e" :data="r.d?.filter.result" :row-key="(row) => row.untranslated.key">
+            <div style="position: absolute; width: 100%;height: 100%;">
+                <el-table v-loading="r.l" v-if="!r.e" :data="r.d?.filter.result"
+                    :row-key="(row) => row.untranslated.key" style="height: 100%;">
                     <!-- 项目原来的翻译列 -->
                     <el-table-column min-width="45">
                         <template #header>

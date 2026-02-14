@@ -2,7 +2,8 @@
     <el-tabs v-model="mEditor.mActiveTab" type="border-card" closable @tab-remove="(fielname: TabPaneName) => {
         mEditor.fRemoveTab(fielname.toString());
     }" class="tabs">
-        <el-tab-pane v-for="item in mEditor.mTabs" :key="item.filename" :label="item.filename" :name="item.filename">
+        <el-tab-pane v-for="item in mEditor.mTabs" :key="item.filename" :label="item.filename" :name="item.filename"
+            style="height: 100%;">
             <template #label>
                 <span class="tab-label">
                     <el-icon>
