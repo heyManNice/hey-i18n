@@ -6,7 +6,7 @@
             style="height: 100%;">
             <template #label>
                 <span class="tab-label" :class="{
-                    'is-deleted': mExplorer.mI18nFiles.find(filename => filename === item.filename) === undefined
+                    'is-deleted': mExplorer.mI18nFiles.some(filename => filename === item.filename) === false
                 }">
                     <el-icon>
                         <Document />
