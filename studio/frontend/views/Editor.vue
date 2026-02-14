@@ -39,6 +39,7 @@ import mEditor from '../models/Editor';
 .tabs {
     flex: 1;
     background-color: var(--panel-bg-color);
+    width: 100%;
 }
 
 .tab-label {
