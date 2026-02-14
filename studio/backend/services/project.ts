@@ -12,6 +12,7 @@ class ProjectService {
     }
     public listProjectInfo() {
         return {
+            projectPath: this.workspacePath,
             projectName: this.projectName,
             i18nDir: this.i18nDir,
         };

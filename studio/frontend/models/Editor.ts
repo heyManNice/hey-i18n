@@ -1,7 +1,8 @@
 import {
     reactive,
     computed,
-    watch
+    watch,
+    toRaw
 } from 'vue';
 
 import {
@@ -11,6 +12,9 @@ import {
 import {
     confirm
 } from '../dialogs/dialogs';
+
+import db from '../utils/indexed-db';
+import mExplorer from './Explorer';
 
 // 翻译资源词条的项目
 export type TranslationItem = {
@@ -80,6 +84,44 @@ const mEditor = reactive({
             [key: string]: TranslationItem
         };
     }
+});
+
+// 保存标签页数据结构
+type SavedTabs = {
+    projectPath: string;
+    mActiveTab: typeof mEditor.mActiveTab;
+    mTabs: typeof mEditor.mTabs;
+    Date: number;
+};
+
+// 恢复保存的标签页
+watch(() => mExplorer.mProjectPath, async () => {
+    if (mExplorer.mProjectPath === '') {
+        // 没有初始化完成
+        return;
+    }
+    const savedTabs = await db.get('savedTabs', mExplorer.mProjectPath);
+    if (!savedTabs) {
+        // 没有保存的数据
+        return;
+    }
+    mEditor.mActiveTab = savedTabs.mActiveTab;
+    mEditor.mTabs = savedTabs.mTabs;
+});
+
+// 保存标签页
+watch(() => mEditor.mActiveTab, () => {
+    if (!mExplorer.mProjectPath) {
+        // 没有初始化完成
+        return;
+    }
+    const dataToSave: SavedTabs = {
+        projectPath: toRaw(mExplorer.mProjectPath),
+        mActiveTab: toRaw(mEditor.mActiveTab),
+        mTabs: toRaw(mEditor.mTabs),
+        Date: Date.now()
+    };
+    db.put('savedTabs', dataToSave);
 });
 
 // 关闭窗口时候，如果有未保存的修改，提示用户确认

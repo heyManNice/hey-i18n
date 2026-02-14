@@ -25,7 +25,10 @@ const mExplorer = reactive({
     },
 
     // 项目原文
-    mSourceLocale: 'null'
+    mSourceLocale: 'null',
+
+    // 项目路径，默认使用 空字符串
+    mProjectPath: '',
 });
 
 export default mExplorer;
@@ -34,7 +37,9 @@ export function useExplorerData() {
     return useReactivePromise(async function () {
         const { info, files, config } = await backend.explorer.getTreeData();
 
+        // 信息同步到模型
         mExplorer.mSourceLocale = config.sourcesLocale;
+        mExplorer.mProjectPath = info.projectPath;
 
         const keysStats = ref<Awaited<ReturnType<typeof backend.explorer.getI18nKeysStats>>>({});
 

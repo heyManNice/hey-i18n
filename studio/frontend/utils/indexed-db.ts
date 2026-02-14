@@ -7,8 +7,8 @@ class Database {
             const request = indexedDB.open("hey-i18n-studio-db", 1);
             request.onupgradeneeded = () => {
                 const db = request.result;
-                if (!db.objectStoreNames.contains('mTabs')) {
-                    db.createObjectStore('mTabs', { keyPath: 'projectPath' });
+                if (!db.objectStoreNames.contains('savedTabs')) {
+                    db.createObjectStore('savedTabs', { keyPath: 'projectPath' });
                 }
             };
             request.onsuccess = () => {
