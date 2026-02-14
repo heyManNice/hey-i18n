@@ -4,9 +4,9 @@
     }" class="editable-cell-renderer" @click.stop>
         <div style="flex: 1;" ref="editorRef" class="editor-content" @dragstart.prevent :contenteditable="true"
             spellcheck="false" @input="onInput" @keydown="onKeydown" @blur="onBlur"></div>
-        <el-button :icon="MagicStick" circle title="AI 翻译" />
-        <el-button style="margin-left: 0px;" :icon="FullScreen" circle title="全屏编辑" />
-        <el-button style="margin-left: 0px;" :icon="ArrowLeft" circle title="高级选项" />
+        <el-button :icon="Operation" circle title="条件翻译" />
+        <el-button style="margin-left: 0px;" :icon="MagicStick" circle title="AI 翻译" />
+        <el-button style="margin-left: 0px;" :icon="More" circle title="更多选项" />
         <Teleport to="body">
             <ul v-if="showSuggestions" class="suggestions-list" :style="suggestionStyle">
                 <template v-if="filteredVariables.length > 0">
@@ -32,8 +32,8 @@ import {
 import { mergeTextAndVariables } from '../../../utils/text-utils';
 
 import {
-    FullScreen,
-    ArrowLeft,
+    Operation,
+    More,
     MagicStick
 } from '@element-plus/icons-vue';
 import { ElButton } from 'element-plus';
