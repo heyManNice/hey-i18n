@@ -1,3 +1,19 @@
+// 定义数据库的表
+const dbStores = [
+    {
+        name: 'savedTabs',
+        options: {
+            keyPath: 'projectPath'
+        }
+    }
+] as const satisfies {
+    name: string;
+    options?: IDBObjectStoreParameters
+}[];
+
+type DBStoreName = typeof dbStores[number]['name'];
+
+
 class Database {
     private db: IDBDatabase | null = null;
     private ready: Promise<IDBDatabase>;
@@ -7,8 +23,10 @@ class Database {
             const request = indexedDB.open("hey-i18n-studio-db", 1);
             request.onupgradeneeded = () => {
                 const db = request.result;
-                if (!db.objectStoreNames.contains('savedTabs')) {
-                    db.createObjectStore('savedTabs', { keyPath: 'projectPath' });
+                for (const store of dbStores) {
+                    if (!db.objectStoreNames.contains(store.name)) {
+                        db.createObjectStore(store.name, store.options);
+                    }
                 }
             };
             request.onsuccess = () => {
@@ -18,7 +36,7 @@ class Database {
             request.onerror = () => reject(request.error);
         });
     }
-    private getStore(storeName: string, mode: IDBTransactionMode = 'readonly') {
+    private getStore(storeName: DBStoreName, mode: IDBTransactionMode = 'readonly') {
         return new Promise<IDBObjectStore>((resolve, reject) => {
             this.ready.then(() => {
                 if (!this.db) {
@@ -30,7 +48,7 @@ class Database {
             }).catch(err => reject(err));
         });
     }
-    put(storeName: string, value: any) {
+    put(storeName: DBStoreName, value: any) {
         return new Promise<IDBValidKey>((resolve, reject) => {
             this.getStore(storeName, 'readwrite')
                 .then(store => {
@@ -45,7 +63,7 @@ class Database {
                 .catch(err => reject(err));
         });
     }
-    get(storeName: string, key: IDBValidKey) {
+    get(storeName: DBStoreName, key: IDBValidKey) {
         return new Promise<any>((resolve, reject) => {
             this.getStore(storeName, 'readonly')
                 .then(store => {
@@ -60,7 +78,7 @@ class Database {
                 .catch(err => reject(err));
         });
     }
-    filter(storeName: string, filterFn: (value: any) => boolean) {
+    filter(storeName: DBStoreName, filterFn: (value: any) => boolean) {
         return new Promise<any[]>((resolve, reject) => {
             this.getStore(storeName, 'readonly')
                 .then(store => {
@@ -84,7 +102,7 @@ class Database {
                 .catch(err => reject(err));
         });
     }
-    delete(storeName: string, key: IDBValidKey) {
+    delete(storeName: DBStoreName, key: IDBValidKey) {
         return new Promise<void>((resolve, reject) => {
             this.getStore(storeName, 'readwrite')
                 .then(store => {
