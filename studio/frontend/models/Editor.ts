@@ -110,7 +110,7 @@ watch(() => mExplorer.mProjectPath, async () => {
 });
 
 // 保存标签页
-watch(() => mEditor.mActiveTab, () => {
+watch(() => mEditor.mTabs, () => {
     if (!mExplorer.mProjectPath) {
         // 没有初始化完成
         return;
@@ -122,7 +122,7 @@ watch(() => mEditor.mActiveTab, () => {
         date: Date.now()
     };
     db.put('savedTabs', dataToSave);
-});
+}, { deep: true });
 
 // 关闭窗口时候，如果有未保存的修改，提示用户确认
 window.addEventListener('beforeunload', (event) => {
