@@ -17,7 +17,7 @@
                     </span>
                 </span>
             </template>
-            <TranslationCompare />
+            <TranslationCompare :filename="item.filename" />
         </el-tab-pane>
     </el-tabs>
     <div class="tabs-empty" v-if="mEditor.mTabs.length === 0">

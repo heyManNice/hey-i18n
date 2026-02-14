@@ -47,7 +47,8 @@
                                 @update:searchInput="val => { if (r.d) { r.d.filter.targetSearch = val } }" />
                         </template>
                         <template #default="scope">
-                            <EditableCellRenderer :item="scope.row.translated" :source-item="scope.row.untranslated" />
+                            <EditableCellRenderer :item="scope.row.translated" :source-item="scope.row.untranslated"
+                                :filename="props.filename" />
                         </template>
                     </el-table-column>
                 </el-table>
@@ -80,11 +81,14 @@ import mExplorer from '../../models/Explorer';
 
 import { useTranslationData } from '../../models/Editor';
 
-const filename = mEditor.mActiveTab;
-const r = useTranslationData(filename);
+const props = defineProps<{
+    filename: string;
+}>();
+
+const r = useTranslationData(props.filename);
 
 // local.json中获取local
-const targetLocal = filename.split('.')[0];
+const targetLocal = props.filename.split('.')[0];
 </script>
 
 <style scoped>

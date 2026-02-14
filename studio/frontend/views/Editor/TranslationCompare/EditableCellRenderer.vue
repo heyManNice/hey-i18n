@@ -47,6 +47,7 @@ import { useDebounceFn } from '@vueuse/core';
 const props = defineProps<{
     item: TranslationItem,
     sourceItem: TranslationItem,
+    filename: string
 }>();
 
 const isEditing = ref(false);
@@ -67,8 +68,7 @@ function renderContent() {
     if (!editorRef.value) return;
     // 诸如筛选时候
     // 该组件卸载并重新挂载时，查看内存里是否有修改的数据
-    const filename = mEditor.mActiveTab;
-    const existingChange = mEditor.mChangeData[filename]?.[props.sourceItem.key];
+    const existingChange = mEditor.mChangeData[props.filename]?.[props.sourceItem.key];
     if (existingChange) {
         isEditing.value = true;
     }
@@ -185,7 +185,7 @@ function updateSuggestionPosition() {
 // 记录当前组件修改的数据
 function recordChange() {
     const newContent = getEditorContent();
-    const filename = mEditor.mActiveTab;
+    const filename = props.filename;
     const key = props.sourceItem.key;
     if (!mEditor.mChangeData[filename]) {
         mEditor.mChangeData[filename] = {};
@@ -195,7 +195,7 @@ function recordChange() {
 
 // 删除记录当前组件修改的数据
 function deleteChange() {
-    const filename = mEditor.mActiveTab;
+    const filename = props.filename;
     const key = props.sourceItem.key;
     if (mEditor.mChangeData[filename]) {
         delete mEditor.mChangeData[filename][key];
