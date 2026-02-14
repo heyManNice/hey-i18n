@@ -1,7 +1,8 @@
 import {
     reactive,
     computed,
-    watch
+    watch,
+    onMounted
 } from 'vue';
 
 import {
@@ -79,6 +80,14 @@ const mEditor = reactive({
         [filename: string]: {
             [key: string]: TranslationItem
         };
+    }
+});
+
+// 关闭窗口时候，如果有未保存的修改，提示用户确认
+window.addEventListener('beforeunload', (event) => {
+    if (Object.keys(mEditor.mChangeData).length > 0) {
+        event.preventDefault();
+        event.returnValue = '';
     }
 });
 
