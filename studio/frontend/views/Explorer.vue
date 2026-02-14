@@ -27,8 +27,10 @@
                         <Document v-else />
                     </el-icon>
                     <span style="flex: 1;display: flex;align-items: center;">
+                        <!-- 标签名、文件名 -->
                         <span>{{ node.label }}</span>
 
+                        <!-- 编辑时候的*号 -->
                         <span
                             v-if="!node.data.isDir && Object.keys(mEditor.mChangeData[node.label] || {}).length > 0">*</span>
 
