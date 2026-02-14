@@ -7,7 +7,7 @@
             <span>失效的键: {{ r.d?.summary.invalidKeysCount ?? '-' }}</span>
             <span>正在修改：{{ r.d?.summary.editingCount ?? '-' }}</span>
             <div class="filter">
-                <el-select :model-value="r.d?.filter.option" @update:model-value="val => {
+                <el-select :disabled="Boolean(r.e)" :model-value="r.d?.filter.option" @update:model-value="val => {
                     if (r.d) { r.d.filter.option = val }
                 }" placeholder="筛选" style="width: 130px;">
                     <template #prefix>
@@ -19,9 +19,9 @@
                         :value="item.value" />
                 </el-select>
             </div>
-            <el-button plain>AI 翻译</el-button>
-            <el-button :disabled="r.d?.summary.editingCount === 0" style="margin-left: 0px;" type="primary"
-                plain>保存</el-button>
+            <el-button :disabled="Boolean(r.e)" plain>AI 翻译</el-button>
+            <el-button :disabled="Boolean(r.e) || r.d?.summary.editingCount === 0" style="margin-left: 0px;"
+                type="primary" plain>保存</el-button>
         </div>
         <!-- 编辑内容的表格 -->
         <div class="table">
