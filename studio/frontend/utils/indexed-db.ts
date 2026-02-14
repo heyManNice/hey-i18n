@@ -45,36 +45,6 @@ class Database {
                 .catch(err => reject(err));
         });
     }
-
-    update(storeName: string, key: IDBValidKey, value: any) {
-        return new Promise<void>((resolve, reject) => {
-            this.getStore(storeName, 'readwrite')
-                .then(store => {
-                    const getRequest = store.get(key);
-                    getRequest.onsuccess = () => {
-                        const existingValue = getRequest.result || {};
-                        const updatedValue = { ...existingValue, ...value };
-                        const putRequest = store.put(updatedValue);
-                        putRequest.onsuccess = () => {
-                            resolve();
-                        }
-                        putRequest.onerror = () => {
-                            reject(putRequest.error);
-                        };
-                    };
-                    getRequest.onerror = () => {
-                        const putRequest = store.put(value);
-                        putRequest.onsuccess = () => {
-                            resolve();
-                        };
-                        putRequest.onerror = () => {
-                            reject(putRequest.error);
-                        }
-                    };
-                })
-                .catch(err => reject(err));
-        });
-    }
     get(storeName: string, key: IDBValidKey) {
         return new Promise<any>((resolve, reject) => {
             this.getStore(storeName, 'readonly')
