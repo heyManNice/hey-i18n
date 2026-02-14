@@ -1,5 +1,5 @@
 <template>
-    <el-tabs v-model="mEditor.mActiveTab" type="border-card" closable @tab-remove="(fielname: TabPaneName) => {
+    <el-tabs v-if="mEditor.mTabs.length > 0" v-model="mEditor.mActiveTab" type="border-card" closable @tab-remove="(fielname: TabPaneName) => {
         mEditor.fRemoveTab(fielname.toString());
     }" class="tabs">
         <el-tab-pane v-for="item in mEditor.mTabs" :key="item.filename" :label="item.filename" :name="item.filename"
@@ -18,6 +18,12 @@
             <TranslationCompare />
         </el-tab-pane>
     </el-tabs>
+    <div class="tabs-empty" v-if="mEditor.mTabs.length === 0">
+        <span style="font-size: 3rem;font-weight: 700;">hey-i18n-studio</span>
+        <br>
+        <span>还没有打开语言资源，请选择或创建一个语言资源开始翻译。</span>
+        <span></span>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -46,6 +52,17 @@ import mEditor from '../models/Editor';
     display: flex;
     align-items: center;
     gap: 5px;
+}
+
+.tabs-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    color: var(--muted-text-color);
+    translate: 0 -5%;
 }
 
 /* 移除 Tab 切换动画，使其感觉更灵敏 */
