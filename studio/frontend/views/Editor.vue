@@ -22,7 +22,6 @@
         <span style="font-size: 3rem;font-weight: 700;">hey-i18n-studio</span>
         <br>
         <span>还没有打开语言资源，请选择或创建一个语言资源开始翻译。</span>
-        <span></span>
     </div>
 </template>
 
