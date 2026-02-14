@@ -110,7 +110,6 @@ const targetLocal = filename.split('.')[0];
     padding: 10px 0px;
     border-bottom: 1px solid var(--border-color);
     font-size: 14px;
-    min-width: 550px;
 }
 
 .filter {

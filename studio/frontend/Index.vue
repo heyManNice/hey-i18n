@@ -6,7 +6,7 @@
                     <Explorer />
                 </el-splitter-panel>
                 <el-splitter-panel class="app-editor-panel" :min="700"
-                    style="background-color: var(--panel-bg-color);display: flex;">
+                    style="background-color: var(--panel-bg-color);display: flex;overflow: hidden;">
                     <Editor />
                 </el-splitter-panel>
             </el-splitter>
