@@ -5,7 +5,9 @@
         <el-tab-pane v-for="item in mEditor.mTabs" :key="item.filename" :label="item.filename" :name="item.filename"
             style="height: 100%;">
             <template #label>
-                <span class="tab-label">
+                <span class="tab-label" :class="{
+                    'is-deleted': mExplorer.mI18nFiles.find(filename => filename === item.filename) === undefined
+                }">
                     <el-icon>
                         <Document />
                     </el-icon>
@@ -37,6 +39,7 @@ import {
 } from '@element-plus/icons-vue';
 import TranslationCompare from './Editor/TranslationCompare.vue';
 import mEditor from '../models/Editor';
+import mExplorer from '../models/Explorer';
 
 </script>
 
@@ -45,6 +48,11 @@ import mEditor from '../models/Editor';
     flex: 1;
     background-color: var(--panel-bg-color);
     width: 100%;
+}
+
+.is-deleted {
+    color: #ff705d;
+    text-decoration: line-through;
 }
 
 .tab-label {

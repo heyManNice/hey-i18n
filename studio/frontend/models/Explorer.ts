@@ -29,6 +29,9 @@ const mExplorer = reactive({
 
     // 项目路径，默认使用 空字符串
     mProjectPath: '',
+
+    // i18n文件名列表
+    mI18nFiles: [] as string[],
 });
 
 export default mExplorer;
@@ -40,6 +43,7 @@ export function useExplorerData() {
         // 信息同步到模型
         mExplorer.mSourceLocale = config.sourcesLocale;
         mExplorer.mProjectPath = info.projectPath;
+        mExplorer.mI18nFiles = files;
 
         const keysStats = ref<Awaited<ReturnType<typeof backend.explorer.getI18nKeysStats>>>({});
 
