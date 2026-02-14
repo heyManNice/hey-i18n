@@ -26,9 +26,17 @@
                         <Folder v-else-if="node.data.isDir && !node.expanded" />
                         <Document v-else />
                     </el-icon>
-                    <span>
-                        {{ node.label }}
-                        <span v-if="Object.keys(mEditor.mChangeData[node.label] || {}).length > 0">*</span>
+                    <span style="flex: 1;display: flex;align-items: center;">
+                        <span>{{ node.label }}</span>
+
+                        <span
+                            v-if="!node.data.isDir && Object.keys(mEditor.mChangeData[node.label] || {}).length > 0">*</span>
+
+                        <!-- 进度条 -->
+                        <el-progress v-if="!node.data.isDir && node.data.totalKeys > 0"
+                            :percentage="node.data.currentKeys * 100 / node.data.totalKeys"
+                            style="margin-left: auto;width: 70px;" :stroke-width="4"
+                            :title="`已编辑 ${node.data.currentKeys} / ${node.data.totalKeys} 条国际化字符串`" />
                     </span>
                 </span>
             </template>
@@ -43,7 +51,8 @@ import {
     ElAutocomplete,
     ElButton,
     ElTree,
-    ElIcon
+    ElIcon,
+    ElProgress
 } from 'element-plus';
 import {
     Search,
@@ -131,10 +140,17 @@ function scanProject() {
     align-items: center;
     gap: 5px;
     overflow: hidden;
-    margin-left: 10px;
+    padding: 10px;
+    width: 100%;
 }
 
 :deep(.el-tree-node__expand-icon) {
     display: none;
+}
+
+:deep(.el-progress__text) {
+    font-size: 10px !important;
+    min-width: 23px;
+    width: 23px;
 }
 </style>

@@ -1,6 +1,7 @@
 import {
     reactive,
-    computed
+    computed,
+    ref
 } from 'vue';
 
 import { languages } from '../consts/languages';
@@ -35,12 +36,22 @@ export function useExplorerData() {
 
         mExplorer.mSourceLocale = config.sourcesLocale;
 
+        const keysStats = ref<Awaited<ReturnType<typeof backend.explorer.getI18nKeysStats>>>({});
+
+        backend.explorer.getI18nKeysStats(files).then(stats => {
+            keysStats.value = stats;
+        });
+
         const treeData = [{
             isDir: true,
             label: `${info.projectName}/${info.i18nDir} (原文 ${config.sourcesLocale})`,
             children: computed(() => {
                 return Array.from(files)
-                    .map(file => ({ label: file }))
+                    .map(file => ({
+                        label: file,
+                        totalKeys: keysStats.value[file]?.totalKeys || 0,
+                        currentKeys: keysStats.value[file]?.currentKeys || 0,
+                    }))
                     .filter(file => file.label.indexOf(mExplorer.mTreeSearch) !== -1);
             })
         }];
