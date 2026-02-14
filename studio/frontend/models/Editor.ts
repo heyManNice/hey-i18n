@@ -91,7 +91,7 @@ type SavedTabs = {
     projectPath: string;
     mActiveTab: typeof mEditor.mActiveTab;
     mTabs: typeof mEditor.mTabs;
-    Date: number;
+    date: number;
 };
 
 // 恢复保存的标签页
@@ -119,7 +119,7 @@ watch(() => mEditor.mActiveTab, () => {
         projectPath: toRaw(mExplorer.mProjectPath),
         mActiveTab: toRaw(mEditor.mActiveTab),
         mTabs: toRaw(mEditor.mTabs),
-        Date: Date.now()
+        date: Date.now()
     };
     db.put('savedTabs', dataToSave);
 });
