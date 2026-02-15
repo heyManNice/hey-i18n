@@ -1,25 +1,61 @@
 <template>
-    <div :class="{
-        'is-editing': isEditing
-    }" class="editable-cell-renderer" @click.stop>
-        <div style="flex: 1;" ref="editorRef" class="editor-content" @dragstart.prevent :contenteditable="true"
-            spellcheck="false" @input="onInput" @keydown="onKeydown" @blur="onBlur"></div>
-        <el-button :icon="Operation" circle title="条件翻译" />
-        <el-button style="margin-left: 0px;" :icon="MagicStick" circle title="AI 翻译" />
-        <el-button style="margin-left: 0px;" :icon="More" circle title="更多选项" />
-        <Teleport to="body">
-            <ul v-if="showSuggestions" class="suggestions-list" :style="suggestionStyle">
-                <template v-if="filteredVariables.length > 0">
-                    <li v-for="(v, index) in filteredVariables" :key="v"
-                        :class="{ active: index === activeSuggestionIndex }" @mousedown.prevent="insertVariable(v)">
-                        <span class="variable">
-                            {{ '{' + v + '}' }}
-                        </span>
-                    </li>
+    <div class="container">
+        <div :class="{
+            'is-editing': isEditing
+        }" class="editable-cell-renderer" @click.stop>
+            <div style="flex: 1;" ref="editorRef" class="editor-content" @dragstart.prevent :contenteditable="true"
+                spellcheck="false" @input="onInput" @keydown="onKeydown" @blur="onBlur"></div>
+            <el-button :icon="Operation" circle title="条件翻译" />
+            <el-button style="margin-left: 0px;" :icon="MagicStick" circle title="AI 翻译" />
+            <el-button style="margin-left: 0px;" :icon="More" circle title="更多选项" />
+            <Teleport to="body">
+                <ul v-if="showSuggestions" class="suggestions-list" :style="suggestionStyle">
+                    <template v-if="filteredVariables.length > 0">
+                        <li v-for="(v, index) in filteredVariables" :key="v"
+                            :class="{ active: index === activeSuggestionIndex }" @mousedown.prevent="insertVariable(v)">
+                            <span class="variable">
+                                {{ '{' + v + '}' }}
+                            </span>
+                        </li>
+                    </template>
+                    <li v-else class="no-suggestions">未匹配到变量</li>
+                </ul>
+            </Teleport>
+        </div>
+        <!-- 条件翻译 -->
+        <div v-if="props.sourceItem.variables.length > 0" style="display: flex;gap: 5px;white-space: nowrap;">
+            <span>当</span>
+            <el-dropdown>
+                <span style="user-select: none;cursor: pointer;" class="variable">
+                    {age}
+                </span>
+                <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item v-for="vars in props.sourceItem.variables">
+                            <span style="user-select: none;" class="variable">
+                                {{ '{' + vars + '}' }}
+                            </span>
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
                 </template>
-                <li v-else class="no-suggestions">未匹配到变量</li>
-            </ul>
-        </Teleport>
+            </el-dropdown>
+
+            <el-dropdown>
+                <span style="user-select: none;cursor: pointer;" class="variable">=</span>
+                <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item v-for="value in ['=', '!=', '>', '<', '>=', '<=']">
+                            {{ value }}
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                </template>
+            </el-dropdown>
+
+            <el-input v-model="mv" style="width: 30px;" size="small"></el-input>
+            <span>时，使用翻译</span>
+            <el-input v-model="mv2" style="flex: 1;" size="small"></el-input>
+            <el-button size="small" :icon="Delete" circle title="删除" />
+        </div>
     </div>
 </template>
 <script setup lang="ts">
@@ -29,12 +65,23 @@ import {
     onMounted
 } from 'vue';
 
+const mv = ref(null);
+const mv2 = ref(null);
+
+import {
+    ElInput,
+    ElDropdown,
+    ElDropdownMenu,
+    ElDropdownItem,
+} from 'element-plus';
+
 import { mergeTextAndVariables } from '../../../utils/text-utils';
 
 import {
     Operation,
     More,
-    MagicStick
+    MagicStick,
+    Delete
 } from '@element-plus/icons-vue';
 import { ElButton } from 'element-plus';
 import mEditor from '../../../models/Editor';
@@ -268,6 +315,12 @@ function insertVariable(variableName: string) {
 </script>
 
 <style scoped>
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .editable-cell-renderer {
     position: relative;
     display: flex;
