@@ -2,9 +2,8 @@
     <div style="display: flex;gap: 5px;white-space: nowrap;">
         <span>当</span>
         <DropdownSelector v-model="vari" :options="['{name}', '{age}']" placeholder="变量" />
-        <DropdownSelector v-model="oper" :options="['=', '!=', '>', '<', '>=', '<=']" placeholder="条件" />
-
-        <el-input v-model="val" style="width: 30px;" size="small" placeholder="值"></el-input>
+        <DropdownSelector v-model="oper" :options="['是 zero', '是 one', '是 two', '是 few', '是 many', '是 other']"
+            placeholder="复数条件" />
         <span>时，使用</span>
         <el-input v-model="tr" style="flex: 1;" size="small" placeholder="翻译"></el-input>
         <el-button size="small" :icon="Delete" circle title="删除" />
@@ -31,7 +30,6 @@ import {
 
 const vari = ref('');
 const oper = ref('');
-const val = ref('');
 const tr = ref('');
 
 </script>

@@ -6,7 +6,7 @@
         }" class="editable-cell-renderer" @click.stop>
             <div style="flex: 1;" ref="editorRef" class="editor-content" @dragstart.prevent :contenteditable="true"
                 spellcheck="false" @input="onInput" @keydown="onKeydown" @blur="onBlur"></div>
-            <el-button :icon="Plus" circle title="添加条件翻译" />
+            <el-button :icon="Plus" circle title="添加复数条件翻译" />
             <el-button style="margin-left: 0px;" :icon="MagicStick" circle title="AI 翻译" />
             <el-dropdown trigger="hover">
                 <el-button style="margin-left: 0px;" :icon="More" circle title="更多选项" />
