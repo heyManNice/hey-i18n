@@ -8,7 +8,16 @@
                 spellcheck="false" @input="onInput" @keydown="onKeydown" @blur="onBlur"></div>
             <el-button :icon="Plus" circle title="添加条件翻译" />
             <el-button style="margin-left: 0px;" :icon="MagicStick" circle title="AI 翻译" />
-            <el-button style="margin-left: 0px;" :icon="More" circle title="更多选项" />
+            <el-dropdown trigger="hover">
+                <el-button style="margin-left: 0px;" :icon="More" circle title="更多选项" />
+                <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item v-for="option in moreOptions" @click="option.action">
+                            {{ option.label }}
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                </template>
+            </el-dropdown>
             <Teleport to="body">
                 <ul v-if="showSuggestions" class="suggestions-list" :style="suggestionStyle">
                     <template v-if="filteredVariables.length > 0">
@@ -51,6 +60,9 @@ const tr = ref('');
 
 import {
     ElInput,
+    ElDropdown,
+    ElDropdownMenu,
+    ElDropdownItem
 } from 'element-plus';
 
 import { mergeTextAndVariables } from '../../../utils/text-utils';
@@ -91,6 +103,32 @@ const filteredVariables = computed(() => {
     if (!filterQuery.value) return props.sourceItem.variables;
     return props.sourceItem.variables.filter(v => v.toLowerCase().startsWith(filterQuery.value.toLowerCase()));
 });
+
+
+// 更多按钮选项
+type MoreOption = {
+    label: string;
+    action: () => void;
+};
+
+const moreOptions = computed<MoreOption[]>(() => [
+    {
+        label: '清除修改',
+        action: () => {
+            if (isEditing.value) {
+                isEditing.value = false;
+                deleteChange();
+                renderContent();
+            }
+        }
+    },
+    {
+        label: '全屏编辑',
+        action: () => {
+
+        }
+    }
+]);
 
 function renderContent() {
     if (!editorRef.value) return;
