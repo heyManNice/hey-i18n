@@ -5,7 +5,7 @@
         }" class="editable-cell-renderer" @click.stop>
             <div style="flex: 1;" ref="editorRef" class="editor-content" @dragstart.prevent :contenteditable="true"
                 spellcheck="false" @input="onInput" @keydown="onKeydown" @blur="onBlur"></div>
-            <el-button :icon="Operation" circle title="条件翻译" />
+            <el-button :icon="Plus" circle title="添加条件翻译" />
             <el-button style="margin-left: 0px;" :icon="MagicStick" circle title="AI 翻译" />
             <el-button style="margin-left: 0px;" :icon="More" circle title="更多选项" />
             <Teleport to="body">
@@ -32,6 +32,7 @@
             <span>时，使用</span>
             <el-input v-model="tr" style="flex: 1;" size="small" placeholder="翻译"></el-input>
             <el-button size="small" :icon="Delete" circle title="删除" />
+            <el-button size="small" style="margin-left: 0px;cursor: move;" :icon="Rank" circle title="排序" />
         </div>
     </div>
 </template>
@@ -54,10 +55,11 @@ import {
 import { mergeTextAndVariables } from '../../../utils/text-utils';
 
 import {
-    Operation,
+    Plus,
     More,
     MagicStick,
-    Delete
+    Delete,
+    Rank
 } from '@element-plus/icons-vue';
 import { ElButton } from 'element-plus';
 import mEditor from '../../../models/Editor';
