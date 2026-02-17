@@ -33,17 +33,7 @@
             </Teleport>
         </div>
         <!-- 条件翻译 -->
-        <div v-if="props.sourceItem.variables.length > 0" style="display: flex;gap: 5px;white-space: nowrap;">
-            <span>当</span>
-            <DropdownSelector v-model="vari" :options="['{name}', '{age}']" placeholder="变量" />
-            <DropdownSelector v-model="oper" :options="['=', '!=', '>', '<', '>=', '<=']" placeholder="条件" />
-
-            <el-input v-model="val" style="width: 30px;" size="small" placeholder="值"></el-input>
-            <span>时，使用</span>
-            <el-input v-model="tr" style="flex: 1;" size="small" placeholder="翻译"></el-input>
-            <el-button size="small" :icon="Delete" circle title="删除" />
-            <el-button size="small" style="margin-left: 0px;cursor: move;" :icon="Rank" circle title="排序" />
-        </div>
+        <TranslationRuleItem v-if="props.sourceItem.variables.length > 0" />
     </div>
 </template>
 <script setup lang="ts">
@@ -53,13 +43,7 @@ import {
     onMounted
 } from 'vue';
 
-const vari = ref('');
-const oper = ref('');
-const val = ref('');
-const tr = ref('');
-
 import {
-    ElInput,
     ElDropdown,
     ElDropdownMenu,
     ElDropdownItem
@@ -67,12 +51,12 @@ import {
 
 import { mergeTextAndVariables } from '../../../utils/text-utils';
 
+import TranslationRuleItem from './EditableCellRenderer/TranslationRuleItem.vue';
+
 import {
     Plus,
     More,
     MagicStick,
-    Delete,
-    Rank
 } from '@element-plus/icons-vue';
 import { ElButton } from 'element-plus';
 import mEditor from '../../../models/Editor';
@@ -81,8 +65,6 @@ import type {
 } from '../../../models/Editor';
 
 import { useDebounceFn } from '@vueuse/core';
-
-import DropdownSelector from './EditableCellRenderer/DropdownSelector.vue';
 
 const props = defineProps<{
     item: TranslationItem,
