@@ -113,7 +113,13 @@ type MoreOption = {
 
 const moreOptions = computed<MoreOption[]>(() => [
     {
-        label: '清除修改',
+        label: '清空内容',
+        action: () => {
+
+        }
+    },
+    {
+        label: '放弃更改',
         action: () => {
             if (isEditing.value) {
                 isEditing.value = false;
