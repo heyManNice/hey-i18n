@@ -25,35 +25,12 @@
         <!-- 条件翻译 -->
         <div v-if="props.sourceItem.variables.length > 0" style="display: flex;gap: 5px;white-space: nowrap;">
             <span>当</span>
-            <el-dropdown>
-                <span style="user-select: none;cursor: pointer;" class="variable">
-                    {age}
-                </span>
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item v-for="vars in props.sourceItem.variables">
-                            <span style="user-select: none;" class="variable">
-                                {{ '{' + vars + '}' }}
-                            </span>
-                        </el-dropdown-item>
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
+            <DropdownSelector v-model="vari" :options="['{name}', '{age}']" placeholder="变量" />
+            <DropdownSelector v-model="oper" :options="['=', '!=', '>', '<', '>=', '<=']" placeholder="条件" />
 
-            <el-dropdown>
-                <span style="user-select: none;cursor: pointer;" class="variable">=</span>
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item v-for="value in ['=', '!=', '>', '<', '>=', '<=']">
-                            {{ value }}
-                        </el-dropdown-item>
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
-
-            <el-input v-model="mv" style="width: 30px;" size="small"></el-input>
+            <el-input v-model="val" style="width: 30px;" size="small"></el-input>
             <span>时，使用翻译</span>
-            <el-input v-model="mv2" style="flex: 1;" size="small"></el-input>
+            <el-input v-model="tr" style="flex: 1;" size="small"></el-input>
             <el-button size="small" :icon="Delete" circle title="删除" />
         </div>
     </div>
@@ -65,14 +42,13 @@ import {
     onMounted
 } from 'vue';
 
-const mv = ref(null);
-const mv2 = ref(null);
+const vari = ref('');
+const oper = ref('');
+const val = ref('');
+const tr = ref('');
 
 import {
     ElInput,
-    ElDropdown,
-    ElDropdownMenu,
-    ElDropdownItem,
 } from 'element-plus';
 
 import { mergeTextAndVariables } from '../../../utils/text-utils';
@@ -90,6 +66,8 @@ import type {
 } from '../../../models/Editor';
 
 import { useDebounceFn } from '@vueuse/core';
+
+import DropdownSelector from './EditableCellRenderer/DropdownSelector.vue';
 
 const props = defineProps<{
     item: TranslationItem,
