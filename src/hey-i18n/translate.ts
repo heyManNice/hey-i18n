@@ -6,12 +6,12 @@ import {
 import type { MessageValue } from './locales';
 
 function formatTranslation(messageValue: MessageValue, values: any[]): string {
-    const strs = messageValue.t;
-    const varIndexes = messageValue.v;
+    const texts = messageValue.texts;
+    const varIndexes = messageValue.varIndexes;
 
     let result = '';
-    for (let i = 0; i < strs.length; i++) {
-        result += strs[i];
+    for (let i = 0; i < texts.length; i++) {
+        result += texts[i];
         if (varIndexes && i < varIndexes.length) {
             result += values[varIndexes[i]];
         }

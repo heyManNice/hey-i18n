@@ -2,13 +2,25 @@ import config from './config';
 
 import { Locale, rtlLocales } from './languages';
 
-type PluralCategories = 'zero' | 'one' | 'two' | 'few' | 'many' | 'other';
+type PluralCategories = 'zero' | 'one' | 'two' | 'few' | 'many';
+// other 已经强制在 MessageValue 第一层显示
 
-//t: 翻译字符串数组
-//v: 变量索引数组
 export type MessageValue = {
-    t: string[];
-    v: number[];
+    // other 文本片段数组
+    texts: string[];
+    // other 变量索引数组
+    varIndexes: number[];
+    // 是否是复数
+    isPlural?: boolean;
+    // 复数变量索引
+    pluralVarIndex?: number;
+    // 复数类别
+    pluralCategory?: {
+        [key in PluralCategories]?: {
+            texts: string[];
+            varIndexes: number[];
+        }
+    };
 };
 
 class Locales {
