@@ -22,6 +22,8 @@ class AssetsService {
 
     // 保存翻译文件
     public saveI18nFile(filename: string, content: Record<string, MessageValue>) {
+        // 需要删除的键
+        const needDeleteKeys: string[] = [];
         // 应该确保 content 中texts的长度比varIndexes的长度大1，否则可能会导致前端展示错误
         for (const key in content) {
             const item = content[key];
@@ -37,6 +39,11 @@ class AssetsService {
                 item.texts = item.texts.slice(0, targetLen);
                 item.texts[targetLen - 1] += extra;
             }
+
+            // 如果没有变量，并且texts只有一个元素而且还是空字符串，说明内容被清空了，应该删除这个键
+            if ((item.varIndexes?.length ?? 0) === 0 && item.texts.length === 1 && item.texts[0] === '') {
+                needDeleteKeys.push(key);
+            }
         }
 
         const fileContent = this.getI18nFile(filename);
@@ -44,6 +51,11 @@ class AssetsService {
             ...fileContent,
             ...content
         };
+
+        // 删除被清空的键
+        for (const key of needDeleteKeys) {
+            delete newContent[key];
+        }
 
         const filePath = path.join(this.assetsPath, filename);
         fs.writeFileSync(filePath, JSON.stringify(newContent, null, 2), 'utf-8');
