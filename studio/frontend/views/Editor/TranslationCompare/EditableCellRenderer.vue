@@ -244,6 +244,17 @@ function recordChange() {
     if (!mEditor.mChangeData[filename]) {
         mEditor.mChangeData[filename] = {};
     }
+
+    // 更新变量索引
+    const varIndexes: number[] = [];
+    for (const variable of newContent.variables) {
+        const index = props.sourceItem.variables.indexOf(variable);
+        if (index !== -1) {
+            varIndexes.push(index);
+        }
+    }
+    newContent.varIndexes = varIndexes;
+
     mEditor.mChangeData[filename][key] = newContent;
 };
 

@@ -20,6 +20,18 @@ class AssetsService {
         return JSON.parse(fileContent) as Record<string, MessageValue>;
     }
 
+    // 保存翻译文件
+    public saveI18nFile(filename: string, content: Record<string, MessageValue>) {
+        const fileContent = this.getI18nFile(filename);
+        const newContent = {
+            ...fileContent,
+            ...content
+        };
+
+        const filePath = path.join(this.assetsPath, filename);
+        fs.writeFileSync(filePath, JSON.stringify(newContent, null, 2), 'utf-8');
+    }
+
     // 获取原文键长度和文件已编辑的键长度
     public getI18nKeysStats(files: string[]) {
         const result: {

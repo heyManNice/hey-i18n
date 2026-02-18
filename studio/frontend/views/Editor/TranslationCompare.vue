@@ -21,7 +21,7 @@
             </div>
             <el-button :disabled="Boolean(r.e)" plain>AI 翻译</el-button>
             <el-button :disabled="Boolean(r.e) || r.d?.summary.editingCount === 0" style="margin-left: 0px;"
-                type="primary" plain>保存</el-button>
+                type="primary" plain @click="mEditor.fSaveFile(props.filename)?.then(() => r.update())">保存</el-button>
         </div>
         <!-- 编辑内容的表格 -->
         <div class="table">

@@ -21,6 +21,7 @@ export type TranslationItem = {
     key: string;
     texts: string[];
     variables: string[];
+    varIndexes?: number[];
 }
 
 const mEditor = reactive({
@@ -66,6 +67,26 @@ const mEditor = reactive({
                 this.mActiveTab = this.mTabs.length > 0 ? this.mTabs[0].filename : '';
             }
         }
+    },
+
+    // 保存文件函数
+    fSaveFile(filename: string) {
+        const content = this.mChangeData[filename];
+        if (!content) {
+            return;
+        }
+        const newContent: Parameters<typeof backend.editor.saveTranslation>[1] = {};
+        for (const key in content) {
+            const item = content[key];
+            newContent[key] = {
+                texts: item.texts,
+                varIndexes: item.varIndexes ?? []
+            };
+        }
+        return backend.editor.saveTranslation(filename, newContent).then(() => {
+            // 保存成功后，清除修改数据
+            delete this.mChangeData[filename];
+        });
     },
 
     // 编辑窗口
