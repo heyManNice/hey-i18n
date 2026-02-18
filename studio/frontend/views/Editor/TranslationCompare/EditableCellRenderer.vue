@@ -32,8 +32,6 @@
                 </ul>
             </Teleport>
         </div>
-        <!-- 条件翻译 -->
-        <TranslationRuleItem v-if="props.sourceItem.variables.length > 0" />
     </div>
 </template>
 <script setup lang="ts">
@@ -50,8 +48,6 @@ import {
 } from 'element-plus';
 
 import { mergeTextAndVariables } from '../../../utils/text-utils';
-
-import TranslationRuleItem from './EditableCellRenderer/TranslationRuleItem.vue';
 
 import {
     Plus,
