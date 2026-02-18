@@ -22,6 +22,23 @@ class AssetsService {
 
     // 保存翻译文件
     public saveI18nFile(filename: string, content: Record<string, MessageValue>) {
+        // 应该确保 content 中texts的长度比varIndexes的长度大1，否则可能会导致前端展示错误
+        for (const key in content) {
+            const item = content[key];
+            const targetLen = (item.varIndexes?.length ?? 0) + 1;
+            const diff = targetLen - item.texts.length;
+
+            if (diff > 0) {
+                // texts 不够，补空字符串
+                item.texts.push(...Array(diff).fill(''));
+            } else if (diff < 0) {
+                // texts 太多，把多余的合并到最后一个片段
+                const extra = item.texts.slice(targetLen).join('');
+                item.texts = item.texts.slice(0, targetLen);
+                item.texts[targetLen - 1] += extra;
+            }
+        }
+
         const fileContent = this.getI18nFile(filename);
         const newContent = {
             ...fileContent,
