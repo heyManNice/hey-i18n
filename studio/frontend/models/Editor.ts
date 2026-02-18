@@ -182,11 +182,11 @@ export function useTranslationData(filename: string) {
                 continue;
             }
 
-            const targetTexts = targetEntry.t || [];
+            const targetTexts = targetEntry.texts || [];
             const targetVariables = Array.from({
-                length: targetEntry.v?.length || 0
+                length: targetEntry.varIndexes?.length || 0
             }, (_, i) => {
-                const currutVarIndex = targetEntry.v?.[i];
+                const currutVarIndex = targetEntry.varIndexes?.[i];
                 const variableName = sourceVariables[currutVarIndex || 0];
                 return variableName;
             }) || [];
