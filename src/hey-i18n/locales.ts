@@ -2,6 +2,8 @@ import config from './config';
 
 import { Locale, rtlLocales } from './languages';
 
+type PluralCategories = 'zero' | 'one' | 'two' | 'few' | 'many' | 'other';
+
 //t: 翻译字符串数组
 //v: 变量索引数组
 export type MessageValue = {
