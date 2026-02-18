@@ -20,6 +20,7 @@
                 </el-select>
             </div>
             <el-button :disabled="Boolean(r.e)" plain>AI 翻译</el-button>
+            <el-button :disabled="Boolean(r.e)" style="margin-left: 0px;" type="danger" plain>删除</el-button>
             <el-button :disabled="Boolean(r.e) || r.d?.summary.editingCount === 0" style="margin-left: 0px;"
                 type="primary" plain @click="saveBtnClick">保存</el-button>
         </div>
