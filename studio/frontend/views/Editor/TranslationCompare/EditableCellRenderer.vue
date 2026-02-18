@@ -7,7 +7,7 @@
             <div style="flex: 1;" ref="editorRef" class="editor-content" @dragstart.prevent :contenteditable="true"
                 spellcheck="false" @input="onInput" @keydown="onKeydown" @blur="onBlur"></div>
             <el-button style="margin-left: 0px;" :icon="MagicStick" circle title="AI 翻译" />
-            <el-dropdown trigger="hover">
+            <el-dropdown trigger="click">
                 <el-button style="margin-left: 0px;" :icon="More" circle title="更多选项" />
                 <template #dropdown>
                     <el-dropdown-menu>
@@ -87,7 +87,7 @@ type MoreOption = {
     action: () => void;
 };
 
-const moreOptions = computed<MoreOption[]>(() => [
+const moreOptions: MoreOption[] = [
     {
         label: '清空内容',
         action: () => {
@@ -116,7 +116,7 @@ const moreOptions = computed<MoreOption[]>(() => [
 
         }
     }
-]);
+];
 
 function renderContent() {
     if (!editorRef.value) return;
