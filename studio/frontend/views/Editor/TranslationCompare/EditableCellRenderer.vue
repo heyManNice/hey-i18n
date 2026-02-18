@@ -161,11 +161,14 @@ function getEditorContent() {
     editorRef.value.normalize(); // 合并文本节点，确保结构清晰
     editorRef.value.childNodes.forEach(node => {
         if (node.nodeType === Node.TEXT_NODE && node.textContent) {
-            content.texts.push(node.textContent || '');
-        } else if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).classList.contains('variable')) {
-            content.variables.push((node.textContent || '').slice(1, -1));
-        } else if (node.nodeName === 'BR') {
-            // text += '\n'; // Handle newlines if needed, but for now single line mostly
+            // 普通的文字节点
+            content.texts.push(node.textContent);
+        } else if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).classList.contains('variable') && node.textContent) {
+            // 变量节点
+            if (content.texts.length === 0) {
+                content.texts.push(''); // 确保变量前有文本占位
+            }
+            content.variables.push((node.textContent).slice(1, -1));// 去除两端的花括号
         }
     });
     return content;
