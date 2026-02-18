@@ -265,6 +265,10 @@ function deleteChange() {
     const key = props.sourceItem.key;
     if (mEditor.mChangeData[filename]) {
         delete mEditor.mChangeData[filename][key];
+        // 如果该文件没有任何修改了，就删除这个文件的修改记录
+        if (Object.keys(mEditor.mChangeData[filename]).length === 0) {
+            delete mEditor.mChangeData[filename];
+        }
     }
 };
 
