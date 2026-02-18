@@ -21,7 +21,7 @@
             </div>
             <el-button :disabled="Boolean(r.e)" plain>AI 翻译</el-button>
             <el-button :disabled="Boolean(r.e) || r.d?.summary.editingCount === 0" style="margin-left: 0px;"
-                type="primary" plain @click="mEditor.fSaveFile(props.filename)?.then(() => r.update())">保存</el-button>
+                type="primary" plain @click="saveBtnClick">保存</el-button>
         </div>
         <!-- 编辑内容的表格 -->
         <div class="table">
@@ -80,15 +80,29 @@ import mEditor from '../../models/Editor';
 import mExplorer from '../../models/Explorer';
 
 import { useTranslationData } from '../../models/Editor';
+import { Notify } from '../../models/SystemBar'
 
 const props = defineProps<{
     filename: string;
 }>();
 
-const r = useTranslationData(props.filename);
+const filename = props.filename;
+
+const r = useTranslationData(filename);
 
 // local.json中获取local
-const targetLocal = props.filename.split('.')[0];
+const targetLocal = filename.split('.')[0];
+
+function saveBtnClick() {
+    mEditor.fSaveFile(filename)?.then(() => {
+        Notify.ok(`更新 ${filename} 的 ${Object.keys(mEditor.mChangeData[filename]).length} 条翻译成功.`);
+        r.update();
+        // 保存成功后，清除修改数据
+        delete mEditor.mChangeData[filename];
+    }).catch((err) => {
+        Notify.fail(`更新 ${filename} 失败: ${err.message}`);
+    });
+}
 </script>
 
 <style scoped>

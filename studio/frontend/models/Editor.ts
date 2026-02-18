@@ -16,6 +16,7 @@ import {
 import db from '../utils/indexed-db';
 import mExplorer from './Explorer';
 
+
 // 翻译资源词条的项目
 export type TranslationItem = {
     key: string;
@@ -83,10 +84,7 @@ const mEditor = reactive({
                 varIndexes: item.varIndexes ?? []
             };
         }
-        return backend.editor.saveTranslation(filename, newContent).then(() => {
-            // 保存成功后，清除修改数据
-            delete this.mChangeData[filename];
-        });
+        return backend.editor.saveTranslation(filename, newContent);
     },
 
     // 编辑窗口
