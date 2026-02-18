@@ -66,7 +66,10 @@ const props = defineProps<{
     filename: string
 }>();
 
-const isEditing = ref(false);
+const isEditing = computed(() => {
+    const existingChange = mEditor.mChangeData[props.filename]?.[props.sourceItem.key];
+    return !!existingChange;
+});
 
 const editorRef = ref<HTMLDivElement | null>(null);
 const showSuggestions = ref(false);
@@ -98,7 +101,6 @@ const moreOptions: MoreOption[] = [
         label: '放弃更改',
         action: () => {
             if (isEditing.value) {
-                isEditing.value = false;
                 deleteChange();
                 renderContent();
             }
@@ -123,9 +125,6 @@ function renderContent() {
     // 诸如筛选时候
     // 该组件卸载并重新挂载时，查看内存里是否有修改的数据
     const existingChange = mEditor.mChangeData[props.filename]?.[props.sourceItem.key];
-    if (existingChange) {
-        isEditing.value = true;
-    }
     const item = existingChange || props.item;
     const parts = mergeTextAndVariables(item.texts, item.variables);
     editorRef.value.innerHTML = '';
@@ -172,15 +171,13 @@ function getEditorContent() {
     return content;
 };
 
-// 更新编辑状态
+// 更新编辑状态，保存修改的内容
 const debouncedUpdateEditingState = useDebounceFn(() => {
     const newContent = getEditorContent();
 
     if (newContent.texts.join('') !== props.item.texts.join('') || newContent.variables.join(',') !== props.item.variables.join(',')) {
-        isEditing.value = true;
         recordChange();
     } else {
-        isEditing.value = false;
         deleteChange();
     }
 }, 300);
