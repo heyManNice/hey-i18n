@@ -160,10 +160,11 @@ function getEditorContent() {
 
     editorRef.value.normalize(); // 合并文本节点，确保结构清晰
     editorRef.value.childNodes.forEach(node => {
-        if (node.nodeType === Node.TEXT_NODE && node.textContent) {
+        if (node.textContent === null) return;
+        if (node.nodeType === Node.TEXT_NODE) {
             // 普通的文字节点
             content.texts.push(node.textContent);
-        } else if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).classList.contains('variable') && node.textContent) {
+        } else if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).classList.contains('variable')) {
             // 变量节点
             if (content.texts.length === 0) {
                 content.texts.push(''); // 确保变量前有文本占位
