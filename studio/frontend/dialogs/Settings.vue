@@ -13,7 +13,7 @@
             </el-aside>
             <el-main>
                 <div v-if="activeMenu === 'basic'">
-                    <el-form>
+                    <el-form label-width="auto">
                         <el-form-item label="项目代码原文语言">
                             <el-select model-value="zh-CN">
                             </el-select>
@@ -25,7 +25,7 @@
                     </el-form>
                 </div>
                 <div v-if="activeMenu === 'view'">
-                    <el-form>
+                    <el-form label-width="auto">
                         <el-form-item label="界面语言">
                             <div style="display: flex;gap: 10px;flex: 1;">
                                 <el-select model-value="简体中文">
@@ -40,12 +40,24 @@
                     </el-form>
                 </div>
                 <div v-if="activeMenu === 'ai'">
-                    <el-form>
-                        <el-form-item label="AI设置项1">
-                            <el-input />
+                    <el-form label-width="auto">
+                        <el-form-item label="AI 翻译接口来源">
+                            <el-select>
+                                <el-option label="hey-i18n-ai" value="hey-i18n-ai"></el-option>
+                                <el-option label="火山引擎 Ark" value="null"></el-option>
+                                <el-option label="OpenAI" value="null"></el-option>
+                                <el-option label="阿里云白炼" value="null"></el-option>
+                                <el-option label="智普 AI" value="null"></el-option>
+                            </el-select>
                         </el-form-item>
-                        <el-form-item label="AI设置项2">
-                            <el-input type="textarea" />
+                        <el-form-item label="接口地址">
+                            <el-input placeholder="请输入 AI 服务商提供的接口地址" />
+                        </el-form-item>
+                        <el-form-item label="API Key">
+                            <el-input placeholder="请输入平台提供的 API Key" />
+                        </el-form-item>
+                        <el-form-item label="模型标识">
+                            <el-input placeholder="请输入对应平台的模型名称或 ID" />
                         </el-form-item>
                     </el-form>
                 </div>
