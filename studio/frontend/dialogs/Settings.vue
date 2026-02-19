@@ -59,6 +59,9 @@
                         <el-form-item label="模型标识">
                             <el-input placeholder="请输入对应平台的模型名称或 ID" />
                         </el-form-item>
+                        <el-form-item label="测试">
+                            <el-button>测试连接</el-button>
+                        </el-form-item>
                     </el-form>
                 </div>
             </el-main>
