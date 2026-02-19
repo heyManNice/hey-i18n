@@ -1,5 +1,10 @@
-import { ElMessageBox } from 'element-plus';
+import {
+    ElMessageBox
+} from 'element-plus';
 
+import DialogFramework from './dialogFrimework';
+
+import Settings from './Settings.vue';
 
 // 确认提示框
 export async function confirm(title: string, message: string) {
@@ -18,3 +23,6 @@ export async function confirm(title: string, message: string) {
         return false;
     }
 }
+
+// 设置页面
+export const settings = new DialogFramework(Settings);

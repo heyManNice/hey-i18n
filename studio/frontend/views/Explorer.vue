@@ -64,7 +64,9 @@ import {
     Setting
 } from '@element-plus/icons-vue';
 
-import settings from '../pages/settings/settings';
+import {
+    settings
+} from '../dialogs/dialogs';
 
 import backend from '../rpc/backend';
 

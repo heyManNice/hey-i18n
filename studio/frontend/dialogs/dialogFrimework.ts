@@ -4,7 +4,7 @@ import {
     h
 } from 'vue';
 
-class PagesFramework {
+class DialogFramework {
     private backdrop;
     private window;
     private component;
@@ -45,4 +45,4 @@ class PagesFramework {
     }
 }
 
-export default PagesFramework;
+export default DialogFramework;
