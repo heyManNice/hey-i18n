@@ -53,9 +53,6 @@
                                 <el-option label="智普 AI" value="null"></el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="接口地址">
-                            <el-input placeholder="请输入 AI 服务商提供的接口地址" />
-                        </el-form-item>
                         <el-form-item label="API Key">
                             <el-input placeholder="请输入平台提供的 API Key" />
                         </el-form-item>
