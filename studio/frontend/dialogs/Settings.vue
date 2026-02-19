@@ -14,11 +14,11 @@
             <el-main>
                 <div v-if="activeMenu === 'project'">
                     <el-form label-width="auto">
-                        <el-form-item label="项目代码原文语言">
+                        <el-form-item label="项目源语言" title="开发者在代码中编写的原始字符串语言">
                             <el-select model-value="zh-CN">
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="项目用户初始语言">
+                        <el-form-item label="用户初始语言" title="用户首次进入时显示的语言，可设置为自动检测或固定语言">
                             <el-select model-value="自动">
                             </el-select>
                         </el-form-item>
