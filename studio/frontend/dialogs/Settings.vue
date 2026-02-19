@@ -37,6 +37,9 @@
                                 </el-button>
                             </div>
                         </el-form-item>
+                        <el-form-item label="提示">
+                            <span style="color: var(--muted-text-color);">你可以点击背景的灰白处关闭设置面板。</span>
+                        </el-form-item>
                     </el-form>
                 </div>
                 <div v-if="activeMenu === 'ai'">
