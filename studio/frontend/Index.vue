@@ -124,7 +124,7 @@ html.dark {
     transform: translate(-50%, -50%) scaleY(0);
     transform-origin: center;
     background-color: var(--bg-color);
-    padding: 20px;
+    overflow: hidden;
     border-radius: 4px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     animation: window-scale-in 0.1s ease-out forwards;
