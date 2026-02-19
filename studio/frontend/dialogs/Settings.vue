@@ -12,7 +12,7 @@
                 </el-menu>
             </el-aside>
             <el-main>
-                <div v-if="activeMenu === 'basic'">
+                <div v-if="activeMenu === 'project'">
                     <el-form label-width="auto">
                         <el-form-item label="项目代码原文语言">
                             <el-select model-value="zh-CN">
@@ -74,7 +74,7 @@ import {
     ref
 } from 'vue';
 import {
-    Setting,
+    Folder,
     Monitor,
     Lollipop
 } from '@element-plus/icons-vue';
@@ -97,12 +97,12 @@ import {
 type Menu = {
     index: string;
     label: string;
-    icon: typeof Setting;
+    icon: typeof Monitor;
 };
 
 const menus: Menu[] = [
-    { index: 'basic', label: '基础', icon: Setting },
     { index: 'view', label: '视图', icon: Monitor },
+    { index: 'project', label: '项目', icon: Folder },
     { index: 'ai', label: 'AI', icon: Lollipop }
 ] as const;
 
