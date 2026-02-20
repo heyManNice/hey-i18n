@@ -45,9 +45,22 @@
                 <div v-if="activeMenu === 'ai'">
                     <el-form label-width="auto">
                         <el-form-item label="AI 翻译接口来源">
-                            <el-select>
-                                <el-option label="hey-i18n-ai" value="hey-i18n-ai"></el-option>
-                                <el-option label="火山引擎 Ark" value="null"></el-option>
+                            <el-select placeholder="选择翻译接口来源">
+                                <el-option value="hey-i18n-ai">
+                                    <span>hey-i18n 官方平台</span>
+                                    <el-tag style="margin-left: 5px;" size="small">0 配置</el-tag>
+                                    <el-tag style="margin-left: 5px;" size="small">付费</el-tag>
+                                </el-option>
+                                <el-option value="third-party">
+                                    <span>第三方 API 平台</span>
+                                    <el-tag style="margin-left: 5px;" size="small">自配置</el-tag>
+                                    <el-tag style="margin-left: 5px;" size="small">性价比</el-tag>
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="API 平台">
+                            <el-select model-value="ark">
+                                <el-option label="火山引擎 Ark" value="ark"></el-option>
                                 <el-option label="OpenAI" value="null"></el-option>
                                 <el-option label="阿里云白炼" value="null"></el-option>
                                 <el-option label="智普 AI" value="null"></el-option>
@@ -90,7 +103,8 @@ import {
     ElIcon,
     ElSelect,
     ElOption,
-    ElButton
+    ElButton,
+    ElTag
 } from 'element-plus';
 
 // 设置的选项类别
