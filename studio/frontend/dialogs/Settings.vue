@@ -59,7 +59,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="API 平台">
-                            <el-select model-value="ark">
+                            <el-select placeholder="选择第三方 API 平台">
                                 <el-option label="火山引擎 Ark" value="ark"></el-option>
                                 <el-option label="OpenAI" value="null"></el-option>
                                 <el-option label="阿里云白炼" value="null"></el-option>
