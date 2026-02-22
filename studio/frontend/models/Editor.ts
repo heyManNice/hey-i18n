@@ -15,6 +15,7 @@ import {
 
 import db from '../utils/indexed-db';
 import mExplorer from './Explorer';
+import { Notify } from './SystemBar';
 
 
 // 翻译资源词条的项目
@@ -87,6 +88,14 @@ const mEditor = reactive({
         return backend.editor.saveTranslation(filename, newContent);
     },
 
+    // 删除文件函数
+    fDeleteFile(filename: string) {
+        if (this.mChangeData[filename]) {
+            delete this.mChangeData[filename];
+        }
+        return backend.editor.deleteTranslationFile(filename)
+    },
+
     // 编辑窗口
     cEdit: {
         oFilterOptions: [
@@ -154,6 +163,7 @@ window.addEventListener('beforeunload', (event) => {
 export default mEditor;
 
 import backend from '../rpc/backend';
+import { de } from 'element-plus/es/locale/index.mjs';
 
 // 编辑器的表单数据
 export function useTranslationData(filename: string) {

@@ -32,6 +32,9 @@ const mExplorer = reactive({
 
     // i18n文件名列表
     mI18nFiles: [] as string[],
+
+    // 更新文件列表函数
+    fUpdateFiles: () => { }
 });
 
 export default mExplorer;

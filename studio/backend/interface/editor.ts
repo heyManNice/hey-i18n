@@ -12,3 +12,8 @@ export function getAssetsAndCache(targetLocale: string) {
 export function saveTranslation(filename: string, content: Parameters<typeof assets.saveI18nFile>[1]) {
     assets.saveI18nFile(filename, content);
 }
+
+// 删除翻译文件
+export function deleteTranslationFile(filename: string) {
+    assets.deleteI18nFile(filename);
+}

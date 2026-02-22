@@ -78,6 +78,11 @@ import { useExplorerData } from '../models/Explorer';
 
 const r = useExplorerData();
 
+// 更新文件列表函数
+mExplorer.fUpdateFiles = () => {
+    r.update();
+};
+
 // 点击添加语言文件
 function addLangFile() {
     const filename = mExplorer.mAddLangInput.trim();

@@ -82,6 +82,16 @@ class AssetsService {
         }
         return result;
     }
+
+    // 删除i18n文件
+    public deleteI18nFile(filename: string) {
+        const filePath = path.join(this.assetsPath, filename);
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        } else {
+            throw new Error(`File ${filename} does not exist.`);
+        }
+    }
 }
 
 

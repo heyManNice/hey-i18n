@@ -113,7 +113,13 @@ async function deleteBtnClick() {
     if (!isDel) {
         return;
     }
-    console.log('删除');
+    mEditor.fDeleteFile(filename).then(() => {
+        mEditor.fRemoveTab(filename);
+        Notify.ok(`成功删除 ${filename}`);
+        mExplorer.fUpdateFiles();
+    }).catch((err) => {
+        Notify.fail(`删除 ${filename} 失败: ${err.message}`);
+    });
 }
 </script>
 
