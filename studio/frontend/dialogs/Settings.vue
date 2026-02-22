@@ -2,8 +2,8 @@
     <div class="settings-dialog-content">
         <el-container style="height: 100%;">
             <el-aside width="110px">
-                <el-menu :default-active="menus[0].index" @select="index => activeMenu = index">
-                    <el-menu-item style="height: 50px;" v-for="menu in menus" :index="menu.index">
+                <el-menu default-active="0" @select="i => activeMenuIndex = Number(i)">
+                    <el-menu-item style="height: 50px;" v-for="(menu, i) in menus" :index="String(i)">
                         <el-icon>
                             <component :is="menu.icon"></component>
                         </el-icon>
@@ -12,71 +12,7 @@
                 </el-menu>
             </el-aside>
             <el-main>
-                <div v-if="activeMenu === 'project'">
-                    <el-form label-width="auto">
-                        <el-form-item label="项目源语言" title="开发者在代码中编写的原始字符串语言">
-                            <el-select model-value="zh-CN">
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="用户初始语言" title="用户首次进入时显示的语言，可设置为自动检测或固定语言">
-                            <el-select model-value="自动">
-                            </el-select>
-                        </el-form-item>
-                    </el-form>
-                </div>
-                <div v-if="activeMenu === 'view'">
-                    <el-form label-width="auto">
-                        <el-form-item label="界面语言">
-                            <div style="display: flex;gap: 10px;flex: 1;">
-                                <el-select model-value="简体中文">
-                                    <el-option label="简体中文" value="zh-CN"></el-option>
-                                    <el-option label="English" value="en-US"></el-option>
-                                </el-select>
-                                <el-button>
-                                    重载后生效
-                                </el-button>
-                            </div>
-                        </el-form-item>
-                        <el-form-item label="提示">
-                            <span style="color: var(--muted-text-color);">你可以点击背景的灰白处关闭设置面板。</span>
-                        </el-form-item>
-                    </el-form>
-                </div>
-                <div v-if="activeMenu === 'ai'">
-                    <el-form label-width="auto">
-                        <el-form-item label="AI 翻译接口来源">
-                            <el-select placeholder="选择翻译接口来源">
-                                <el-option value="hey-i18n-ai">
-                                    <span>hey-i18n 官方平台</span>
-                                    <el-tag style="margin-left: 5px;" size="small">0 配置</el-tag>
-                                    <el-tag style="margin-left: 5px;" size="small">付费</el-tag>
-                                </el-option>
-                                <el-option value="third-party">
-                                    <span>第三方 API 平台</span>
-                                    <el-tag style="margin-left: 5px;" size="small">自配置</el-tag>
-                                    <el-tag style="margin-left: 5px;" size="small">性价比</el-tag>
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="API 平台">
-                            <el-select placeholder="选择第三方 API 平台">
-                                <el-option label="火山引擎 Ark" value="volcanoark"></el-option>
-                                <el-option label="OpenAI" value="openai"></el-option>
-                                <el-option label="阿里云白炼" value="model-studio"></el-option>
-                                <el-option label="智普 AI" value="zai"></el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="API Key">
-                            <el-input placeholder="请输入平台提供的 API Key" />
-                        </el-form-item>
-                        <el-form-item label="模型标识">
-                            <el-input placeholder="请输入对应平台的模型名称或 ID" />
-                        </el-form-item>
-                        <el-form-item label="测试">
-                            <el-button>测试连接</el-button>
-                        </el-form-item>
-                    </el-form>
-                </div>
+                <component :is="menus[activeMenuIndex].component"></component>
             </el-main>
         </el-container>
     </div>
@@ -92,36 +28,33 @@ import {
     Lollipop
 } from '@element-plus/icons-vue';
 import {
-    ElForm,
-    ElFormItem,
-    ElInput,
     ElContainer,
     ElAside,
     ElMain,
     ElMenu,
     ElMenuItem,
     ElIcon,
-    ElSelect,
-    ElOption,
-    ElButton,
-    ElTag
 } from 'element-plus';
+
+import Project from './Settings/Project.vue';
+import View from './Settings/View.vue';
+import Ai from './Settings/Ai.vue';
 
 // 设置的选项类别
 type Menu = {
-    index: string;
     label: string;
     icon: typeof Monitor;
+    component: typeof View;
 };
 
 const menus: Menu[] = [
-    { index: 'view', label: '视图', icon: Monitor },
-    { index: 'project', label: '项目', icon: Folder },
-    { index: 'ai', label: 'AI', icon: Lollipop }
+    { label: '视图', icon: Monitor, component: View },
+    { label: '项目', icon: Folder, component: Project },
+    { label: 'AI', icon: Lollipop, component: Ai }
 ] as const;
 
-// 当前活动的选项类别
-const activeMenu = ref(menus[0].index);
+// 当前活动的选项索引
+const activeMenuIndex = ref(0);
 </script>
 
 <style scoped>
