@@ -97,6 +97,7 @@ const r = useTranslationData(filename);
 const targetLocal = filename.split('.')[0];
 
 function saveBtnClick() {
+    Notify.loading(`正在保存 ${filename}...`);
     mEditor.fSaveFile(filename)?.then(() => {
         Notify.ok(`更新 ${filename} 的 ${Object.keys(mEditor.mChangeData[filename]).length} 条翻译成功.`);
         r.update();
@@ -111,6 +112,7 @@ function saveBtnClick() {
 
 // 点击删除按钮的处理函数
 async function deleteBtnClick() {
+    Notify.loading(`正在删除 ${filename}...`);
     const isDel = await confirm(`确定要删除 ${filename} 吗？`, `${filename} 将会永久消失！(真的很久！)`);
     if (!isDel) {
         return;
