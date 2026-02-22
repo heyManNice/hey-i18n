@@ -2,7 +2,7 @@
     <div class="settings-dialog-content">
         <el-container style="height: 100%;">
             <el-aside width="110px">
-                <el-menu default-active="0" @select="i => activeMenuIndex = Number(i)">
+                <el-menu :default-active="String(activeMenuIndex)" @select="i => activeMenuIndex = Number(i)">
                     <el-menu-item style="height: 50px;" v-for="(menu, i) in menus" :index="String(i)">
                         <el-icon>
                             <component :is="menu.icon"></component>
@@ -20,8 +20,8 @@
 
 <script setup lang="ts">
 import {
-    ref
-} from 'vue';
+    useStorage
+} from '@vueuse/core';
 import {
     Folder,
     Monitor,
@@ -54,7 +54,8 @@ const menus: Menu[] = [
 ] as const;
 
 // 当前活动的选项索引
-const activeMenuIndex = ref(0);
+const activeMenuIndex = useStorage('settings:activeMenuIndex', 0);
+
 </script>
 
 <style scoped>
