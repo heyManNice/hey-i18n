@@ -6,7 +6,7 @@
                     <el-option label="简体中文" value="zh-CN"></el-option>
                     <el-option label="English" value="en-US"></el-option>
                 </el-select>
-                <el-button>
+                <el-button @click="reload">
                     重载后生效
                 </el-button>
             </div>
@@ -25,4 +25,9 @@ import {
     ElOption,
     ElButton
 } from 'element-plus';
+
+// 重载
+function reload() {
+    window.location.reload();
+}
 </script>
