@@ -10,16 +10,16 @@ import Confirm from './Confirm.vue';
 export function settings() {
     const dialog = new DialogFramework(Settings);
     // 记录设置已经打开
-    localStorage.setItem('settingsOpen', 'true');
+    localStorage.setItem('settings:open', 'true');
     // 关闭时清除记录
     dialog.setOnCloseCallback(() => {
-        localStorage.removeItem('settingsOpen');
+        localStorage.removeItem('settings:open');
     });
 
     dialog.open();
 }
 // 如果设置页面已经打开，则自动打开
-if (localStorage.getItem('settingsOpen') === 'true') {
+if (localStorage.getItem('settings:open') === 'true') {
     setTimeout(() => {
         settings();
     }, 0);
