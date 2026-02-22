@@ -1,28 +1,34 @@
 import {
-    ElMessageBox
-} from 'element-plus';
-
+    h
+} from 'vue';
 import DialogFramework from './dialogFrimework';
 
 import Settings from './Settings.vue';
-
-// 确认提示框
-export async function confirm(title: string, message: string) {
-    try {
-        await ElMessageBox.confirm(
-            message,
-            title,
-            {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                lockScroll: false,
-            }
-        )
-        return true;
-    } catch {
-        return false;
-    }
-}
+import Confirm from './Confirm.vue';
 
 // 设置页面
 export const settings = new DialogFramework(Settings);
+
+
+// 确认提示页面
+export function confirm(title: string, message: string): Promise<boolean> {
+    return new Promise((resolve) => {
+        const dialog = new DialogFramework(h(Confirm, {
+            title,
+            message,
+            onCancel() {
+                // 已在setOnCloseCallback中resolve(false)
+                dialog.close();
+            },
+            onConfirm() {
+                resolve(true);
+                dialog.close();
+            }
+        }));
+        dialog.setSize('400px', 'fit-content');
+        dialog.setOnCloseCallback(() => {
+            resolve(false);
+        });
+        dialog.open();
+    });
+}

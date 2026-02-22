@@ -20,7 +20,8 @@
                 </el-select>
             </div>
             <el-button :disabled="Boolean(r.e)" plain>AI 翻译</el-button>
-            <el-button :disabled="Boolean(r.e)" style="margin-left: 0px;" type="danger" plain>删除</el-button>
+            <el-button :disabled="Boolean(r.e)" @click="deleteBtnClick" style="margin-left: 0px;" type="danger"
+                plain>删除</el-button>
             <el-button :disabled="Boolean(r.e) || r.d?.summary.editingCount === 0" style="margin-left: 0px;"
                 type="primary" plain @click="saveBtnClick">保存</el-button>
         </div>
@@ -81,7 +82,8 @@ import mEditor from '../../models/Editor';
 import mExplorer from '../../models/Explorer';
 
 import { useTranslationData } from '../../models/Editor';
-import { Notify } from '../../models/SystemBar'
+import { Notify } from '../../models/SystemBar';
+import { confirm } from '../../dialogs/dialogs';
 
 const props = defineProps<{
     filename: string;
@@ -103,6 +105,15 @@ function saveBtnClick() {
     }).catch((err) => {
         Notify.fail(`更新 ${filename} 失败: ${err.message}`);
     });
+}
+
+// 点击删除按钮的处理函数
+async function deleteBtnClick() {
+    const isDel = await confirm(`确定要删除 ${filename} 吗？`, `${filename} 将会永久消失！(真的很久！)`);
+    if (!isDel) {
+        return;
+    }
+    console.log('删除');
 }
 </script>
 
