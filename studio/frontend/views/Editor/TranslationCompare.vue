@@ -102,6 +102,8 @@ function saveBtnClick() {
         r.update();
         // 保存成功后，清除修改数据
         delete mEditor.mChangeData[filename];
+        // 更新文件列表进度条
+        mExplorer.fUpdateFiles();
     }).catch((err) => {
         Notify.fail(`更新 ${filename} 失败: ${err.message}`);
     });
