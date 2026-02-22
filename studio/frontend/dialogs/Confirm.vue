@@ -4,7 +4,7 @@
         <div class="message">{{ message }}</div>
         <div class="buttons">
             <el-button @click="emit('cancel')">取消</el-button>
-            <el-button @click="emit('confirm')" type="primary">确认</el-button>
+            <el-button style="margin-left: 0px;" @click="emit('confirm')" type="primary">确认</el-button>
         </div>
     </div>
 </template>
@@ -46,5 +46,6 @@ const props = defineProps<{
 .buttons {
     display: flex;
     justify-content: flex-end;
+    gap: 10px;
 }
 </style>
