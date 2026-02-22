@@ -114,7 +114,7 @@ html.dark {
     background-color: rgba(0, 0, 0, 0.5);
     opacity: 0;
     animation: backdrop-fade-in 0.3s ease-out forwards;
-    z-index: 999;
+    z-index: 5999;
 }
 
 .pages-window {
@@ -128,7 +128,7 @@ html.dark {
     border-radius: 4px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     animation: window-scale-in 0.1s ease-out forwards;
-    z-index: 1000;
+    z-index: 6000;
     width: min(800px, 90vw);
     height: min(600px, 80vh);
 }

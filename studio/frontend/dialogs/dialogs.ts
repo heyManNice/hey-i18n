@@ -7,7 +7,23 @@ import Settings from './Settings.vue';
 import Confirm from './Confirm.vue';
 
 // 设置页面
-export const settings = new DialogFramework(Settings);
+export function settings() {
+    const dialog = new DialogFramework(Settings);
+    // 记录设置已经打开
+    localStorage.setItem('settingsOpen', 'true');
+    // 关闭时清除记录
+    dialog.setOnCloseCallback(() => {
+        localStorage.removeItem('settingsOpen');
+    });
+
+    dialog.open();
+}
+// 如果设置页面已经打开，则自动打开
+if (localStorage.getItem('settingsOpen') === 'true') {
+    setTimeout(() => {
+        settings();
+    }, 0);
+}
 
 
 // 确认提示页面
