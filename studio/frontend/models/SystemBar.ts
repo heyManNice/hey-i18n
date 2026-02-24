@@ -46,7 +46,7 @@ const mSystemBar = reactive({
         mTimestamp: 0,
 
         // 上次扫描时间显示文本
-        mLastScanTime: "上次扫描时间: 2024-06-01 12:00",
+        mLastScanTime: "上次扫描时间: 2026-01-08 12:51",
 
         // 设置上次扫描时间
         fSetLastScanTime(timestamp: number) {
