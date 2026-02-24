@@ -42,10 +42,16 @@ const mSystemBar = reactive({
     },
 
     cScanTime: {
+        // 上次扫描时间戳
+        mTimestamp: 0,
+
+        // 上次扫描时间显示文本
         mLastScanTime: "上次扫描时间: 2024-06-01 12:00",
 
         // 设置上次扫描时间
         fSetLastScanTime(timestamp: number) {
+            this.mTimestamp = timestamp;
+
             const time = new Date(timestamp);
             const year = time.getFullYear();
             const month = String(time.getMonth() + 1).padStart(2, '0');

@@ -113,7 +113,16 @@ function nodeClick(data: NonNullable<typeof r.d>["treeData"][number]) {
 
 // 点击扫描项目原文
 function scanProject() {
-    Notify.progress(30);
+    Notify.loading('正在扫描项目原文...');
+    backend.explorer.scanI18nStrings().then(() => {
+        Notify.ok('扫描项目原文完成');
+        r.update();
+    }).catch((error) => {
+        if (!(error instanceof Error)) {
+            throw error;
+        }
+        Notify.fail(`扫描项目原文失败：${error.message}`);
+    });
 }
 </script>
 

@@ -20,6 +20,12 @@ export function getI18nKeysStats(files: string[]) {
     return assets.getI18nKeysStats(files);
 }
 
+// 扫描项目中的i18n字符串
+export function scanI18nStrings() {
+    const i18nStrings = scaner.scanI18nStrings(['src']);
+    scaner.saveI18nStringsToCacheFile(i18nStrings);
+}
+
 // 获取扫描键值的时间戳
 export function getScanKeysTimestamp() {
     const cache = scaner.getI18nStringsFromCacheFile();

@@ -82,8 +82,12 @@ import mEditor from '../../models/Editor';
 import mExplorer from '../../models/Explorer';
 
 import { useTranslationData } from '../../models/Editor';
-import { Notify } from '../../models/SystemBar';
+import mSystemBar, { Notify } from '../../models/SystemBar';
 import { confirm } from '../../dialogs/dialogs';
+
+import {
+    watch
+} from 'vue';
 
 const props = defineProps<{
     filename: string;
@@ -92,6 +96,11 @@ const props = defineProps<{
 const filename = props.filename;
 
 const r = useTranslationData(filename);
+
+// 当原文的键扫描时间更新时，重新获取翻译数据
+watch(() => mSystemBar.cScanTime.mTimestamp, () => {
+    r.update();
+});
 
 // local.json中获取local
 const targetLocal = filename.split('.')[0];
