@@ -45,11 +45,13 @@ class Locales {
 
         // 确定当前语言
         this.currentLocale = localStorage.getItem('hey-i18n-locale') || (config.defaultLocale === 'system' ? this.getSystemLocale() : config.defaultLocale);
+        // 更新当前语言的标记
+        document.documentElement.lang = this.currentLocale;
     }
 
     // 获取系统语言
     private getSystemLocale(): string {
-        return navigator.language || document.documentElement.lang || 'en-US';
+        return navigator.language || 'en-US';
     }
 
     // 加载语言包
