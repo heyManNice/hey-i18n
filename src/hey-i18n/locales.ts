@@ -89,7 +89,7 @@ export const currentLocale = localesInstance.getCurrentLocale();
 export const sourcesLocale = config.sourcesLocale;
 
 // 切换语言
-export function switchLocale(locale: string) {
+export function switchLocale(locale: string, reload = true) {
 
     switch (locale) {
         case currentLocale:
@@ -97,13 +97,17 @@ export function switchLocale(locale: string) {
 
         case 'system':
             localStorage.removeItem('hey-i18n-locale');
-            location.reload();
+            if (reload) {
+                location.reload();
+            }
             break;
 
         default:
             if (availableLocales.includes(locale as Locale)) {
                 localStorage.setItem('hey-i18n-locale', locale);
-                location.reload();
+                if (reload) {
+                    location.reload();
+                }
             } else {
                 console.warn(`Locale "${locale}" is not available.`);
             }
