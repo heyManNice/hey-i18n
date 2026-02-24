@@ -39,11 +39,13 @@
                     <Files />
                 </template>
             </BarItem>
+            <!-- 上次扫描时间 -->
             <BarItem :text="mSystemBar.cScanTime.mLastScanTime">
                 <template #icon>
                     <Timer />
                 </template>
             </BarItem>
+            <!-- hey-i18n-studio版本号 -->
             <BarItem :text="mSystemBar.CVersion.mVersion">
                 <template #icon>
                     <Flag />
