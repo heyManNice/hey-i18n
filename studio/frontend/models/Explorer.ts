@@ -6,6 +6,8 @@ import {
 
 import { languages } from '../consts/languages';
 
+import mSystemBar from './SystemBar';
+
 import {
     useReactivePromise
 } from '../utils/promise';
@@ -52,6 +54,11 @@ export function useExplorerData() {
 
         backend.explorer.getI18nKeysStats(files).then(stats => {
             keysStats.value = stats;
+        });
+
+        // 更新上次扫描时间戳
+        backend.explorer.getScanKeysTimestamp().then(timestamp => {
+            mSystemBar.cScanTime.fSetLastScanTime(timestamp);
         });
 
         const treeData = [{
