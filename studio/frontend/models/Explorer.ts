@@ -52,6 +52,7 @@ export function useExplorerData() {
 
         const keysStats = ref<Awaited<ReturnType<typeof backend.explorer.getI18nKeysStats>>>({});
 
+        // 获取原文键长度和文件已编辑的键长度
         backend.explorer.getI18nKeysStats(files).then(stats => {
             keysStats.value = stats;
         });
