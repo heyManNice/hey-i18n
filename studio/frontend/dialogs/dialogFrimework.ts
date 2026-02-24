@@ -9,6 +9,9 @@ class DialogFramework {
     private window;
     private component;
 
+    // 是否启用点击背景关闭
+    private backdropCloseEnabled = true;
+
     private onCloseCallback = () => { };
 
     constructor(component: Component) {
@@ -18,7 +21,9 @@ class DialogFramework {
             if (event.target !== this.backdrop) {
                 return;
             }
-            this.close();
+            if (this.backdropCloseEnabled) {
+                this.close();
+            }
         });
 
         this.window = document.createElement('div');
@@ -55,6 +60,11 @@ class DialogFramework {
     // 设置关闭回调
     public setOnCloseCallback(callback: () => void) {
         this.onCloseCallback = callback;
+    }
+
+    // 设置背景点击关闭
+    public setBackdropCloseEnabled(enabled: boolean) {
+        this.backdropCloseEnabled = enabled;
     }
 }
 
