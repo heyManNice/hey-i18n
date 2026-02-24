@@ -163,7 +163,6 @@ window.addEventListener('beforeunload', (event) => {
 export default mEditor;
 
 import backend from '../rpc/backend';
-import { de } from 'element-plus/es/locale/index.mjs';
 
 // 编辑器的表单数据
 export function useTranslationData(filename: string) {
