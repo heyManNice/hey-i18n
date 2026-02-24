@@ -37,7 +37,7 @@
                         <!-- 进度条 -->
                         <el-progress v-if="!node.data.isDir && node.data.totalKeys > 0"
                             :percentage="node.data.currentKeys * 100 / node.data.totalKeys"
-                            style="margin-left: auto;width: 70px;" :stroke-width="4"
+                            :format="p => p.toFixed(0) + '%'" style="margin-left: auto;width: 70px;" :stroke-width="4"
                             :title="`已编辑 ${node.data.currentKeys} / ${node.data.totalKeys} 条国际化字符串`" />
                     </span>
                 </span>
