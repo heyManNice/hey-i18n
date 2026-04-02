@@ -1,12 +1,12 @@
 <template>
     <el-form v-if="!r.e" v-loading="r.l" label-width="auto">
         <el-form-item label="项目源语言" title="开发者在代码中编写的原始字符串语言">
-            <el-select :model-value="r.d?.sourcesLocale" @change="(v) => { r.d!.sourcesLocale = v; }">
+            <el-select :model-value="r.d?.sourcesLocale" @change="(v) => { if (r.d) r.d.sourcesLocale = v; }">
                 <el-option v-for="local in languages" :key="local" :label="local" :value="local" />
             </el-select>
         </el-form-item>
         <el-form-item label="用户初始语言" title="用户首次进入时显示的语言，可设置为自动检测或固定语言">
-            <el-select :model-value="r.d?.defaultLocale" @change="(v) => { r.d!.defaultLocale = v; }">
+            <el-select :model-value="r.d?.defaultLocale" @change="(v) => { if (r.d) r.d.defaultLocale = v; }">
                 <el-option label="跟随系统" value="system" />
                 <el-option v-for="local in availableLocales" :key="local" :label="local" :value="local" />
             </el-select>
