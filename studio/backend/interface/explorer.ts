@@ -7,7 +7,7 @@ export async function getTreeData() {
     return {
         info: project.listProjectInfo(),
         files: project.listI18nFiles(),
-        config: await config.getConfig(),
+        config: await config.getI18nConfig(),
     }
 }
 

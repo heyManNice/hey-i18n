@@ -15,8 +15,6 @@ import {
 
 import db from '../utils/indexed-db';
 import mExplorer from './Explorer';
-import { Notify } from './SystemBar';
-
 
 // 翻译资源词条的项目
 export type TranslationItem = {
