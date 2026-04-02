@@ -5,6 +5,8 @@ import {
 
 import mExplorer from '../../Explorer';
 
+import { Notify } from '../../SystemBar';
+
 import {
     useReactivePromise
 } from '../../../utils/promise';
@@ -24,6 +26,13 @@ export function useProjectData() {
                 defaultLocale: defaultLocale.value,
             }).then(() => {
                 mExplorer.fUpdateFiles();
+                Notify.ok('项目配置已保存');
+            }).catch(err => {
+                if (err instanceof Error) {
+                    Notify.fail('保存项目配置失败：' + err.message);
+                } else {
+                    throw err;
+                }
             });
         });
         return {
