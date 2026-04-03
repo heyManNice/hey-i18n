@@ -81,7 +81,6 @@ class ScanerService {
                 ['.ts', '.tsx', '.js', '.jsx', '.vue', '.svelte']
             );
         }
-        console.log(results);
         return results;
     }
 
