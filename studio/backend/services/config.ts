@@ -28,7 +28,7 @@ class ConfigService {
 
     // 写入项目的 i18n 配置
     public async setI18nConfig(config: I18nConfig) {
-        const content = `//该文件是自动生成的，请在hey-i18n-studio中修改。\nexport default ${JSON.stringify(config, null, 4)};`;
+        const content = `// 该文件是自动生成的，请在hey-i18n-studio中修改。\n\nexport default ${JSON.stringify(config, null, 4)};`;
         fs.writeFileSync(this.configFilePath, content, 'utf-8');
     }
 
