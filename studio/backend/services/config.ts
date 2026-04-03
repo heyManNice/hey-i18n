@@ -31,6 +31,19 @@ class ConfigService {
         const content = `//该文件是自动生成的，请在hey-i18n-studio中修改。\nexport default ${JSON.stringify(config, null, 4)};`;
         fs.writeFileSync(this.configFilePath, content, 'utf-8');
     }
+
+    // 初始化配置目录
+    public async initConfigDir(sourcesLocale: string) {
+        if (!fs.existsSync(this.configFilePath)) {
+            fs.mkdirSync(path.dirname(this.configFilePath), { recursive: true });
+            // 创建默认配置
+            const defaultConfig: I18nConfig = {
+                sourcesLocale,
+                defaultLocale: 'system'
+            };
+            await this.setI18nConfig(defaultConfig);
+        }
+    }
 }
 
 

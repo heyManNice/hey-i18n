@@ -5,6 +5,7 @@ import DialogFramework from './dialogFrimework';
 
 import Settings from './Settings.vue';
 import Confirm from './Confirm.vue';
+import ConfigGuide from './ConfigGuide.vue';
 
 // 设置页面
 export function settings() {
@@ -47,4 +48,14 @@ export function confirm(title: string, message: string): Promise<boolean> {
         });
         dialog.open();
     });
+}
+
+
+// 配置向导
+
+export function configGuide() {
+    const dialog = new DialogFramework(ConfigGuide);
+    dialog.setSize('400px', 'fit-content');
+    dialog.setBackdropCloseEnabled(false);
+    dialog.open();
 }

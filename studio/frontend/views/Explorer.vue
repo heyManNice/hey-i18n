@@ -65,6 +65,10 @@ import {
 } from '@element-plus/icons-vue';
 
 import {
+    watch
+} from 'vue';
+
+import {
     settings
 } from '../dialogs/dialogs';
 
@@ -75,6 +79,7 @@ import mEditor from '../models/Editor';
 import mExplorer from '../models/Explorer';
 
 import { useExplorerData } from '../models/Explorer';
+import { configGuide } from '../dialogs/dialogs';
 
 const r = useExplorerData();
 
@@ -82,6 +87,11 @@ const r = useExplorerData();
 mExplorer.fUpdateFiles = () => {
     r.update();
 };
+
+watch(() => [r.e], () => {
+    console.log(r.e?.message === 'i18n config file not found');
+    configGuide();
+});
 
 // 点击添加语言文件
 function addLangFile() {

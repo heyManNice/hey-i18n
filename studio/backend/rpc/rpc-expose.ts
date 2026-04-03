@@ -1,13 +1,15 @@
 import * as explorer from '../interface/explorer';
 import * as editor from '../interface/editor';
 import * as project from '../interface/settings/project';
+import * as config from '../interface/config';
 
 const backend = {
     explorer,
     editor,
     settings: {
         project
-    }
+    },
+    config
 };
 
 type Asyncify<T> = {
