@@ -33,7 +33,16 @@
                     />
                 </el-select>
             </div>
-            <el-button :disabled="Boolean(r.e)" plain>AI 翻译</el-button>
+            <el-button :disabled="true" plain title="AI 翻译开发中">AI 翻译</el-button>
+            <el-button
+                v-if="(r.d?.summary.invalidKeysCount ?? 0) > 0"
+                :disabled="Boolean(r.e)"
+                type="warning"
+                plain
+                @click="cleanupBtnClick"
+            >
+                清理失效键
+            </el-button>
             <el-button :disabled="Boolean(r.e)" @click="deleteBtnClick" style="margin-left: 0px" type="danger" plain
                 >删除</el-button
             >
@@ -94,10 +103,12 @@
                         </template>
                         <template #default="scope">
                             <EditableCellRenderer
+                                v-if="!scope.row.isInvalid"
                                 :item="scope.row.translated"
                                 :source-item="scope.row.untranslated"
                                 :filename="props.filename"
                             />
+                            <TextCellRenderer v-else :item="scope.row.translated" />
                         </template>
                     </el-table-column>
                 </el-table>
@@ -122,6 +133,7 @@ import mExplorer from '../../models/Explorer';
 import { useTranslationData } from '../../models/Editor';
 import mSystemBar, { Notify } from '../../models/SystemBar';
 import { confirm } from '../../dialogs/dialogs';
+import backend from '../../rpc/backend';
 
 import { watch } from 'vue';
 
@@ -177,6 +189,29 @@ async function deleteBtnClick() {
         })
         .catch((err) => {
             Notify.fail(`删除 ${filename} 失败: ${err.message}`);
+        });
+}
+
+// 点击清理失效键按钮的处理函数
+async function cleanupBtnClick() {
+    const invalidCount = r.d?.summary.invalidKeysCount ?? 0;
+    const isClean = await confirm(
+        `清理 ${filename} 中的失效键？`,
+        `将从 ${filename} 中删除 ${invalidCount} 个源码中已不存在的键。`,
+    );
+    if (!isClean) {
+        return;
+    }
+    Notify.loading(`正在清理 ${filename} 的失效键...`);
+    backend.editor
+        .cleanupInvalidKeys(filename)
+        .then(({ removedKeys }) => {
+            Notify.ok(`已清理 ${removedKeys.length} 个失效键`);
+            r.update();
+            mExplorer.fUpdateFiles();
+        })
+        .catch((err) => {
+            Notify.fail(`清理失效键失败: ${err.message}`);
         });
 }
 </script>

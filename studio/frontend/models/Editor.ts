@@ -15,6 +15,13 @@ export type TranslationItem = {
     varIndexes?: number[];
 };
 
+// 表格中的一行；isInvalid 表示该键已不存在于源码扫描缓存中
+export type TranslationRow = {
+    untranslated: TranslationItem;
+    translated: TranslationItem;
+    isInvalid?: boolean;
+};
+
 const mEditor = reactive({
     // 编辑器的标签页
     mTabs: [] as {
@@ -166,10 +173,7 @@ import backend from '../rpc/backend';
 // 编辑器的表单数据
 export function useTranslationData(filename: string) {
     return useReactivePromise(async function () {
-        const translationList: {
-            untranslated: TranslationItem;
-            translated: TranslationItem;
-        }[] = [];
+        const translationList: TranslationRow[] = [];
 
         const summary = {
             translatedCount: 0,
@@ -182,8 +186,11 @@ export function useTranslationData(filename: string) {
         };
 
         const { localAssets, keyCache } = await backend.editor.getAssetsAndCache(filename);
-        summary.translatedCount = Object.keys(localAssets).length;
-        summary.totalCount = keyCache.entries?.length || 0;
+        const cacheKeys = new Set((keyCache.entries || []).map((entry) => entry.texts.join('')));
+        const localKeys = Object.keys(localAssets);
+        summary.totalCount = cacheKeys.size;
+        summary.translatedCount = localKeys.filter((key) => cacheKeys.has(key)).length;
+        summary.invalidKeysCount = localKeys.length - summary.translatedCount;
 
         for (const entry of keyCache.entries || []) {
             const sourceTexts = entry.texts;
@@ -236,6 +243,28 @@ export function useTranslationData(filename: string) {
             });
         }
 
+        // 失效键：存在于语言包但已不在源码缓存中的键。
+        // 原文信息无从得知，只保留 key 与译文，供查看/一键清理。
+        const invalidTranslationList: TranslationRow[] = localKeys
+            .filter((key) => !cacheKeys.has(key))
+            .map((key) => {
+                const asset = localAssets[key];
+                return {
+                    untranslated: {
+                        key,
+                        texts: [`(已失效) ${key}`],
+                        variables: [],
+                    },
+                    translated: {
+                        key,
+                        texts: asset.texts || [],
+                        variables: (asset.varIndexes || []).map((varIndex) => `var${varIndex}`),
+                        varIndexes: asset.varIndexes || [],
+                    },
+                    isInvalid: true,
+                };
+            });
+
         const filter = reactive({
             option: 'all' as (typeof mEditor.cEdit.oFilterOptions)[number]['value'],
             sourceSearch: '',
@@ -247,7 +276,8 @@ export function useTranslationData(filename: string) {
         watch(
             () => [filter.option, filter.sourceSearch, filter.targetSearch],
             () => {
-                filter.result = translationList.filter((item) => {
+                const sourceList = filter.option === 'invalid' ? invalidTranslationList : translationList;
+                filter.result = sourceList.filter((item) => {
                     // 原匹配
                     const matchesSource = item.untranslated.texts.join('').includes(filter.sourceSearch);
 
@@ -262,13 +292,15 @@ export function useTranslationData(filename: string) {
                             return matchesSource && matchesTarget;
                         case 'untranslated':
                             return matchesSource && targetItem.texts.length === 0;
+                        case 'invalid':
+                            return matchesSource && matchesTarget;
                         case 'editing':
                             return (
                                 matchesSource && Object.prototype.hasOwnProperty.call(changeData, item.untranslated.key)
                             );
                     }
 
-                    return true;
+                    return matchesSource && matchesTarget;
                 });
             },
             { immediate: true },

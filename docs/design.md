@@ -150,7 +150,7 @@ studio 通过 `process.cwd()` 将当前目录视为目标项目：
 ### 3.7 构建布局
 
 - 运行时库：根目录 `tsc` 编译 `src/` → `dist/`；
-- studio：`vite build` 出前端、`bun backend.build.ts`（esbuild）出后端，统一落到根目录 `dist/hey-i18n-studio/`；
+- studio：`vite build` 出前端、`node backend.build.ts`（esbuild，需 Node 22.18+ 原生运行 TS）出后端，统一落到根目录 `dist/hey-i18n-studio/`；
 - 根 `package.json` 的 bin 指向该后端入口；发布前的 `prepare/prepack` 自动化尚未补齐。
 
 ## 4. 目录职责速查
@@ -178,7 +178,7 @@ studio/frontend/
 
 ## 5. 状态与已知缺口
 
-仓库处于 v0.0.1 原型阶段。AI 翻译、复数分发与编辑、失效 key 清理目前是**占位或未实现**（详见 README Roadmap），涉及这些功能时不要声称"已支持"。其余已知问题（扫描器去重、key 碰撞、后端输入校验、`--expose` 安全等）均记录在 README 的 Roadmap 中。
+仓库处于 v0.0.1 原型阶段。AI 翻译、复数分发与编辑目前是**占位或未实现**（详见 README Roadmap），涉及这些功能时不要声称"已支持"。失效 key 的统计/筛选/清理、扫描去重与语言文件名校验已实现。其余已知问题（key 碰撞、`--expose` 安全等）均记录在 README 的 Roadmap 中。
 
 ## 6. 风格约定
 

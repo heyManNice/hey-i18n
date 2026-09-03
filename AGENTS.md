@@ -16,7 +16,7 @@ hey-i18n 是面向 Vite 项目的「源码即文案」国际化方案：开发�
 - 语言代码/名称/RTL 集合只允许在 `src/hey-i18n/languages.ts` 维护，studio 侧保持 re-export；
 - 资源文件的写操作统一走 `studio/backend/services/assets.ts` 的归一化逻辑，不要在其他位置复制；
 - 复数字段（`isPlural` / `pluralVarIndex` / `pluralCategory`）是「other 为基底」的预留结构，未实现完成前不要宣称已支持；
-- AI 翻译、失效 key 清理等功能目前是占位/半成品，README Roadmap 有清单，改动时勿误报状态；
+- AI 翻译、复数分发与编辑等功能目前是占位/未实现，README Roadmap 有清单，改动时勿误报状态；
 - **禁止**把任何 token / 密钥提交进版本库；本仓库远程公开，仓库内凭据只存在于 `.git/.github-credentials`，不得复制或移动到被跟踪文件。
 
 ## 目录速览
@@ -42,7 +42,7 @@ docs/               设计文档
 # 运行时库
 npm install && npm run build
 
-# studio 整体构建（后端需要 bun；产物在根目录 dist/hey-i18n-studio/）
+# studio 整体构建（需要 Node 22.18+；产物在根目录 dist/hey-i18n-studio/）
 cd studio && npm install && npm run build:all
 
 # 在目标项目根目录运行 studio（以 cwd 为目标项目）

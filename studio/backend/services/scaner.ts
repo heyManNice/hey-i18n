@@ -72,7 +72,19 @@ class ScanerService {
                 ['.ts', '.tsx', '.js', '.jsx', '.vue', '.svelte'],
             );
         }
-        return results;
+
+        // 同一原文（texts 骨架相同）可能出现在多个文件/多处，
+        // 编辑器按唯一键逐行翻译，这里去重避免重复行与统计虚高。
+        // 注意：骨架相同的不同原文可能语义不同（key 归一化的已知边界），
+        // 后续引入保留占位符的 key 方案时，需要同步调整此处的去重维度。
+        const uniqueResults = new Map<string, (typeof results)[number]>();
+        for (const entry of results) {
+            const key = entry.texts.join('');
+            if (!uniqueResults.has(key)) {
+                uniqueResults.set(key, entry);
+            }
+        }
+        return [...uniqueResults.values()];
     }
 
     public saveI18nStringsToCacheFile(scanResults: ReturnType<typeof this.scanI18nStrings>) {

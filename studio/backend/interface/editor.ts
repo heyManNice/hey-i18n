@@ -17,3 +17,8 @@ export function saveTranslation(filename: string, content: Parameters<typeof ass
 export function deleteTranslationFile(filename: string) {
     assets.deleteI18nFile(filename);
 }
+
+// 清理失效键
+export function cleanupInvalidKeys(filename: string) {
+    return assets.cleanupInvalidKeys(filename);
+}

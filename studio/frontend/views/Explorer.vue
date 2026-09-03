@@ -83,11 +83,13 @@ mExplorer.fUpdateFiles = () => {
     r.update();
 };
 
+// 只有未初始化 i18n 配置时才弹初始化向导，其他错误交给界面上的错误提示
 watch(
-    () => [r.e],
-    () => {
-        console.log(r.e?.message === 'i18n config file not found');
-        configGuide();
+    () => r.e,
+    (error) => {
+        if (error?.message === 'i18n config file not found') {
+            configGuide();
+        }
     },
 );
 

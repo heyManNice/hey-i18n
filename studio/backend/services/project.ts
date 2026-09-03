@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import { assertLocaleFile } from '../utils/locale-file';
 
 class ProjectService {
     private workspacePath: string;
@@ -25,6 +26,7 @@ class ProjectService {
     }
 
     public addI18nFile(filename: string) {
+        assertLocaleFile(filename);
         const filePath = path.join(this.workspacePath, this.i18nDir, filename);
         if (fs.existsSync(filePath)) {
             throw new Error(`File ${filename} already exists.`);

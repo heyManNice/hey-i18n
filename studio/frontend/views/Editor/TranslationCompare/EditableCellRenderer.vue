@@ -19,12 +19,17 @@
                 @keydown="onKeydown"
                 @blur="onBlur"
             ></div>
-            <el-button style="margin-left: 0px" :icon="MagicStick" circle title="AI 翻译" />
+            <el-button style="margin-left: 0px" :icon="MagicStick" circle disabled title="AI 翻译（开发中）" />
             <el-dropdown trigger="click">
                 <el-button style="margin-left: 0px" :icon="More" circle title="更多选项" />
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item v-for="option in moreOptions" :key="option.label" @click="option.action">
+                        <el-dropdown-item
+                            v-for="option in moreOptions"
+                            :key="option.label"
+                            :disabled="option.disabled"
+                            @click="option.action"
+                        >
                             {{ option.label }}
                         </el-dropdown-item>
                     </el-dropdown-menu>
@@ -90,12 +95,15 @@ const filteredVariables = computed(() => {
 type MoreOption = {
     label: string;
     action: () => void;
+    disabled?: boolean;
 };
 
 const moreOptions: MoreOption[] = [
     {
         label: '清空内容',
-        action: () => {},
+        action: () => {
+            clearContent();
+        },
     },
     {
         label: '放弃更改',
@@ -108,10 +116,12 @@ const moreOptions: MoreOption[] = [
     },
     {
         label: '复数模式',
+        disabled: true,
         action: () => {},
     },
     {
         label: '全屏编辑',
+        disabled: true,
         action: () => {},
     },
 ];
@@ -268,6 +278,23 @@ function deleteChange() {
         if (Object.keys(mEditor.mChangeData[filename]).length === 0) {
             delete mEditor.mChangeData[filename];
         }
+    }
+}
+
+// 清空译文内容；保存时后端会把空内容当作删除该键处理
+function clearContent() {
+    if (!editorRef.value) {
+        return;
+    }
+    editorRef.value.innerHTML = '';
+    const content = getEditorContent();
+    const isSameAsOriginal =
+        content.texts.join('') === props.item.texts.join('') &&
+        content.variables.join(',') === props.item.variables.join(',');
+    if (isSameAsOriginal) {
+        deleteChange();
+    } else {
+        recordChange();
     }
 }
 
