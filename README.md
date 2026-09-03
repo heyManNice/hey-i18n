@@ -220,7 +220,7 @@ npm run test:e2e
 - **扫描器**：已按 key 去重；仍基于正则匹配 `T\`...\``，不支持跨行、嵌套反引号或含 `}` 的复杂表达式，后续可替换为真实解析；
 - **工作台自身**：界面语言暂固定为简体中文；全屏编辑、复数模式、AI 翻译入口仍为禁用/占位；
 - **安全性**：studio 为本地开发工具，语言文件名已加白名单校验，但 RPC 仍无鉴权，请勿在 `--expose` 下对不可信网络开放；
-- **工程化**：已加入 ESLint/Prettier 与 demo + Playwright 端到端测试；CI 与单元测试尚待配置。
+- **工程化**：已加入 ESLint/Prettier、demo + Playwright 端到端测试与 GitHub Actions CI；单元测试仍待补充。
 
 ## License
 
