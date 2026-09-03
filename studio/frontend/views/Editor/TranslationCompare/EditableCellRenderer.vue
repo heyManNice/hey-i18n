@@ -52,6 +52,14 @@
                     <li v-else class="no-suggestions">未匹配到变量</li>
                 </ul>
             </Teleport>
+            <PluralEditor
+                v-if="pluralEditorOpen"
+                :source-item="props.sourceItem"
+                :item="props.item"
+                :locale="props.filename.split('.')[0]"
+                @cancel="pluralEditorOpen = false"
+                @save="applyPluralData"
+            />
         </div>
     </div>
 </template>
@@ -69,6 +77,9 @@ import type { TranslationItem } from '../../../models/Editor';
 
 import { useDebounceFn } from '@vueuse/core';
 
+import PluralEditor from './EditableCellRenderer/PluralEditor.vue';
+import type { PluralCategoryData } from '../../../models/Editor';
+
 const props = defineProps<{
     item: TranslationItem;
     sourceItem: TranslationItem;
@@ -84,6 +95,7 @@ const editorRef = ref<HTMLDivElement | null>(null);
 const showSuggestions = ref(false);
 const suggestionStyle = ref({ top: '0px', left: '0px' });
 const activeSuggestionIndex = ref(0);
+const pluralEditorOpen = ref(false);
 
 const filterQuery = ref('');
 const filteredVariables = computed(() => {
@@ -116,8 +128,9 @@ const moreOptions: MoreOption[] = [
     },
     {
         label: '复数模式',
-        disabled: true,
-        action: () => {},
+        action: () => {
+            pluralEditorOpen.value = true;
+        },
     },
     {
         label: '全屏编辑',
@@ -309,6 +322,42 @@ function clearContent() {
     } else {
         recordChange();
     }
+}
+
+// 复数编辑器保存：把复数规则合并进当前修改集（other 分支保留在单元格内容中）
+function applyPluralData(data: { isPlural: boolean; pluralVarIndex?: number; pluralCategory?: PluralCategoryData }) {
+    const filename = props.filename;
+    const key = props.sourceItem.key;
+    if (!mEditor.mChangeData[filename]) {
+        mEditor.mChangeData[filename] = {};
+    }
+
+    let current = mEditor.mChangeData[filename][key];
+    if (!current) {
+        current = getEditorContent();
+        current.key = key;
+        // 单元格可能还没编辑过，从语言包加载的条目中取 other 分支作为基底
+        if ((current.texts.join('') === '' || current.variables.length === 0) && props.item.texts?.length > 0) {
+            current.texts = [...props.item.texts];
+            current.variables = [...(props.item.variables || [])];
+            current.varIndexes = props.item.varIndexes ? [...props.item.varIndexes] : [];
+        }
+        mEditor.mChangeData[filename][key] = current;
+    }
+
+    current.isPlural = data.isPlural;
+    if (data.pluralVarIndex === undefined) {
+        delete current.pluralVarIndex;
+    } else {
+        current.pluralVarIndex = data.pluralVarIndex;
+    }
+    if (!data.pluralCategory) {
+        delete current.pluralCategory;
+    } else {
+        current.pluralCategory = data.pluralCategory;
+    }
+
+    pluralEditorOpen.value = false;
 }
 
 function onBlur() {

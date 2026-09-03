@@ -65,7 +65,7 @@ test('studio 扫描项目原文并完成一次翻译保存', async ({ page }) =>
     // 打开 zh-CN.json 语言文件
     const fileNode = page.locator('.el-tree-node__content').filter({ hasText: 'zh-CN.json' });
     await fileNode.first().click();
-    await expect(page.getByText('总计: 3')).toBeVisible();
+    await expect(page.getByText('总计: 4')).toBeVisible();
 
     // 找到目标行并编辑译文
     const row = page.locator('.el-table__row').filter({ hasText: 'This sentence will stay English.' });
@@ -85,5 +85,39 @@ test('studio 扫描项目原文并完成一次翻译保存', async ({ page }) =>
     expect(zhFile['This sentence will stay English.']).toEqual({
         texts: ['这句话会保持英文（e2e 修改）。'],
         varIndexes: [],
+    });
+});
+
+test('studio 编辑复数规则并保存', async ({ page }) => {
+    await page.goto(studioUrl);
+    await expect(page.getByText('hey-i18n-studio').first()).toBeVisible();
+
+    // 打开 ru-RU.json（demo 里已包含一个复数词条）
+    const fileNode = page.locator('.el-tree-node__content').filter({ hasText: 'ru-RU.json' });
+    await fileNode.first().click();
+    await expect(page.getByText('总计: 4')).toBeVisible();
+
+    // 定位复数词条所在行，打开“复数模式”
+    const row = page.locator('.el-table__row').filter({ hasText: 'apples' });
+    await row.locator('button[title="更多选项"]').click();
+    await page.getByRole('menuitem', { name: '复数模式' }).click();
+
+    // 修改 many 分支
+    const panel = page.locator('.plural-editor-panel');
+    await expect(panel).toBeVisible();
+    const manyFormItem = panel.locator('.el-form-item').filter({ hasText: 'many' });
+    await manyFormItem.locator('input').fill('{apples} яблок (e2e)');
+    await panel.getByRole('button', { name: '保存' }).click();
+
+    // 保存语言文件
+    const saveButton = page.getByRole('button', { name: '保存' });
+    await expect(saveButton).toBeEnabled({ timeout: 5_000 });
+    await saveButton.click();
+    await expect(page.getByText(/更新 ru-RU\.json 的 1 条翻译成功/)).toBeVisible({ timeout: 10_000 });
+
+    const ruFile = JSON.parse(fs.readFileSync(path.join(projectDir!, 'i18n', 'ru-RU.json'), 'utf-8'));
+    expect(ruFile[' apples'].pluralCategory.many).toEqual({
+        texts: ['', ' яблок (e2e)'],
+        varIndexes: [0],
     });
 });

@@ -44,7 +44,9 @@ function matchI18nStringsInFile(filePath: string) {
             line: lineNumber,
             column: columnNumber,
             raw: rawText,
-            texts: textParts.filter((part) => part.length > 0),
+            // 保留空片段（如 `${name} 你好` 的句首），
+            // 使 texts 与运行时模板字符串片段一一对应，编辑器才能正确还原变量位置
+            texts: textParts,
             variables: variableParts,
         });
     }

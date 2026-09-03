@@ -69,7 +69,7 @@ type MessageValue = {
 };
 ```
 
-设计意图：顶层 `texts/varIndexes` 就是 other；`pluralCategory` 只存条件分支的覆盖，缺失分支回落到 other。运行时分发已按此语义实现（`Intl.PluralRules` 选分支，`pluralVarIndex` 定位参与复数判断的数值参数）；studio 的复数规则编辑器尚未实现。
+设计意图：顶层 `texts/varIndexes` 就是 other；`pluralCategory` 只存条件分支的覆盖，缺失分支回落到 other。运行时分发已按此语义实现（`Intl.PluralRules` 选分支，`pluralVarIndex` 定位参与复数判断的数值参数）；studio 的复数规则编辑器也已实现（按目标语言展示可用类别，`{变量}` 模板编码为分支）。
 
 ### 2.4 源语言零开销
 
@@ -178,7 +178,7 @@ studio/frontend/
 
 ## 5. 状态与已知缺口
 
-仓库处于 v0.0.1 原型阶段。AI 翻译、复数分发与编辑目前是**占位或未实现**（详见 README Roadmap），涉及这些功能时不要声称"已支持"。失效 key 的统计/筛选/清理、扫描去重与语言文件名校验已实现。其余已知问题（key 碰撞、`--expose` 安全等）均记录在 README 的 Roadmap 中。
+仓库处于 v0.0.1 原型阶段。AI 翻译目前是**占位或未实现**（详见 README Roadmap），涉及这些功能时不要声称"已支持"。复数（运行时 + studio 编辑器）、失效 key 的统计/筛选/清理、扫描去重与语言文件名校验已实现。其余已知问题（key 碰撞、`--expose` 安全等）均记录在 README 的 Roadmap 中。
 
 ## 6. 风格约定
 
