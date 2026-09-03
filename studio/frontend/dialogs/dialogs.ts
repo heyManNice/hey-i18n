@@ -1,6 +1,4 @@
-import {
-    h
-} from 'vue';
+import { h } from 'vue';
 import DialogFramework from './dialogFrimework';
 
 import Settings from './Settings.vue';
@@ -26,22 +24,23 @@ if (localStorage.getItem('settings:open') === 'true') {
     }, 0);
 }
 
-
 // 确认提示页面
 export function confirm(title: string, message: string): Promise<boolean> {
     return new Promise((resolve) => {
-        const dialog = new DialogFramework(h(Confirm, {
-            title,
-            message,
-            onCancel() {
-                // 已在setOnCloseCallback中resolve(false)
-                dialog.close();
-            },
-            onConfirm() {
-                resolve(true);
-                dialog.close();
-            }
-        }));
+        const dialog = new DialogFramework(
+            h(Confirm, {
+                title,
+                message,
+                onCancel() {
+                    // 已在setOnCloseCallback中resolve(false)
+                    dialog.close();
+                },
+                onConfirm() {
+                    resolve(true);
+                    dialog.close();
+                },
+            }),
+        );
         dialog.setSize('400px', 'fit-content');
         dialog.setOnCloseCallback(() => {
             resolve(false);
@@ -49,7 +48,6 @@ export function confirm(title: string, message: string): Promise<boolean> {
         dialog.open();
     });
 }
-
 
 // 配置向导
 

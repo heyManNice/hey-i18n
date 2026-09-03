@@ -1,5 +1,4 @@
-import config from "../services/config";
-
+import config from '../services/config';
 
 // 初始化i18n配置
 export async function initConfig(sourcesLocale: string) {

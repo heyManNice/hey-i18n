@@ -1,12 +1,12 @@
-import project from "./project";
-import path from "path";
-import fs from "fs";
+import project from './project';
+import path from 'path';
+import fs from 'fs';
 
 // i18n 配置接口
 type I18nConfig = {
     sourcesLocale: string; // 源语言
     defaultLocale: string; // 用户初始语言，默认为 system，表示跟随系统
-}
+};
 
 class ConfigService {
     private configFilePath = path.join(project.getWorkspacePath(), 'i18n', '.hey-i18n-config');
@@ -39,12 +39,11 @@ class ConfigService {
             // 创建默认配置
             const defaultConfig: I18nConfig = {
                 sourcesLocale,
-                defaultLocale: 'system'
+                defaultLocale: 'system',
             };
             await this.setI18nConfig(defaultConfig);
         }
     }
 }
-
 
 export default new ConfigService();

@@ -1,5 +1,5 @@
 function createBackend(path: string[] = []) {
-    return new Proxy(() => { }, {
+    return new Proxy(() => {}, {
         get(_, prop: string) {
             const newPath = [...path, prop];
             return createBackend(newPath);
@@ -8,19 +8,21 @@ function createBackend(path: string[] = []) {
             return fetch('/rpc', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ funcs: path, args })
-            }).then(res => {
-                if (!res.ok) {
-                    throw new Error(`http error! status: ${res.status}`);
-                }
-                return res.json();
-            }).then(data => {
-                if (data.error) {
-                    throw new Error(data.error);
-                }
-                return data.result;
-            });
-        }
+                body: JSON.stringify({ funcs: path, args }),
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        throw new Error(`http error! status: ${res.status}`);
+                    }
+                    return res.json();
+                })
+                .then((data) => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    return data.result;
+                });
+        },
     });
 }
 

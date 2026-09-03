@@ -1,8 +1,4 @@
-import {
-    messages,
-    currentLocale,
-    sourcesLocale
-} from './locales';
+import { messages, currentLocale, sourcesLocale } from './locales';
 import type { MessageValue } from './locales';
 
 function formatTranslation(messageValue: MessageValue, values: any[]): string {
@@ -21,13 +17,13 @@ function formatTranslation(messageValue: MessageValue, values: any[]): string {
 
 /**
  * 此标记字符串为国际化字符串  
- * 
+ *
  * 使用 `hey-i18n-studio` 命令启动国际化资源编辑器进行翻译资源的编辑和管理。
- * 
+ *
  * @example
  * ```ts
  * import T from 'hey-i18n';
- * 
+ *
  * const str = T`Hello Hey-I18n!`;
  * ```
  */
@@ -43,7 +39,10 @@ export default function translate(strings: TemplateStringsArray, ...values: any[
                 return formatTranslation(messageValue, values);
             }
         } catch (e) {
-            console.error(`[hey-i18n] Failed to process translation for key [${currentLocale}] "${key}".\n - Check language pack format.\n - You should use hey-i18n-studio to edit resource files instead of manual editing.\n - If this issue persists, please report it at https://github.com/heyManNice/hey-i18n\n Error details:\n`, e);
+            console.error(
+                `[hey-i18n] Failed to process translation for key [${currentLocale}] "${key}".\n - Check language pack format.\n - You should use hey-i18n-studio to edit resource files instead of manual editing.\n - If this issue persists, please report it at https://github.com/heyManNice/hey-i18n\n Error details:\n`,
+                e,
+            );
         }
     }
 

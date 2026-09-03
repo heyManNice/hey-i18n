@@ -3,16 +3,15 @@ const dbStores = [
     {
         name: 'savedTabs',
         options: {
-            keyPath: 'projectPath'
-        }
-    }
+            keyPath: 'projectPath',
+        },
+    },
 ] as const satisfies {
     name: string;
-    options?: IDBObjectStoreParameters
+    options?: IDBObjectStoreParameters;
 }[];
 
-type DBStoreName = typeof dbStores[number]['name'];
-
+type DBStoreName = (typeof dbStores)[number]['name'];
 
 class Database {
     private db: IDBDatabase | null = null;
@@ -20,7 +19,7 @@ class Database {
 
     constructor() {
         this.ready = new Promise((resolve, reject) => {
-            const request = indexedDB.open("hey-i18n-studio-db", 1);
+            const request = indexedDB.open('hey-i18n-studio-db', 1);
             request.onupgradeneeded = () => {
                 const db = request.result;
                 for (const store of dbStores) {
@@ -38,20 +37,22 @@ class Database {
     }
     private getStore(storeName: DBStoreName, mode: IDBTransactionMode = 'readonly') {
         return new Promise<IDBObjectStore>((resolve, reject) => {
-            this.ready.then(() => {
-                if (!this.db) {
-                    return reject(new Error('Database not initialized'));
-                }
-                const tx = this.db.transaction(storeName, mode);
-                const store = tx.objectStore(storeName);
-                resolve(store);
-            }).catch(err => reject(err));
+            this.ready
+                .then(() => {
+                    if (!this.db) {
+                        return reject(new Error('Database not initialized'));
+                    }
+                    const tx = this.db.transaction(storeName, mode);
+                    const store = tx.objectStore(storeName);
+                    resolve(store);
+                })
+                .catch((err) => reject(err));
         });
     }
     put(storeName: DBStoreName, value: any) {
         return new Promise<IDBValidKey>((resolve, reject) => {
             this.getStore(storeName, 'readwrite')
-                .then(store => {
+                .then((store) => {
                     const request = store.put(value);
                     request.onsuccess = () => {
                         resolve(request.result);
@@ -60,28 +61,28 @@ class Database {
                         reject(request.error);
                     };
                 })
-                .catch(err => reject(err));
+                .catch((err) => reject(err));
         });
     }
     get(storeName: DBStoreName, key: IDBValidKey) {
         return new Promise<any>((resolve, reject) => {
             this.getStore(storeName, 'readonly')
-                .then(store => {
+                .then((store) => {
                     const request = store.get(key);
                     request.onsuccess = () => {
                         resolve(request.result);
                     };
                     request.onerror = () => {
                         reject(request.error);
-                    }
+                    };
                 })
-                .catch(err => reject(err));
+                .catch((err) => reject(err));
         });
     }
     filter(storeName: DBStoreName, filterFn: (value: any) => boolean) {
         return new Promise<any[]>((resolve, reject) => {
             this.getStore(storeName, 'readonly')
-                .then(store => {
+                .then((store) => {
                     const request = store.openCursor();
                     const results: any[] = [];
                     request.onsuccess = () => {
@@ -99,22 +100,22 @@ class Database {
                         reject(request.error);
                     };
                 })
-                .catch(err => reject(err));
+                .catch((err) => reject(err));
         });
     }
     delete(storeName: DBStoreName, key: IDBValidKey) {
         return new Promise<void>((resolve, reject) => {
             this.getStore(storeName, 'readwrite')
-                .then(store => {
+                .then((store) => {
                     const request = store.delete(key);
                     request.onsuccess = () => {
                         resolve();
-                    }
+                    };
                     request.onerror = () => {
                         reject(request.error);
                     };
                 })
-                .catch(err => reject(err));
+                .catch((err) => reject(err));
         });
     }
 }

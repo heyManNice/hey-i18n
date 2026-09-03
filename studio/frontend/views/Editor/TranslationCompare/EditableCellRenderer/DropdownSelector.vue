@@ -1,12 +1,12 @@
 <template>
     <el-dropdown trigger="hover">
-        <span style="user-select: none;cursor: pointer;" class="variable">
+        <span style="user-select: none; cursor: pointer" class="variable">
             {{ modelValue || placeholder }}
         </span>
         <template #dropdown>
             <el-dropdown-menu>
-                <el-dropdown-item @click="emit('update:modelValue', option)" v-for="option in options">
-                    <span style="user-select: none;" class="variable">
+                <el-dropdown-item @click="emit('update:modelValue', option)" v-for="option in options" :key="option">
+                    <span style="user-select: none" class="variable">
                         {{ option }}
                     </span>
                 </el-dropdown-item>
@@ -16,13 +16,9 @@
 </template>
 
 <script lang="ts" setup>
-import {
-    ElDropdown,
-    ElDropdownMenu,
-    ElDropdownItem,
-} from 'element-plus';
+import { ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus';
 
-const props = defineProps<{
+defineProps<{
     modelValue: string;
     placeholder: string;
     options: string[];
@@ -31,7 +27,6 @@ const props = defineProps<{
 const emit = defineEmits<{
     (e: 'update:modelValue', value: string): void;
 }>();
-
 </script>
 
 <style></style>

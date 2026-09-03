@@ -1,6 +1,4 @@
-import {
-    reactive
-} from 'vue';
+import { reactive } from 'vue';
 
 const mSystemBar = reactive({
     cStatus: {
@@ -38,7 +36,7 @@ const mSystemBar = reactive({
         fSetLoading(text: string) {
             this.mStatus = 'loading';
             this.mMessage = text;
-        }
+        },
     },
 
     cScanTime: {
@@ -46,7 +44,7 @@ const mSystemBar = reactive({
         mTimestamp: 0,
 
         // 上次扫描时间显示文本
-        mLastScanTime: "加载中...",
+        mLastScanTime: '加载中...',
 
         // 设置上次扫描时间
         fSetLastScanTime(timestamp: number) {
@@ -59,12 +57,12 @@ const mSystemBar = reactive({
             const hours = String(time.getHours()).padStart(2, '0');
             const minutes = String(time.getMinutes()).padStart(2, '0');
             this.mLastScanTime = `上次扫描时间: ${year}-${month}-${day} ${hours}:${minutes}`;
-        }
+        },
     },
 
     CVersion: {
         mVersion: 'v0.0.1',
-    }
+    },
 });
 
 export default mSystemBar;
@@ -89,5 +87,5 @@ export const Notify = {
     // 加载
     loading(msg: string) {
         mSystemBar.cStatus.fSetLoading(msg);
-    }
-}
+    },
+};

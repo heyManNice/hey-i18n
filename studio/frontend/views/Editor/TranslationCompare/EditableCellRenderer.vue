@@ -1,17 +1,30 @@
 <template>
     <div class="container">
         <!-- 第一行的输入框 -->
-        <div :class="{
-            'is-editing': isEditing
-        }" class="editable-cell-renderer" @click.stop>
-            <div style="flex: 1;" ref="editorRef" class="editor-content" @dragstart.prevent :contenteditable="true"
-                spellcheck="false" @input="onInput" @keydown="onKeydown" @blur="onBlur"></div>
-            <el-button style="margin-left: 0px;" :icon="MagicStick" circle title="AI 翻译" />
+        <div
+            :class="{
+                'is-editing': isEditing,
+            }"
+            class="editable-cell-renderer"
+            @click.stop
+        >
+            <div
+                style="flex: 1"
+                ref="editorRef"
+                class="editor-content"
+                @dragstart.prevent
+                :contenteditable="true"
+                spellcheck="false"
+                @input="onInput"
+                @keydown="onKeydown"
+                @blur="onBlur"
+            ></div>
+            <el-button style="margin-left: 0px" :icon="MagicStick" circle title="AI 翻译" />
             <el-dropdown trigger="click">
-                <el-button style="margin-left: 0px;" :icon="More" circle title="更多选项" />
+                <el-button style="margin-left: 0px" :icon="More" circle title="更多选项" />
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item v-for="option in moreOptions" @click="option.action">
+                        <el-dropdown-item v-for="option in moreOptions" :key="option.label" @click="option.action">
                             {{ option.label }}
                         </el-dropdown-item>
                     </el-dropdown-menu>
@@ -20,8 +33,12 @@
             <Teleport to="body">
                 <ul v-if="showSuggestions" class="suggestions-list" :style="suggestionStyle">
                     <template v-if="filteredVariables.length > 0">
-                        <li v-for="(v, index) in filteredVariables" :key="v"
-                            :class="{ active: index === activeSuggestionIndex }" @mousedown.prevent="insertVariable(v)">
+                        <li
+                            v-for="(v, index) in filteredVariables"
+                            :key="v"
+                            :class="{ active: index === activeSuggestionIndex }"
+                            @mousedown.prevent="insertVariable(v)"
+                        >
                             <span class="variable">
                                 {{ '{' + v + '}' }}
                             </span>
@@ -34,36 +51,23 @@
     </div>
 </template>
 <script setup lang="ts">
-import {
-    ref,
-    computed,
-    onMounted
-} from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
-import {
-    ElDropdown,
-    ElDropdownMenu,
-    ElDropdownItem
-} from 'element-plus';
+import { ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus';
 
 import { mergeTextAndVariables } from '../../../utils/text-utils';
 
-import {
-    More,
-    MagicStick,
-} from '@element-plus/icons-vue';
+import { More, MagicStick } from '@element-plus/icons-vue';
 import { ElButton } from 'element-plus';
 import mEditor from '../../../models/Editor';
-import type {
-    TranslationItem
-} from '../../../models/Editor';
+import type { TranslationItem } from '../../../models/Editor';
 
 import { useDebounceFn } from '@vueuse/core';
 
 const props = defineProps<{
-    item: TranslationItem,
-    sourceItem: TranslationItem,
-    filename: string
+    item: TranslationItem;
+    sourceItem: TranslationItem;
+    filename: string;
 }>();
 
 const isEditing = computed(() => {
@@ -76,13 +80,11 @@ const showSuggestions = ref(false);
 const suggestionStyle = ref({ top: '0px', left: '0px' });
 const activeSuggestionIndex = ref(0);
 
-
 const filterQuery = ref('');
 const filteredVariables = computed(() => {
     if (!filterQuery.value) return props.sourceItem.variables;
-    return props.sourceItem.variables.filter(v => v.toLowerCase().startsWith(filterQuery.value.toLowerCase()));
+    return props.sourceItem.variables.filter((v) => v.toLowerCase().startsWith(filterQuery.value.toLowerCase()));
 });
-
 
 // 更多按钮选项
 type MoreOption = {
@@ -93,9 +95,7 @@ type MoreOption = {
 const moreOptions: MoreOption[] = [
     {
         label: '清空内容',
-        action: () => {
-
-        }
+        action: () => {},
     },
     {
         label: '放弃更改',
@@ -104,20 +104,16 @@ const moreOptions: MoreOption[] = [
                 deleteChange();
                 renderContent();
             }
-        }
+        },
     },
     {
         label: '复数模式',
-        action: () => {
-
-        }
+        action: () => {},
     },
     {
         label: '全屏编辑',
-        action: () => {
-
-        }
-    }
+        action: () => {},
+    },
 ];
 
 function renderContent() {
@@ -128,7 +124,7 @@ function renderContent() {
     const item = existingChange || props.item;
     const parts = mergeTextAndVariables(item.texts, item.variables);
     editorRef.value.innerHTML = '';
-    parts.forEach(part => {
+    parts.forEach((part) => {
         if (part.type === 'variable') {
             const span = createVariableElement(part.content);
             editorRef.value!.appendChild(span);
@@ -136,7 +132,7 @@ function renderContent() {
             editorRef.value!.appendChild(document.createTextNode(part.content));
         }
     });
-};
+}
 
 function createVariableElement(text: string) {
     const span = document.createElement('span');
@@ -144,7 +140,7 @@ function createVariableElement(text: string) {
     span.className = 'variable';
     span.contentEditable = 'false';
     return span;
-};
+}
 
 onMounted(() => {
     renderContent();
@@ -154,12 +150,12 @@ function getEditorContent() {
     const content: typeof props.item = {
         key: props.sourceItem.key,
         texts: [],
-        variables: []
+        variables: [],
     };
     if (!editorRef.value) return content;
 
     editorRef.value.normalize(); // 合并文本节点，确保结构清晰
-    editorRef.value.childNodes.forEach(node => {
+    editorRef.value.childNodes.forEach((node) => {
         if (node.textContent === null) return;
         if (node.nodeType === Node.TEXT_NODE) {
             // 普通的文字节点
@@ -169,24 +165,27 @@ function getEditorContent() {
             if (content.texts.length === 0) {
                 content.texts.push(''); // 确保变量前有文本占位
             }
-            content.variables.push((node.textContent).slice(1, -1));// 去除两端的花括号
+            content.variables.push(node.textContent.slice(1, -1)); // 去除两端的花括号
         }
     });
     return content;
-};
+}
 
 // 更新编辑状态，保存修改的内容
 const debouncedUpdateEditingState = useDebounceFn(() => {
     const newContent = getEditorContent();
 
-    if (newContent.texts.join('') !== props.item.texts.join('') || newContent.variables.join(',') !== props.item.variables.join(',')) {
+    if (
+        newContent.texts.join('') !== props.item.texts.join('') ||
+        newContent.variables.join(',') !== props.item.variables.join(',')
+    ) {
         recordChange();
     } else {
         deleteChange();
     }
 }, 300);
 
-function onInput(e: Event) {
+function onInput() {
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return;
 
@@ -216,7 +215,7 @@ function onInput(e: Event) {
         }
     }
     showSuggestions.value = false;
-};
+}
 
 function updateSuggestionPosition() {
     const selection = window.getSelection();
@@ -235,7 +234,7 @@ function updateSuggestionPosition() {
             left: `${rect.left}px`,
         };
     }
-};
+}
 
 // 记录当前组件修改的数据
 function recordChange() {
@@ -257,7 +256,7 @@ function recordChange() {
     newContent.varIndexes = varIndexes;
 
     mEditor.mChangeData[filename][key] = newContent;
-};
+}
 
 // 删除记录当前组件修改的数据
 function deleteChange() {
@@ -270,13 +269,13 @@ function deleteChange() {
             delete mEditor.mChangeData[filename];
         }
     }
-};
+}
 
 function onBlur() {
     setTimeout(() => {
         showSuggestions.value = false;
     }, 200);
-};
+}
 
 // 显示推荐的时候的键盘操作
 function onKeydown(e: KeyboardEvent) {
@@ -290,7 +289,8 @@ function onKeydown(e: KeyboardEvent) {
             activeSuggestionIndex.value = (activeSuggestionIndex.value + 1) % filteredVariables.value.length;
         } else if (e.key === 'ArrowUp') {
             e.preventDefault();
-            activeSuggestionIndex.value = (activeSuggestionIndex.value - 1 + filteredVariables.value.length) % filteredVariables.value.length;
+            activeSuggestionIndex.value =
+                (activeSuggestionIndex.value - 1 + filteredVariables.value.length) % filteredVariables.value.length;
         } else if (e.key === 'Enter') {
             e.preventDefault();
             if (filteredVariables.value.length > 0) {
@@ -300,7 +300,7 @@ function onKeydown(e: KeyboardEvent) {
             showSuggestions.value = false;
         }
     }
-};
+}
 
 function insertVariable(variableName: string) {
     const selection = window.getSelection();
@@ -333,8 +333,7 @@ function insertVariable(variableName: string) {
 
     showSuggestions.value = false;
     debouncedUpdateEditingState();
-};
-
+}
 </script>
 
 <style scoped>
@@ -388,8 +387,6 @@ function insertVariable(variableName: string) {
 .editor-content:focus {
     border-color: var(--el-color-primary);
 }
-
-
 
 .suggestions-list {
     position: fixed;

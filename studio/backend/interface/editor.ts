@@ -5,7 +5,7 @@ export function getAssetsAndCache(targetLocale: string) {
     return {
         localAssets: assets.getI18nFile(targetLocale),
         keyCache: scaner.getI18nStringsFromCacheFile(),
-    }
+    };
 }
 
 // 储存翻译结果

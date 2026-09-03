@@ -1,19 +1,20 @@
 import http, { IncomingMessage, ServerResponse } from 'http';
 import routes from './routes.js';
 import useStatic from './static.js';
-import chalk from "chalk";
+import chalk from 'chalk';
 
-import packageJson from '../../../package.json' assert { type: "json" };
+import packageJson from '../../../package.json' assert { type: 'json' };
 const { green, blue, bold } = chalk;
 
 function printBoxedMessage(lines: string[]) {
-    const stripAnsi = (str: string) => str.replace(/\u001b\[[0-9;]*m/g, '');
-    const width = Math.max(...lines.map(line => stripAnsi(line).length));
-    const top = `╔${"═".repeat(width + 2)}╗`;
-    const bottom = `╚${"═".repeat(width + 2)}╝`;
-    const content = lines.map(line => `║ ${line.padEnd(width + (line.length - stripAnsi(line).length))} ║`);
+    const ansiPattern = new RegExp(String.fromCharCode(27) + '\\[[0-9;]*m', 'g');
+    const stripAnsi = (str: string) => str.replace(ansiPattern, '');
+    const width = Math.max(...lines.map((line) => stripAnsi(line).length));
+    const top = `╔${'═'.repeat(width + 2)}╗`;
+    const bottom = `╚${'═'.repeat(width + 2)}╝`;
+    const content = lines.map((line) => `║ ${line.padEnd(width + (line.length - stripAnsi(line).length))} ║`);
     console.log(top);
-    content.forEach(line => console.log(line));
+    content.forEach((line) => console.log(line));
     console.log(bottom);
 }
 
@@ -26,7 +27,7 @@ class Server {
                 `${bold(green('hey-i18n-studio')) + green(' v' + packageJson.version)} ready`,
                 ``,
                 ` ${green('➜')}  ${bold('Local')}: ${blue(bold(`http://localhost:${port}`))}`,
-                ` ${green("➜")}  ${bold("Start")}: ${blue(new Date().toLocaleString())}`,
+                ` ${green('➜')}  ${bold('Start')}: ${blue(new Date().toLocaleString())}`,
             ]);
         });
     }
@@ -38,8 +39,8 @@ class Server {
             return;
         }
 
-        const method = req.method?.toLowerCase() || "get";
-        const url = req.url || "/";
+        const method = req.method?.toLowerCase() || 'get';
+        const url = req.url || '/';
         const key = `${method}:${url}`;
 
         const handler = routes[key];
@@ -49,8 +50,7 @@ class Server {
             res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
             res.end(JSON.stringify({ error: `service not found` }));
         }
-    };
+    }
 }
-
 
 export default Server;

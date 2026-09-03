@@ -1,4 +1,4 @@
-import { build } from 'esbuild'
+import { build } from 'esbuild';
 
 build({
     entryPoints: ['backend/main.ts'],
@@ -7,5 +7,5 @@ build({
     target: ['node20'],
     outdir: '../dist/hey-i18n-studio/backend',
     sourcemap: false,
-    minify: true
+    minify: true,
 }).then(() => console.log('Backend build completed.'));

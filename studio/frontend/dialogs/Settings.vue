@@ -1,9 +1,9 @@
 <template>
     <div class="settings-dialog-content">
-        <el-container style="height: 100%;">
+        <el-container style="height: 100%">
             <el-aside width="110px">
-                <el-menu :default-active="String(activeMenuIndex)" @select="i => activeMenuIndex = Number(i)">
-                    <el-menu-item style="height: 50px;" v-for="(menu, i) in menus" :index="String(i)">
+                <el-menu :default-active="String(activeMenuIndex)" @select="(i) => (activeMenuIndex = Number(i))">
+                    <el-menu-item style="height: 50px" v-for="(menu, i) in menus" :key="i" :index="String(i)">
                         <el-icon>
                             <component :is="menu.icon"></component>
                         </el-icon>
@@ -19,22 +19,9 @@
 </template>
 
 <script setup lang="ts">
-import {
-    useStorage
-} from '@vueuse/core';
-import {
-    Folder,
-    Monitor,
-    Lollipop
-} from '@element-plus/icons-vue';
-import {
-    ElContainer,
-    ElAside,
-    ElMain,
-    ElMenu,
-    ElMenuItem,
-    ElIcon,
-} from 'element-plus';
+import { useStorage } from '@vueuse/core';
+import { Folder, Monitor, Lollipop } from '@element-plus/icons-vue';
+import { ElContainer, ElAside, ElMain, ElMenu, ElMenuItem, ElIcon } from 'element-plus';
 
 import Project from './Settings/Project.vue';
 import View from './Settings/View.vue';
@@ -50,12 +37,11 @@ type Menu = {
 const menus: Menu[] = [
     { label: '视图', icon: Monitor, component: View },
     { label: '项目', icon: Folder, component: Project },
-    { label: 'AI', icon: Lollipop, component: Ai }
+    { label: 'AI', icon: Lollipop, component: Ai },
 ] as const;
 
 // 当前活动的选项索引
 const activeMenuIndex = useStorage('settings:activeMenuIndex', 0);
-
 </script>
 
 <style scoped>

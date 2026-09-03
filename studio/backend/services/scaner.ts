@@ -1,12 +1,8 @@
-import path from "path";
-import fs from "fs";
-import project from "./project";
+import path from 'path';
+import fs from 'fs';
+import project from './project';
 
-function iterateSourceFiles(
-    dirPath: string,
-    fileCallback: (filePath: string) => void,
-    extensions: string[]
-) {
+function iterateSourceFiles(dirPath: string, fileCallback: (filePath: string) => void, extensions: string[]) {
     if (!fs.existsSync(dirPath)) {
         return;
     }
@@ -48,8 +44,8 @@ function matchI18nStringsInFile(filePath: string) {
             line: lineNumber,
             column: columnNumber,
             raw: rawText,
-            texts: textParts.filter(part => part.length > 0),
-            variables: variableParts
+            texts: textParts.filter((part) => part.length > 0),
+            variables: variableParts,
         });
     }
     return results;
@@ -58,11 +54,7 @@ function matchI18nStringsInFile(filePath: string) {
 class ScanerService {
     private cacheFilePath: string;
     constructor() {
-        this.cacheFilePath = path.join(
-            project.getWorkspacePath(),
-            project.getI18nDir(),
-            '.hey-i18n-key-cache'
-        );
+        this.cacheFilePath = path.join(project.getWorkspacePath(), project.getI18nDir(), '.hey-i18n-key-cache');
     }
 
     public scanI18nStrings(sourcePaths: string[]) {
@@ -76,9 +68,8 @@ class ScanerService {
                     if (matches.length > 0) {
                         results.push(...matches);
                     }
-
                 },
-                ['.ts', '.tsx', '.js', '.jsx', '.vue', '.svelte']
+                ['.ts', '.tsx', '.js', '.jsx', '.vue', '.svelte'],
             );
         }
         return results;
@@ -88,9 +79,9 @@ class ScanerService {
         const cacheData = {
             metadata: {
                 timestamp: Date.now(),
-                project: project.listProjectInfo()
+                project: project.listProjectInfo(),
             },
-            entries: scanResults
+            entries: scanResults,
         };
         fs.writeFileSync(this.cacheFilePath, JSON.stringify(cacheData, null, 2), 'utf-8');
         return cacheData;

@@ -49,7 +49,7 @@ class AssetsService {
         const fileContent = this.getI18nFile(filename);
         const newContent = {
             ...fileContent,
-            ...content
+            ...content,
         };
 
         // 删除被清空的键
@@ -67,7 +67,7 @@ class AssetsService {
             [filename: string]: {
                 totalKeys: number;
                 currentKeys: number;
-            }
+            };
         } = {};
         const entries = scaner.getI18nStringsFromCacheFile().entries || [];
         const totalKeys = entries.length;
@@ -93,6 +93,5 @@ class AssetsService {
         }
     }
 }
-
 
 export default new AssetsService();

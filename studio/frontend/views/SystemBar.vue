@@ -16,22 +16,30 @@
             </BarItem>
 
             <!-- 错误提示 -->
-            <BarItem v-if="mSystemBar.cStatus.mStatus === 'error'" :text="mSystemBar.cStatus.mMessage"
-                style="background-color: color-mix(in srgb, red 50%, var(--bg-color));">
+            <BarItem
+                v-if="mSystemBar.cStatus.mStatus === 'error'"
+                :text="mSystemBar.cStatus.mMessage"
+                style="background-color: color-mix(in srgb, red 50%, var(--bg-color))"
+            >
                 <template #icon>
                     <Close />
                 </template>
             </BarItem>
 
             <!-- 进度条提示 -->
-            <BarItem v-if="mSystemBar.cStatus.mStatus === 'progress'" :text="mSystemBar.cStatus.mMessage"
-                :progress="mSystemBar.cStatus.mProgress" />
+            <BarItem
+                v-if="mSystemBar.cStatus.mStatus === 'progress'"
+                :text="mSystemBar.cStatus.mMessage"
+                :progress="mSystemBar.cStatus.mProgress"
+            />
 
             <!-- 加载提示 -->
-            <BarItem v-if="mSystemBar.cStatus.mStatus === 'loading'" :is-loading="true"
-                :text="mSystemBar.cStatus.mMessage">
+            <BarItem
+                v-if="mSystemBar.cStatus.mStatus === 'loading'"
+                :is-loading="true"
+                :text="mSystemBar.cStatus.mMessage"
+            >
             </BarItem>
-
         </div>
         <div class="right">
             <BarItem text="zh-CN">
@@ -55,14 +63,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import {
-    Files,
-    Check,
-    Folder,
-    Flag,
-    Timer,
-    Close
-} from '@element-plus/icons-vue';
+import { Files, Check, Folder, Flag, Timer, Close } from '@element-plus/icons-vue';
 
 import BarItem from './SystemBar/BarItem.vue';
 

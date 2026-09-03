@@ -1,8 +1,4 @@
-import {
-    Component,
-    render,
-    h
-} from 'vue';
+import { Component, render, h } from 'vue';
 
 class DialogFramework {
     private backdrop;
@@ -12,7 +8,7 @@ class DialogFramework {
     // 是否启用点击背景关闭
     private backdropCloseEnabled = true;
 
-    private onCloseCallback = () => { };
+    private onCloseCallback = () => {};
 
     constructor(component: Component) {
         this.backdrop = document.createElement('div');
@@ -49,7 +45,6 @@ class DialogFramework {
             this.backdrop.style.animation = '';
             this.window.style.animation = '';
         }, 300);
-
     }
     // 设置窗口大小
     public setSize(width: string, height: string) {

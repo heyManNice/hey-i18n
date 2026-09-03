@@ -1,12 +1,26 @@
 <template>
     <el-form v-if="!r.e" v-loading="r.l" label-width="auto">
         <el-form-item label="项目源语言" title="开发者在代码中编写的原始字符串语言">
-            <el-select :model-value="r.d?.sourcesLocale" @change="(v) => { if (r.d) r.d.sourcesLocale = v; }">
+            <el-select
+                :model-value="r.d?.sourcesLocale"
+                @change="
+                    (v) => {
+                        if (r.d) r.d.sourcesLocale = v;
+                    }
+                "
+            >
                 <el-option v-for="local in languages" :key="local" :label="local" :value="local" />
             </el-select>
         </el-form-item>
         <el-form-item label="用户初始语言" title="用户首次进入时显示的语言，可设置为自动检测或固定语言">
-            <el-select :model-value="r.d?.defaultLocale" @change="(v) => { if (r.d) r.d.defaultLocale = v; }">
+            <el-select
+                :model-value="r.d?.defaultLocale"
+                @change="
+                    (v) => {
+                        if (r.d) r.d.defaultLocale = v;
+                    }
+                "
+            >
                 <el-option label="跟随系统" value="system" />
                 <el-option v-for="local in availableLocales" :key="local" :label="local" :value="local" />
             </el-select>
@@ -16,20 +30,11 @@
 </template>
 
 <script setup lang="ts">
-import {
-    ElForm,
-    ElFormItem,
-    ElSelect,
-    ElOption
-} from 'element-plus';
+import { ElForm, ElFormItem, ElSelect, ElOption } from 'element-plus';
 
-import {
-    computed,
-} from 'vue';
+import { computed } from 'vue';
 
-import {
-    languages
-} from '../../consts/languages';
+import { languages } from '../../consts/languages';
 
 import mExplorer from '../../models/Explorer';
 import { useProjectData } from '../../models/dialogs/Settings/Project';
@@ -38,8 +43,8 @@ import { useProjectData } from '../../models/dialogs/Settings/Project';
 import { vLoading } from 'element-plus';
 defineOptions({
     directives: {
-        loading: vLoading
-    }
+        loading: vLoading,
+    },
 });
 
 // 可用的语言

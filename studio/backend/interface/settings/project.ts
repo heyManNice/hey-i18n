@@ -1,4 +1,4 @@
-import config from "../../services/config";
+import config from '../../services/config';
 
 // 读取项目的i18n配置
 export async function getI18nConfig() {

@@ -7,50 +7,97 @@
             <span>失效的键: {{ r.d?.summary.invalidKeysCount ?? '-' }}</span>
             <span>正在修改：{{ r.d?.summary.editingCount ?? '-' }}</span>
             <div class="filter">
-                <el-select :disabled="Boolean(r.e)" :model-value="r.d?.filter.option" @update:model-value="val => {
-                    if (r.d) { r.d.filter.option = val }
-                }" placeholder="筛选" style="width: 130px;">
+                <el-select
+                    :disabled="Boolean(r.e)"
+                    :model-value="r.d?.filter.option"
+                    @update:model-value="
+                        (val) => {
+                            if (r.d) {
+                                r.d.filter.option = val;
+                            }
+                        }
+                    "
+                    placeholder="筛选"
+                    style="width: 130px"
+                >
                     <template #prefix>
                         <el-icon>
                             <Filter />
                         </el-icon>
                     </template>
-                    <el-option v-for="item in mEditor.cEdit.oFilterOptions" :key="item.value" :label="item.label"
-                        :value="item.value" />
+                    <el-option
+                        v-for="item in mEditor.cEdit.oFilterOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                    />
                 </el-select>
             </div>
             <el-button :disabled="Boolean(r.e)" plain>AI 翻译</el-button>
-            <el-button :disabled="Boolean(r.e)" @click="deleteBtnClick" style="margin-left: 0px;" type="danger"
-                plain>删除</el-button>
-            <el-button :disabled="Boolean(r.e) || r.d?.summary.editingCount === 0" style="margin-left: 0px;"
-                type="primary" plain @click="saveBtnClick">保存</el-button>
+            <el-button :disabled="Boolean(r.e)" @click="deleteBtnClick" style="margin-left: 0px" type="danger" plain
+                >删除</el-button
+            >
+            <el-button
+                :disabled="Boolean(r.e) || r.d?.summary.editingCount === 0"
+                style="margin-left: 0px"
+                type="primary"
+                plain
+                @click="saveBtnClick"
+                >保存</el-button
+            >
         </div>
         <!-- 编辑内容的表格 -->
         <div class="table">
-            <div style="position: absolute; width: 100%;height: 100%;">
-                <el-table v-loading="r.l" v-if="!r.e" :data="r.d?.filter.result"
-                    :row-key="(row) => row.untranslated.key" style="height: 100%;">
+            <div style="position: absolute; width: 100%; height: 100%">
+                <el-table
+                    v-loading="r.l"
+                    v-if="!r.e"
+                    :data="r.d?.filter.result"
+                    :row-key="(row) => row.untranslated.key"
+                    style="height: 100%"
+                >
                     <!-- 项目原来的翻译列 -->
                     <el-table-column min-width="45">
                         <template #header>
-                            <HeaderCellRenderer :search-input="r.d?.filter.sourceSearch"
-                                :label="`项目原文 (${mExplorer.mSourceLocale})`" search-placeholder="搜索原文"
-                                @update:searchInput="val => { if (r.d) { r.d.filter.sourceSearch = val } }" />
+                            <HeaderCellRenderer
+                                :search-input="r.d?.filter.sourceSearch"
+                                :label="`项目原文 (${mExplorer.mSourceLocale})`"
+                                search-placeholder="搜索原文"
+                                @update:searchInput="
+                                    (val) => {
+                                        if (r.d) {
+                                            r.d.filter.sourceSearch = val;
+                                        }
+                                    }
+                                "
+                            />
                         </template>
                         <template #default="scope">
-                            <TextCellRenderer :item="scope.row.untranslated" style="cursor: not-allowed;" />
+                            <TextCellRenderer :item="scope.row.untranslated" style="cursor: not-allowed" />
                         </template>
                     </el-table-column>
                     <!-- 目标翻译的列 -->
                     <el-table-column min-width="55">
                         <template #header>
-                            <HeaderCellRenderer :search-input="r.d?.filter.targetSearch"
-                                :label="`目标译文 (${targetLocal})`" search-placeholder="搜索译文"
-                                @update:searchInput="val => { if (r.d) { r.d.filter.targetSearch = val } }" />
+                            <HeaderCellRenderer
+                                :search-input="r.d?.filter.targetSearch"
+                                :label="`目标译文 (${targetLocal})`"
+                                search-placeholder="搜索译文"
+                                @update:searchInput="
+                                    (val) => {
+                                        if (r.d) {
+                                            r.d.filter.targetSearch = val;
+                                        }
+                                    }
+                                "
+                            />
                         </template>
                         <template #default="scope">
-                            <EditableCellRenderer :item="scope.row.translated" :source-item="scope.row.untranslated"
-                                :filename="props.filename" />
+                            <EditableCellRenderer
+                                :item="scope.row.translated"
+                                :source-item="scope.row.untranslated"
+                                :filename="props.filename"
+                            />
                         </template>
                     </el-table-column>
                 </el-table>
@@ -61,18 +108,9 @@
 </template>
 
 <script setup lang="ts">
-import {
-    ElTable,
-    ElTableColumn,
-    ElSelect,
-    ElOption,
-    ElIcon,
-    ElButton
-} from 'element-plus';
+import { ElTable, ElTableColumn, ElSelect, ElOption, ElIcon, ElButton } from 'element-plus';
 
-import {
-    Filter
-} from '@element-plus/icons-vue';
+import { Filter } from '@element-plus/icons-vue';
 
 import HeaderCellRenderer from './TranslationCompare/HeaderCellRenderer.vue';
 import TextCellRenderer from './TranslationCompare/TextCellRenderer.vue';
@@ -85,9 +123,7 @@ import { useTranslationData } from '../../models/Editor';
 import mSystemBar, { Notify } from '../../models/SystemBar';
 import { confirm } from '../../dialogs/dialogs';
 
-import {
-    watch
-} from 'vue';
+import { watch } from 'vue';
 
 const props = defineProps<{
     filename: string;
@@ -98,25 +134,31 @@ const filename = props.filename;
 const r = useTranslationData(filename);
 
 // 当原文的键扫描时间更新时，重新获取翻译数据
-watch(() => mSystemBar.cScanTime.mTimestamp, () => {
-    r.update();
-});
+watch(
+    () => mSystemBar.cScanTime.mTimestamp,
+    () => {
+        r.update();
+    },
+);
 
 // local.json中获取local
 const targetLocal = filename.split('.')[0];
 
 function saveBtnClick() {
     Notify.loading(`正在保存 ${filename}...`);
-    mEditor.fSaveFile(filename)?.then(() => {
-        Notify.ok(`更新 ${filename} 的 ${Object.keys(mEditor.mChangeData[filename]).length} 条翻译成功.`);
-        r.update();
-        // 保存成功后，清除修改数据
-        delete mEditor.mChangeData[filename];
-        // 更新文件列表进度条
-        mExplorer.fUpdateFiles();
-    }).catch((err) => {
-        Notify.fail(`更新 ${filename} 失败: ${err.message}`);
-    });
+    mEditor
+        .fSaveFile(filename)
+        ?.then(() => {
+            Notify.ok(`更新 ${filename} 的 ${Object.keys(mEditor.mChangeData[filename]).length} 条翻译成功.`);
+            r.update();
+            // 保存成功后，清除修改数据
+            delete mEditor.mChangeData[filename];
+            // 更新文件列表进度条
+            mExplorer.fUpdateFiles();
+        })
+        .catch((err) => {
+            Notify.fail(`更新 ${filename} 失败: ${err.message}`);
+        });
 }
 
 // 点击删除按钮的处理函数
@@ -126,13 +168,16 @@ async function deleteBtnClick() {
         return;
     }
     Notify.loading(`正在删除 ${filename}...`);
-    mEditor.fDeleteFile(filename).then(() => {
-        mEditor.fRemoveTab(filename);
-        Notify.ok(`成功删除 ${filename}`);
-        mExplorer.fUpdateFiles();
-    }).catch((err) => {
-        Notify.fail(`删除 ${filename} 失败: ${err.message}`);
-    });
+    mEditor
+        .fDeleteFile(filename)
+        .then(() => {
+            mEditor.fRemoveTab(filename);
+            Notify.ok(`成功删除 ${filename}`);
+            mExplorer.fUpdateFiles();
+        })
+        .catch((err) => {
+            Notify.fail(`删除 ${filename} 失败: ${err.message}`);
+        });
 }
 </script>
 

@@ -55,15 +55,16 @@ texts[0] + values[varIndexes[0]] + texts[1] + ...
 type PluralCategories = 'zero' | 'one' | 'two' | 'few' | 'many';
 
 type MessageValue = {
-    texts: string[];                 // 即 other 分支
+    texts: string[]; // 即 other 分支
     varIndexes: number[];
-    isPlural?: boolean;              // 预留
-    pluralVarIndex?: number;         // 参与复数判断的参数下标，预留
-    pluralCategory?: {               // 各复数类别的覆盖分支，预留
+    isPlural?: boolean; // 预留
+    pluralVarIndex?: number; // 参与复数判断的参数下标，预留
+    pluralCategory?: {
+        // 各复数类别的覆盖分支，预留
         [key in PluralCategories]?: {
             texts: string[];
             varIndexes: number[];
-        }
+        };
     };
 };
 ```
@@ -123,7 +124,7 @@ studio 通过 `process.cwd()` 将当前目录视为目标项目：
 - 后端以命名空间对象暴露能力：`explorer`、`editor`、`settings.project`、`config`（rpc/rpc-expose.ts）；
 - 前端用 Proxy 按路径调用并返回 Promise（rpc/backend.ts）；
 - 类型通过 `Asyncify<T>` 从后端推导到前端；
-- 接口层（backend/interface/*）是薄封装，服务层（backend/services/*）持有真正的文件逻辑；
+- 接口层（backend/interface/_）是薄封装，服务层（backend/services/_）持有真正的文件逻辑；
 - 新增后端能力时：在 `services/` 实现 → `interface/` 暴露 → 挂到 `rpc-expose.ts`，前端类型即可用。
 
 ### 3.4 前端模式：集中模型 + 薄组件

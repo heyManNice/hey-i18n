@@ -1,9 +1,9 @@
-import { IncomingMessage, ServerResponse } from 'http'
+import { IncomingMessage, ServerResponse } from 'http';
 import backend from './rpc-expose.js';
 
 export default async function rpc(req: IncomingMessage, res: ServerResponse) {
     let body = '';
-    req.on('data', chunk => {
+    req.on('data', (chunk) => {
         body += chunk;
     });
     req.on('end', async () => {
@@ -20,7 +20,7 @@ export default async function rpc(req: IncomingMessage, res: ServerResponse) {
 
             const methodName = funcs[funcs.length - 1];
             const method = target[methodName];
-            if (typeof method !== "function") {
+            if (typeof method !== 'function') {
                 throw new Error(`${funcs.join('.')} is not a function`);
             }
 
@@ -32,4 +32,4 @@ export default async function rpc(req: IncomingMessage, res: ServerResponse) {
             res.end(JSON.stringify({ error: error.message }));
         }
     });
-};
+}

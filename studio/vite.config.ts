@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -14,13 +14,13 @@ export default defineConfig({
                     if (req.url != '/rpc') {
                         return req.url;
                     }
-                }
+                },
             },
-        }
+        },
     },
     plugins: [vue()],
     build: {
         outDir: '../../dist/hey-i18n-studio/frontend',
         emptyOutDir: true,
     },
-})
+});

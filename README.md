@@ -91,16 +91,16 @@ i18n/
 // 该文件是自动生成的，请在 hey-i18n-studio 中修改。
 
 export default {
-    "sourcesLocale": "en-US",
-    "defaultLocale": "system"
+    sourcesLocale: 'en-US',
+    defaultLocale: 'system',
 };
 ```
 
 配置项：
 
-| 字段 | 说明 |
-| --- | --- |
-| `sourcesLocale` | 源码中书写原文的语言，如 `en-US` |
+| 字段            | 说明                                                                          |
+| --------------- | ----------------------------------------------------------------------------- |
+| `sourcesLocale` | 源码中书写原文的语言，如 `en-US`                                              |
 | `defaultLocale` | 用户首次访问时的语言；`system` 表示跟随浏览器系统语言，也可固定为某个语言代码 |
 
 ### 3. 在代码中使用
@@ -120,10 +120,10 @@ switchLocale('zh-CN');
 ```ts
 import {
     availableLocales, // 当前可用语言列表
-    currentLocale,    // 当前语言
-    isRtlLocale,      // 当前语言是否 RTL
-    localeNames,      // 语言代码 -> 语言名称
-    defineLocaleNames // 自定义/合并语言名称
+    currentLocale, // 当前语言
+    isRtlLocale, // 当前语言是否 RTL
+    localeNames, // 语言代码 -> 语言名称
+    defineLocaleNames, // 自定义/合并语言名称
 } from 'hey-i18n';
 ```
 

@@ -1,30 +1,27 @@
 <template>
     <el-container style="height: 100vh">
-        <el-main style="padding: 0;">
+        <el-main style="padding: 0">
             <el-splitter>
-                <el-splitter-panel size="300px" :min="250" style="background-color: var(--sidebar-bg-color);">
+                <el-splitter-panel size="300px" :min="250" style="background-color: var(--sidebar-bg-color)">
                     <Explorer />
                 </el-splitter-panel>
-                <el-splitter-panel class="app-editor-panel" :min="700"
-                    style="background-color: var(--panel-bg-color);display: flex;overflow: hidden;">
+                <el-splitter-panel
+                    class="app-editor-panel"
+                    :min="700"
+                    style="background-color: var(--panel-bg-color); display: flex; overflow: hidden"
+                >
                     <Editor />
                 </el-splitter-panel>
             </el-splitter>
         </el-main>
-        <el-footer style="padding: 0;height: 20px;">
+        <el-footer style="padding: 0; height: 20px">
             <SystemBar />
         </el-footer>
     </el-container>
 </template>
 
 <script setup lang="ts">
-import {
-    ElSplitter,
-    ElSplitterPanel,
-    ElContainer,
-    ElMain,
-    ElFooter
-} from 'element-plus';
+import { ElSplitter, ElSplitterPanel, ElContainer, ElMain, ElFooter } from 'element-plus';
 
 import SystemBar from './views/SystemBar.vue';
 import Explorer from './views/Explorer.vue';

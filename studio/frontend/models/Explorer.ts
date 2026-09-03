@@ -1,16 +1,10 @@
-import {
-    reactive,
-    computed,
-    ref
-} from 'vue';
+import { reactive, computed, ref } from 'vue';
 
 import { languages } from '../consts/languages';
 
 import mSystemBar from './SystemBar';
 
-import {
-    useReactivePromise
-} from '../utils/promise';
+import { useReactivePromise } from '../utils/promise';
 import backend from '../rpc/backend';
 
 const mExplorer = reactive({
@@ -22,7 +16,7 @@ const mExplorer = reactive({
 
     // 添加语言输入框的建议列表函数
     fFetchLangSug(input: string, callback: any) {
-        const suggestions = languages.filter(lang => lang.indexOf(input) !== -1).map(lang => ({ value: lang }));
+        const suggestions = languages.filter((lang) => lang.indexOf(input) !== -1).map((lang) => ({ value: lang }));
         callback(suggestions);
     },
 
@@ -36,7 +30,7 @@ const mExplorer = reactive({
     mI18nFiles: [] as string[],
 
     // 更新文件列表函数
-    fUpdateFiles: () => { }
+    fUpdateFiles: () => {},
 });
 
 export default mExplorer;
@@ -53,30 +47,32 @@ export function useExplorerData() {
         const keysStats = ref<Awaited<ReturnType<typeof backend.explorer.getI18nKeysStats>>>({});
 
         // 获取原文键长度和文件已编辑的键长度
-        backend.explorer.getI18nKeysStats(files).then(stats => {
+        backend.explorer.getI18nKeysStats(files).then((stats) => {
             keysStats.value = stats;
         });
 
         // 更新上次扫描时间戳
-        backend.explorer.getScanKeysTimestamp().then(timestamp => {
+        backend.explorer.getScanKeysTimestamp().then((timestamp) => {
             mSystemBar.cScanTime.fSetLastScanTime(timestamp);
         });
 
-        const treeData = [{
-            isDir: true,
-            label: `${info.projectName}/${info.i18nDir} (原文 ${config.sourcesLocale})`,
-            children: computed(() => {
-                return Array.from(files)
-                    .map(file => ({
-                        label: file,
-                        totalKeys: keysStats.value[file]?.totalKeys || 0,
-                        currentKeys: keysStats.value[file]?.currentKeys || 0,
-                    }))
-                    .filter(file => file.label.indexOf(mExplorer.mTreeSearch) !== -1);
-            })
-        }];
+        const treeData = [
+            {
+                isDir: true,
+                label: `${info.projectName}/${info.i18nDir} (原文 ${config.sourcesLocale})`,
+                children: computed(() => {
+                    return Array.from(files)
+                        .map((file) => ({
+                            label: file,
+                            totalKeys: keysStats.value[file]?.totalKeys || 0,
+                            currentKeys: keysStats.value[file]?.currentKeys || 0,
+                        }))
+                        .filter((file) => file.label.indexOf(mExplorer.mTreeSearch) !== -1);
+                }),
+            },
+        ];
         return {
-            treeData
+            treeData,
         };
     });
 }

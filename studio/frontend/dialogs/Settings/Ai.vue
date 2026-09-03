@@ -4,13 +4,13 @@
             <el-select placeholder="选择翻译接口来源">
                 <el-option value="hey-i18n-ai">
                     <span>hey-i18n 官方平台</span>
-                    <el-tag style="margin-left: 5px;" size="small">0 配置</el-tag>
-                    <el-tag style="margin-left: 5px;" size="small">付费</el-tag>
+                    <el-tag style="margin-left: 5px" size="small">0 配置</el-tag>
+                    <el-tag style="margin-left: 5px" size="small">付费</el-tag>
                 </el-option>
                 <el-option value="third-party">
                     <span>第三方 API 平台</span>
-                    <el-tag style="margin-left: 5px;" size="small">自配置</el-tag>
-                    <el-tag style="margin-left: 5px;" size="small">性价比</el-tag>
+                    <el-tag style="margin-left: 5px" size="small">自配置</el-tag>
+                    <el-tag style="margin-left: 5px" size="small">性价比</el-tag>
                 </el-option>
             </el-select>
         </el-form-item>
@@ -35,13 +35,5 @@
 </template>
 
 <script setup lang="ts">
-import {
-    ElForm,
-    ElFormItem,
-    ElSelect,
-    ElOption,
-    ElInput,
-    ElButton,
-    ElTag
-} from 'element-plus';
+import { ElForm, ElFormItem, ElSelect, ElOption, ElInput, ElButton, ElTag } from 'element-plus';
 </script>

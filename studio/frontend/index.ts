@@ -7,6 +7,6 @@ useDark();
 import 'element-plus/dist/index.css';
 import 'element-plus/theme-chalk/dark/css-vars.css';
 
-import { ElLoading } from 'element-plus'
+import { ElLoading } from 'element-plus';
 
 createApp(Index).directive('loading', ElLoading.directive).mount(document.body);

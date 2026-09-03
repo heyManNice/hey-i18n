@@ -1,0 +1,6 @@
+node_modules
+dist
+.git
+package-lock.json
+studio/package-lock.json
+LICENSE

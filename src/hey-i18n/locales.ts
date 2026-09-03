@@ -19,7 +19,7 @@ export type MessageValue = {
         [key in PluralCategories]?: {
             texts: string[];
             varIndexes: number[];
-        }
+        };
     };
 };
 
@@ -33,18 +33,23 @@ class Locales {
 
     constructor() {
         // 构建 locale 映射
-        this.locales = Object.entries(config.i18nFiles).reduce((acc, [path, module]) => {
-            const locale = path.split('/').pop()?.split('.').shift();
-            if (locale) {
-                acc[locale] = module;
-            }
-            return acc;
-        }, {} as {
-            [locale: string]: () => Promise<unknown>;
-        });
+        this.locales = Object.entries(config.i18nFiles).reduce(
+            (acc, [path, module]) => {
+                const locale = path.split('/').pop()?.split('.').shift();
+                if (locale) {
+                    acc[locale] = module;
+                }
+                return acc;
+            },
+            {} as {
+                [locale: string]: () => Promise<unknown>;
+            },
+        );
 
         // 确定当前语言
-        this.currentLocale = localStorage.getItem('hey-i18n-locale') || (config.defaultLocale === 'system' ? this.getSystemLocale() : config.defaultLocale);
+        this.currentLocale =
+            localStorage.getItem('hey-i18n-locale') ||
+            (config.defaultLocale === 'system' ? this.getSystemLocale() : config.defaultLocale);
         // 更新当前语言的标记
         document.documentElement.lang = this.currentLocale;
     }
@@ -59,7 +64,7 @@ class Locales {
         const importfunc = this.locales[this.currentLocale] as () => Promise<{
             default: Record<string, MessageValue>;
         }>;
-        this.messages = importfunc ? (await importfunc()).default as Record<string, MessageValue> : {};
+        this.messages = importfunc ? ((await importfunc()).default as Record<string, MessageValue>) : {};
     }
 
     // 获取当前可用语言列表
@@ -92,7 +97,6 @@ export const sourcesLocale = config.sourcesLocale;
 
 // 切换语言
 export function switchLocale(locale: string, reload = true) {
-
     switch (locale) {
         case currentLocale:
             return;

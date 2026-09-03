@@ -7,19 +7,18 @@ const backend = {
     explorer,
     editor,
     settings: {
-        project
+        project,
     },
-    config
+    config,
 };
 
 type Asyncify<T> = {
     [K in keyof T]: T[K] extends (...args: infer A) => infer R
-    ? (...args: A) => Promise<R>
-    : T[K] extends object
-    ? Asyncify<T[K]>
-    : T[K];
+        ? (...args: A) => Promise<R>
+        : T[K] extends object
+          ? Asyncify<T[K]>
+          : T[K];
 };
-
 
 export default backend;
 

@@ -1,5 +1,5 @@
-import path from "path";
-import fs from "fs";
+import path from 'path';
+import fs from 'fs';
 
 class ProjectService {
     private workspacePath: string;
@@ -21,7 +21,7 @@ class ProjectService {
         if (!fs.existsSync(i18nPath)) {
             return [];
         }
-        return fs.readdirSync(i18nPath).filter(file => file.endsWith('.json'));
+        return fs.readdirSync(i18nPath).filter((file) => file.endsWith('.json'));
     }
 
     public addI18nFile(filename: string) {
@@ -49,7 +49,7 @@ class ProjectService {
         const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
         const dependencies = {
             ...packageJson.dependencies,
-            ...packageJson.devDependencies
+            ...packageJson.devDependencies,
         };
         return 'vite' in dependencies;
     }

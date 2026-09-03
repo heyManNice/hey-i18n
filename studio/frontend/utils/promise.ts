@@ -1,8 +1,4 @@
-import {
-    reactive
-} from 'vue';
-
-
+import { reactive } from 'vue';
 
 // vue 响应式的承诺
 export function useReactivePromise<T>(promiseFn: () => Promise<T>) {
@@ -10,7 +6,7 @@ export function useReactivePromise<T>(promiseFn: () => Promise<T>) {
         d: null as T | null, // data
         e: null as Error | null, // error
         l: false, // is loading
-        update: () => { } // 重发数据
+        update: () => {}, // 重发数据
     });
 
     async function run() {
@@ -18,18 +14,18 @@ export function useReactivePromise<T>(promiseFn: () => Promise<T>) {
 
         try {
             // 此时 Awaited<T> 可以安全地赋值给 UnwrapRef<T>
-            // @ts-ignore
+            // @ts-expect-error Awaited<T> 可直接赋给 UnwrapRef<T>
             r.d = await promiseFn();
         } catch (err: any) {
-            return r.e = err instanceof Error ? err : new Error(String(err))
+            return (r.e = err instanceof Error ? err : new Error(String(err)));
         } finally {
             r.l = false;
         }
     }
     r.update = () => {
         run();
-    }
+    };
 
-    run()
+    run();
     return r;
 }

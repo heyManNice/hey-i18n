@@ -8,7 +8,7 @@ export async function getTreeData() {
         info: project.listProjectInfo(),
         files: project.listI18nFiles(),
         config: await config.getI18nConfig(),
-    }
+    };
 }
 
 export function addI18nFile(locale: string) {
