@@ -121,6 +121,26 @@ const mEditor = reactive({
         return backend.editor.deleteTranslationFile(filename);
     },
 
+    // AI 批量翻译当前文件未翻译的条目，生成可审阅的修改草稿
+    async fAiTranslate(filename: string) {
+        const result = await backend.ai.translateFile(filename);
+        if (result.translated.length === 0) {
+            return result;
+        }
+        if (!this.mChangeData[filename]) {
+            this.mChangeData[filename] = {};
+        }
+        for (const item of result.translated) {
+            this.mChangeData[filename][item.key] = {
+                key: item.key,
+                texts: item.texts,
+                variables: item.variables,
+                varIndexes: item.varIndexes,
+            };
+        }
+        return result;
+    },
+
     // 编辑窗口
     cEdit: {
         oFilterOptions: [

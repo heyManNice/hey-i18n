@@ -33,7 +33,9 @@
                     />
                 </el-select>
             </div>
-            <el-button :disabled="true" plain title="AI 翻译开发中">AI 翻译</el-button>
+            <el-button :disabled="Boolean(r.e) || aiLoading" :loading="aiLoading" plain @click="aiTranslateClick">
+                AI 翻译
+            </el-button>
             <el-button
                 v-if="(r.d?.summary.invalidKeysCount ?? 0) > 0"
                 :disabled="Boolean(r.e)"
@@ -135,7 +137,7 @@ import mSystemBar, { Notify } from '../../models/SystemBar';
 import { confirm } from '../../dialogs/dialogs';
 import backend from '../../rpc/backend';
 
-import { watch } from 'vue';
+import { ref, watch } from 'vue';
 
 const props = defineProps<{
     filename: string;
@@ -144,6 +146,7 @@ const props = defineProps<{
 const filename = props.filename;
 
 const r = useTranslationData(filename);
+const aiLoading = ref(false);
 
 // 当原文的键扫描时间更新时，重新获取翻译数据
 watch(
@@ -155,6 +158,30 @@ watch(
 
 // local.json中获取local
 const targetLocal = filename.split('.')[0];
+
+function aiTranslateClick() {
+    aiLoading.value = true;
+    Notify.loading(`正在用 AI 翻译 ${filename} 的未翻译条目...`);
+    mEditor
+        .fAiTranslate(filename)
+        .then((result) => {
+            r.update();
+            mExplorer.fUpdateFiles();
+            if (result.translated.length === 0) {
+                Notify.ok(`${filename} 没有需要翻译的内容`);
+            } else {
+                Notify.ok(
+                    `AI 已生成 ${result.translated.length} 条翻译草稿（共 ${result.totalCount} 条），请检查后保存`,
+                );
+            }
+        })
+        .catch((error) => {
+            Notify.fail(`AI 翻译失败：${error.message}`);
+        })
+        .finally(() => {
+            aiLoading.value = false;
+        });
+}
 
 function saveBtnClick() {
     Notify.loading(`正在保存 ${filename}...`);

@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { spawn, type ChildProcess } from 'child_process';
 import fs from 'fs';
+import http from 'http';
 import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -9,8 +10,10 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 const demoDir = path.join(repoRoot, 'demo');
 const backendEntry = path.join(repoRoot, 'dist', 'hey-i18n-studio', 'backend', 'main.js');
 const studioUrl = 'http://127.0.0.1:3034';
+const mockAiUrl = 'http://127.0.0.1:5099';
 
 let server: ChildProcess;
+let mockAiServer: http.Server;
 let projectDir: string;
 
 async function waitForServer(url: string, timeoutMs = 15_000) {
@@ -34,6 +37,33 @@ test.beforeAll(async () => {
         throw new Error(`studio 后端产物不存在，请先执行 npm run build:studio`);
     }
 
+    // Mock 一个 OpenAI 兼容服务，验证 AI 翻译链路
+    mockAiServer = http.createServer((req, res) => {
+        if (req.url !== '/chat/completions') {
+            res.writeHead(404);
+            res.end();
+            return;
+        }
+        let body = '';
+        req.on('data', (chunk) => {
+            body += chunk;
+        });
+        req.on('end', () => {
+            const parsed = JSON.parse(body);
+            const userContent = parsed.messages?.find((m: { role: string }) => m.role === 'user')?.content ?? '';
+            let content = `[AI] ${userContent}`;
+            if (userContent.includes('{count}')) {
+                content = '{total} AI {count}';
+            } else if (userContent === 'This sentence will stay English.') {
+                content = '[AI] 翻译';
+            }
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ choices: [{ message: { content } }] }));
+        });
+    });
+    await new Promise<void>((resolve) => mockAiServer.listen(5099, '127.0.0.1', resolve));
+    process.env.HEY_I18N_AI_BASE_URL = mockAiUrl;
+
     // 在临时目录复制一份 demo 作为被翻译的项目，避免测试改动污染仓库内数据
     projectDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hey-i18n-studio-e2e-'));
     for (const name of ['package.json', 'index.html', 'vite.config.ts']) {
@@ -52,6 +82,8 @@ test.beforeAll(async () => {
 
 test.afterAll(async () => {
     server?.kill();
+    mockAiServer?.close();
+    delete process.env.HEY_I18N_AI_BASE_URL;
 });
 
 test('studio 扫描项目原文并完成一次翻译保存', async ({ page }) => {
@@ -119,5 +151,49 @@ test('studio 编辑复数规则并保存', async ({ page }) => {
     expect(ruFile[' apples'].pluralCategory.many).toEqual({
         texts: ['', ' яблок (e2e)'],
         varIndexes: [0],
+    });
+});
+
+test('AI 翻译生成草稿并可保存', async ({ page }) => {
+    // 直接写入 AI 配置（等价于在设置页填写并保存）
+    fs.writeFileSync(
+        path.join(projectDir!, 'i18n', '.hey-i18n-ai-config'),
+        JSON.stringify(
+            {
+                provider: 'third-party',
+                platform: 'openai',
+                apiKey: 'test-key',
+                model: 'mock-model',
+            },
+            null,
+            4,
+        ),
+        'utf-8',
+    );
+
+    await page.goto(studioUrl);
+    await expect(page.getByText('hey-i18n-studio').first()).toBeVisible();
+    const fileNode = page.locator('.el-tree-node__content').filter({ hasText: 'ru-RU.json' });
+    await fileNode.first().click();
+    await expect(page.getByText('总计: 4')).toBeVisible();
+
+    // 点击 AI 翻译，等待草稿生成
+    await page.locator('.summary').getByRole('button', { name: 'AI 翻译', exact: true }).click();
+    await expect(page.getByText(/AI 已生成 2 条翻译草稿/)).toBeVisible({ timeout: 20_000 });
+
+    // 保存草稿并校验语言文件
+    const saveButton = page.getByRole('button', { name: '保存' });
+    await expect(saveButton).toBeEnabled({ timeout: 5_000 });
+    await saveButton.click();
+    await expect(page.getByText(/更新 ru-RU\.json 的 2 条翻译成功/)).toBeVisible({ timeout: 10_000 });
+
+    const ruFile = JSON.parse(fs.readFileSync(path.join(projectDir!, 'i18n', 'ru-RU.json'), 'utf-8'));
+    expect(ruFile['Items: , total ']).toEqual({
+        texts: ['', ' AI ', ''],
+        varIndexes: [1, 0],
+    });
+    expect(ruFile['This sentence will stay English.']).toEqual({
+        texts: ['[AI] 翻译'],
+        varIndexes: [],
     });
 });

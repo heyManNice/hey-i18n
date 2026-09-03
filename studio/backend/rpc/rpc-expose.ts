@@ -1,11 +1,13 @@
 import * as explorer from '../interface/explorer';
 import * as editor from '../interface/editor';
+import * as ai from '../interface/ai';
 import * as project from '../interface/settings/project';
 import * as config from '../interface/config';
 
 const backend = {
     explorer,
     editor,
+    ai,
     settings: {
         project,
     },
