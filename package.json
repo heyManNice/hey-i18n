@@ -13,10 +13,14 @@
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
-        "format:check": "prettier --check ."
+        "format:check": "prettier --check .",
+        "demo:install": "npm --prefix demo install",
+        "build:studio": "npm --prefix studio run build:all",
+        "test:e2e": "npm run build && npm --prefix studio install && npm run build:studio && npm --prefix demo install && playwright test"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
+        "@playwright/test": "^1.62.1",
         "eslint": "^10.9.1",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-vue": "^10.10.0",

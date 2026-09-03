@@ -47,6 +47,11 @@ cd studio && npm install && npm run build:all
 
 # 在目标项目根目录运行 studio（以 cwd 为目标项目）
 node dist/hey-i18n-studio/backend/main.js
+
+# 质量检查与端到端测试
+npm run lint
+npm run format:check
+npm run test:e2e   # 需要先安装 demo 依赖与 Playwright 浏览器
 ```
 
 ## 提交约定

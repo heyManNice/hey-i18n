@@ -1,0 +1,14 @@
+{
+    "Hello, !": {
+        "texts": ["你好，", "！"],
+        "varIndexes": [0]
+    },
+    "Items: , total ": {
+        "texts": ["共", " 项，其中 ", "。"],
+        "varIndexes": [1, 0]
+    },
+    "This sentence will stay English.": {
+        "texts": ["这句话会保持英文。"],
+        "varIndexes": []
+    }
+}

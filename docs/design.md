@@ -85,7 +85,7 @@ type MessageValue = {
 
 ### 2.6 集成形态依赖 Vite 编译期转换（待验证）
 
-运行时通过 `import.meta.glob('/i18n/*.json')` 与 `'/i18n/.hey-i18n-config'` 发现语言包（config.ts）。该 API 需要 Vite 在编译期处理。以 npm 预编译产物发布后，依赖中的代码通常不会再经过该转换，因此**发布/集成形态（源码入口、Vite 插件或虚拟模块）是待定事项**，也是 README Roadmap 的第一优先级。现阶段不要在文档中宣称"npm 安装即用"。
+运行时通过 `import.meta.glob('/i18n/*.json')` 与 `'/i18n/.hey-i18n-config'` 发现语言包（config.ts）。该 API 需要 Vite 在编译期处理。仓库内的 [demo/](../demo/) 与 Playwright 测试已在 Vite 7 下验证两种安装方式（`file:` 本地链接与 `npm pack` 打包安装）均可正常加载语言包；尚未覆盖全部 Vite 版本与 SSR 场景，后续发布前仍建议补充 `exports`/`types` 等包字段。
 
 ## 3. studio 架构
 

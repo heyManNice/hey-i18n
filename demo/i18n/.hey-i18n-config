@@ -1,0 +1,6 @@
+// 该文件是自动生成的，请在hey-i18n-studio中修改。
+
+export default {
+    "sourcesLocale": "en-US",
+    "defaultLocale": "system"
+};
