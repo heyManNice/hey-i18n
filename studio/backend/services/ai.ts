@@ -161,6 +161,33 @@ Keep placeholders exactly as-is (e.g. {name}). Return only the translated text w
             totalCount: cacheKeys.size,
         };
     }
+
+    // 翻译指定 key 的单条原文
+    public async translateKey(filename: string, key: string) {
+        const config = this.getAiConfig();
+        const targetLocale = filename.replace(/\.json$/, '');
+        const cache = scaner.getI18nStringsFromCacheFile();
+        const entry = (cache.entries || []).find((item) => item.texts.join('') === key);
+        if (!entry) {
+            throw new Error(`扫描缓存中不存在该键：${key}`);
+        }
+
+        const source = buildSourceTemplate(entry.texts, entry.variables || []);
+        const systemMessage = `You are a professional translator. Translate user text into ${targetLocale}.
+Keep placeholders exactly as-is (e.g. {name}). Return only the translated text without quotes or explanations.`;
+        const content = await this.chat(config, [
+            { role: 'system', content: systemMessage },
+            { role: 'user', content: source },
+        ]);
+        const branch = encodeTemplate(content, entry.variables || []);
+
+        return {
+            key,
+            texts: branch.texts,
+            varIndexes: branch.varIndexes,
+            variables: entry.variables || [],
+        };
+    }
 }
 
 export default new AiService();

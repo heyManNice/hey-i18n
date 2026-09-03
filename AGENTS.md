@@ -16,7 +16,7 @@ hey-i18n 是面向 Vite 项目的「源码即文案」国际化方案：开发�
 - 语言代码/名称/RTL 集合只允许在 `src/hey-i18n/languages.ts` 维护，studio 侧保持 re-export；
 - 资源文件的写操作统一走 `studio/backend/services/assets.ts` 的归一化逻辑，不要在其他位置复制；
 - 复数字段（`isPlural` / `pluralVarIndex` / `pluralCategory`）是「other 为基底」的预留结构，未实现完成前不要宣称已支持；
-- AI 翻译（第三方 OpenAI 兼容批量翻译）与复数已完成；官方 AI 平台、逐条 AI、全屏编辑仍未实现，README Roadmap 有清单，改动时勿误报状态；
+- AI 翻译（批量 + 逐条，OpenAI 兼容）与复数、全屏编辑已完成；官方 AI 平台与工作台自身国际化仍未实现，README Roadmap 有清单，改动时勿误报状态；
 - **禁止**把任何 token / 密钥提交进版本库；本仓库远程公开，仓库内凭据只存在于 `.git/.github-credentials`，不得复制或移动到被跟踪文件。
 
 ## 目录速览

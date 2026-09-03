@@ -197,3 +197,55 @@ test('AI 翻译生成草稿并可保存', async ({ page }) => {
         varIndexes: [],
     });
 });
+
+test('单元格 AI 翻译单条并保存', async ({ page }) => {
+    await page.goto(studioUrl);
+    await expect(page.getByText('hey-i18n-studio').first()).toBeVisible();
+    const fileNode = page.locator('.el-tree-node__content').filter({ hasText: 'de-DE.json' });
+    await fileNode.first().click();
+    await expect(page.getByText('总计: 4')).toBeVisible();
+
+    const row = page.locator('.el-table__row').filter({ hasText: 'This sentence will stay English.' });
+    await row.locator('button[title="AI 翻译"]').click();
+    await expect(row.locator('.editor-content')).toHaveText('[AI] 翻译', { timeout: 15_000 });
+
+    const saveButton = page.getByRole('button', { name: '保存' });
+    await expect(saveButton).toBeEnabled({ timeout: 5_000 });
+    await saveButton.click();
+    await expect(page.getByText(/更新 de-DE\.json 的 1 条翻译成功/)).toBeVisible({ timeout: 10_000 });
+
+    const deFile = JSON.parse(fs.readFileSync(path.join(projectDir!, 'i18n', 'de-DE.json'), 'utf-8'));
+    expect(deFile['This sentence will stay English.']).toEqual({
+        texts: ['[AI] 翻译'],
+        varIndexes: [],
+    });
+});
+
+test('全屏编辑保存变量模板', async ({ page }) => {
+    await page.goto(studioUrl);
+    await expect(page.getByText('hey-i18n-studio').first()).toBeVisible();
+    const fileNode = page.locator('.el-tree-node__content').filter({ hasText: 'ru-RU.json' });
+    await fileNode.first().click();
+    await expect(page.getByText('总计: 4')).toBeVisible();
+
+    const row = page.locator('.el-table__row').filter({ hasText: 'Items:' });
+    await row.locator('button[title="更多选项"]').click();
+    await page.getByRole('menuitem', { name: '全屏编辑' }).click();
+
+    const panel = page.locator('.full-editor-panel');
+    await expect(panel).toBeVisible();
+    await panel.locator('textarea').fill('{total} 全屏 {count}');
+    await panel.getByRole('button', { name: '保存' }).click();
+    await expect(row.locator('.editor-content')).toContainText('全屏');
+
+    const saveButton = page.getByRole('button', { name: '保存' });
+    await expect(saveButton).toBeEnabled({ timeout: 5_000 });
+    await saveButton.click();
+    await expect(page.getByText(/更新 ru-RU\.json 的 1 条翻译成功/)).toBeVisible({ timeout: 10_000 });
+
+    const ruFile = JSON.parse(fs.readFileSync(path.join(projectDir!, 'i18n', 'ru-RU.json'), 'utf-8'));
+    expect(ruFile['Items: , total ']).toEqual({
+        texts: ['', ' 全屏 ', ''],
+        varIndexes: [1, 0],
+    });
+});

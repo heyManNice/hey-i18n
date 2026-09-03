@@ -134,11 +134,26 @@ const mEditor = reactive({
             this.mChangeData[filename][item.key] = {
                 key: item.key,
                 texts: item.texts,
-                variables: item.variables,
+                variables: item.varIndexes.map((varIndex) => item.variables[varIndex]),
                 varIndexes: item.varIndexes,
             };
         }
         return result;
+    },
+
+    // AI 翻译单条 key，生成可审阅的修改草稿
+    async fAiTranslateKey(filename: string, key: string) {
+        const item = await backend.ai.translateKey(filename, key);
+        if (!this.mChangeData[filename]) {
+            this.mChangeData[filename] = {};
+        }
+        this.mChangeData[filename][key] = {
+            key: item.key,
+            texts: item.texts,
+            variables: item.varIndexes.map((varIndex) => item.variables[varIndex]),
+            varIndexes: item.varIndexes,
+        };
+        return item;
     },
 
     // 编辑窗口

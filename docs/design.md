@@ -178,7 +178,7 @@ studio/frontend/
 
 ## 5. 状态与已知缺口
 
-仓库处于 v0.0.1 原型阶段。复数（运行时 + studio 编辑器）、失效 key 管理、扫描去重、语言文件名校验与第三方 OpenAI 兼容 AI 批量翻译已实现；官方 AI 平台、逐条 AI 翻译与全屏编辑仍未实现（详见 README Roadmap），涉及这些功能时不要声称"已支持"。其余已知问题（key 碰撞、`--expose` 安全等）均记录在 README 的 Roadmap 中。
+仓库处于 v0.0.1 原型阶段。复数（运行时 + studio 编辑器）、失效 key 管理、扫描去重、语言文件名校验、AI 翻译（批量 + 逐条，OpenAI 兼容）与全屏编辑已实现；官方 AI 平台与工作台自身国际化仍未实现（详见 README Roadmap），涉及这些功能时不要声称"已支持"。其余已知问题（key 碰撞、`--expose` 安全等）均记录在 README 的 Roadmap 中。
 
 ## 6. 风格约定
 

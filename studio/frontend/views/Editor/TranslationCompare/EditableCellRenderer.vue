@@ -19,7 +19,14 @@
                 @keydown="onKeydown"
                 @blur="onBlur"
             ></div>
-            <el-button style="margin-left: 0px" :icon="MagicStick" circle disabled title="AI 翻译（开发中）" />
+            <el-button
+                style="margin-left: 0px"
+                :icon="MagicStick"
+                :loading="cellAiLoading"
+                circle
+                title="AI 翻译"
+                @click="cellAiTranslate"
+            />
             <el-dropdown trigger="click">
                 <el-button style="margin-left: 0px" :icon="More" circle title="更多选项" />
                 <template #dropdown>
@@ -60,6 +67,13 @@
                 @cancel="pluralEditorOpen = false"
                 @save="applyPluralData"
             />
+            <FullEditor
+                v-if="fullEditorOpen"
+                :item="currentFullItem"
+                :source-item="props.sourceItem"
+                @cancel="fullEditorOpen = false"
+                @save="applyFullTemplate"
+            />
         </div>
     </div>
 </template>
@@ -73,12 +87,15 @@ import { mergeTextAndVariables } from '../../../utils/text-utils';
 import { More, MagicStick } from '@element-plus/icons-vue';
 import { ElButton } from 'element-plus';
 import mEditor from '../../../models/Editor';
+import { Notify } from '../../../models/SystemBar';
 import type { TranslationItem } from '../../../models/Editor';
 
 import { useDebounceFn } from '@vueuse/core';
 
 import PluralEditor from './EditableCellRenderer/PluralEditor.vue';
+import FullEditor from './EditableCellRenderer/FullEditor.vue';
 import type { PluralCategoryData } from '../../../models/Editor';
+import { templateToBranch } from '../../../utils/text-utils';
 
 const props = defineProps<{
     item: TranslationItem;
@@ -96,6 +113,13 @@ const showSuggestions = ref(false);
 const suggestionStyle = ref({ top: '0px', left: '0px' });
 const activeSuggestionIndex = ref(0);
 const pluralEditorOpen = ref(false);
+const fullEditorOpen = ref(false);
+const cellAiLoading = ref(false);
+
+// 全屏编辑器展示的数据：优先取修改集，其次取语言包加载的条目
+const currentFullItem = computed(() => {
+    return mEditor.mChangeData[props.filename]?.[props.sourceItem.key] || props.item;
+});
 
 const filterQuery = ref('');
 const filteredVariables = computed(() => {
@@ -134,8 +158,9 @@ const moreOptions: MoreOption[] = [
     },
     {
         label: '全屏编辑',
-        disabled: true,
-        action: () => {},
+        action: () => {
+            fullEditorOpen.value = true;
+        },
     },
 ];
 
@@ -358,6 +383,66 @@ function applyPluralData(data: { isPlural: boolean; pluralVarIndex?: number; plu
     }
 
     pluralEditorOpen.value = false;
+}
+
+// 单条 AI 翻译：生成该 key 的译文草稿并渲染到单元格
+async function cellAiTranslate() {
+    if (cellAiLoading.value) {
+        return;
+    }
+    cellAiLoading.value = true;
+    try {
+        await mEditor.fAiTranslateKey(props.filename, props.sourceItem.key);
+        Notify.ok(`AI 已生成「${props.sourceItem.key}」的翻译草稿`);
+        renderContent();
+    } catch (error) {
+        Notify.fail(`AI 翻译失败：${(error as Error).message}`);
+    } finally {
+        cellAiLoading.value = false;
+    }
+}
+
+// 全屏编辑器保存：把 {name} 模板编码回 texts + varIndexes（保留复数元数据）
+function applyFullTemplate(template: string) {
+    try {
+        const filename = props.filename;
+        const key = props.sourceItem.key;
+        const sourceVariables = props.sourceItem.variables || [];
+        const branch = templateToBranch(template, sourceVariables);
+
+        if (!mEditor.mChangeData[filename]) {
+            mEditor.mChangeData[filename] = {};
+        }
+        const existing = mEditor.mChangeData[filename][key];
+        const current =
+            existing ||
+            (mEditor.mChangeData[filename][key] = {
+                key,
+                texts: [],
+                variables: [],
+            });
+
+        current.texts = branch.texts;
+        current.varIndexes = branch.varIndexes;
+        current.variables = branch.varIndexes.map((varIndex) => sourceVariables[varIndex]);
+
+        // 保留复数元数据（全屏编辑只改 other 分支）
+        const pluralSource = existing || props.item;
+        if (pluralSource.isPlural !== undefined) {
+            current.isPlural = pluralSource.isPlural;
+        }
+        if (pluralSource.pluralVarIndex !== undefined) {
+            current.pluralVarIndex = pluralSource.pluralVarIndex;
+        }
+        if (pluralSource.pluralCategory) {
+            current.pluralCategory = pluralSource.pluralCategory;
+        }
+
+        fullEditorOpen.value = false;
+        renderContent();
+    } catch (error) {
+        Notify.fail(`保存全屏编辑失败：${(error as Error).message}`);
+    }
 }
 
 function onBlur() {

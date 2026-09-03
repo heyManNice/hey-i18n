@@ -30,3 +30,8 @@ export function testConnection() {
 export function translateFile(filename: string) {
     return ai.translateFile(filename);
 }
+
+// 翻译指定 key 的单条原文
+export function translateKey(filename: string, key: string) {
+    return ai.translateKey(filename, key);
+}
