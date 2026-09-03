@@ -69,7 +69,7 @@ type MessageValue = {
 };
 ```
 
-设计意图：顶层 `texts/varIndexes` 就是 other；`pluralCategory` 只存条件分支的覆盖，缺失分支回落到 other。运行时分发与编辑器目前**尚未实现**，实现时应按此语义扩展，并配合 `Intl.PluralRules` 之类规则选择分支。
+设计意图：顶层 `texts/varIndexes` 就是 other；`pluralCategory` 只存条件分支的覆盖，缺失分支回落到 other。运行时分发已按此语义实现（`Intl.PluralRules` 选分支，`pluralVarIndex` 定位参与复数判断的数值参数）；studio 的复数规则编辑器尚未实现。
 
 ### 2.4 源语言零开销
 

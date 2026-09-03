@@ -30,6 +30,7 @@ hey-i18n 的思路是 **「源码即文案」**：
 ### 运行时库（hey-i18n）
 
 - 标签模板语法 `T\`...\``，支持插值变量；
+- 复数支持：以 `Intl.PluralRules` 按数量选择 zero/one/two/few/many 分支（other 为默认分支）；
 - 按需动态加载 `i18n/*.json` 语言包（基于 Vite `import.meta.glob`）；
 - 语言跟随系统或手动切换（持久化在 `localStorage`）；
 - 自动设置 `<html lang>` 与 RTL 书写方向；
@@ -212,7 +213,7 @@ npm run test:e2e
 
 当前属于原型阶段，以下内容尚未完成或需要验证：
 
-- **复数支持**：数据模型预留了 `pluralCategory` 等字段，但运行时分发与编辑器尚未实现；
+- **复数支持**：运行时已实现（`Intl.PluralRules` 选分支、缺失回退 other）；studio 的复数规则编辑器尚未实现；
 - **AI 翻译**：设置页与按钮仅为 UI 占位，未接入任何接口；
 - **失效 key 管理**：已支持统计、筛选与一键清理（后续可打磨为可勾选批量删除）；
 - **发布/集成形态**：已在 Vite 7 下验证 `import.meta.glob('/i18n/*.json')` 的两种安装方式（`file:` 本地安装与 `npm pack` 打包安装）均可正常加载语言包；尚未覆盖全部 Vite 版本与 SSR 场景；

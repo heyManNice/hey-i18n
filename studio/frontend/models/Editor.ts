@@ -7,12 +7,23 @@ import { confirm } from '../dialogs/dialogs';
 import db from '../utils/indexed-db';
 import mExplorer from './Explorer';
 
+// 复数类别（与运行时的 other-基底模型一致，other 在 texts/varIndexes 上）
+export type PluralCategoryKey = 'zero' | 'one' | 'two' | 'few' | 'many';
+export type PluralBranch = {
+    texts: string[];
+    varIndexes?: number[];
+};
+export type PluralCategoryData = Partial<Record<PluralCategoryKey, PluralBranch>>;
+
 // 翻译资源词条的项目
 export type TranslationItem = {
     key: string;
     texts: string[];
     variables: string[];
     varIndexes?: number[];
+    isPlural?: boolean;
+    pluralVarIndex?: number;
+    pluralCategory?: PluralCategoryData;
 };
 
 // 表格中的一行；isInvalid 表示该键已不存在于源码扫描缓存中
@@ -82,6 +93,21 @@ const mEditor = reactive({
             newContent[key] = {
                 texts: item.texts,
                 varIndexes: item.varIndexes ?? [],
+                ...(item.isPlural === undefined ? {} : { isPlural: item.isPlural }),
+                ...(item.pluralVarIndex === undefined ? {} : { pluralVarIndex: item.pluralVarIndex }),
+                ...(item.pluralCategory
+                    ? {
+                          pluralCategory: Object.fromEntries(
+                              Object.entries(item.pluralCategory).map(([category, branch]) => [
+                                  category,
+                                  {
+                                      texts: branch?.texts ?? [],
+                                      varIndexes: branch?.varIndexes ?? [],
+                                  },
+                              ]),
+                          ),
+                      }
+                    : {}),
             };
         }
         return backend.editor.saveTranslation(filename, newContent);
@@ -239,6 +265,9 @@ export function useTranslationData(filename: string) {
                     key,
                     texts: targetTexts,
                     variables: targetVariables,
+                    isPlural: targetEntry.isPlural,
+                    pluralVarIndex: targetEntry.pluralVarIndex,
+                    pluralCategory: targetEntry.pluralCategory,
                 },
             });
         }

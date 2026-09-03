@@ -1,0 +1,26 @@
+{
+    "Hello, !": {
+        "texts": ["Привет, ", "!"],
+        "varIndexes": [0]
+    },
+    " apples": {
+        "texts": ["", " яблок"],
+        "varIndexes": [0],
+        "isPlural": true,
+        "pluralVarIndex": 0,
+        "pluralCategory": {
+            "one": {
+                "texts": ["", " яблоко"],
+                "varIndexes": [0]
+            },
+            "few": {
+                "texts": ["", " яблока"],
+                "varIndexes": [0]
+            },
+            "many": {
+                "texts": ["", " яблок"],
+                "varIndexes": [0]
+            }
+        }
+    }
+}

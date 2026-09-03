@@ -38,6 +38,13 @@ test('空语言包回退原文', async ({ page }) => {
     await expect(page.locator('#current-locale')).toHaveText('de-DE');
 });
 
+test('俄语复数按数量选择分支', async ({ page }) => {
+    await clickLocale(page, 'ru-RU');
+    await expect(page.locator('#plural-1')).toHaveText('1 яблоко');
+    await expect(page.locator('#plural-2')).toHaveText('2 яблока');
+    await expect(page.locator('#plural-5')).toHaveText('5 яблок');
+});
+
 test('切回源语言后仍然渲染原文', async ({ page }) => {
     await clickLocale(page, 'zh-CN');
     await expect(page.locator('#greeting')).toHaveText('你好，Codex！');

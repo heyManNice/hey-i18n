@@ -2,7 +2,7 @@ import config from './config';
 
 import { Locale, rtlLocales } from './languages';
 
-type PluralCategories = 'zero' | 'one' | 'two' | 'few' | 'many';
+export type PluralCategories = 'zero' | 'one' | 'two' | 'few' | 'many';
 // other 已经强制在 MessageValue 第一层显示
 
 export type MessageValue = {

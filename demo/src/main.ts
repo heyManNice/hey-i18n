@@ -8,6 +8,9 @@ document.querySelector('#current-locale')!.textContent = currentLocale;
 document.querySelector('#greeting')!.textContent = T`Hello, ${name}!`;
 document.querySelector('#message')!.textContent = T`Items: ${count}, total ${total}`;
 document.querySelector('#fallback')!.textContent = T`This sentence will stay English.`;
+for (const apples of [1, 2, 5]) {
+    document.querySelector(`#plural-${apples}`)!.textContent = T`${apples} apples`;
+}
 
 document.querySelectorAll<HTMLButtonElement>('[data-locale]').forEach((button) => {
     button.addEventListener('click', () => {

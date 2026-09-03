@@ -265,6 +265,19 @@ function recordChange() {
     }
     newContent.varIndexes = varIndexes;
 
+    // 保留复数元数据（编辑 other 分支时不应丢失复数配置）
+    const existingChange = mEditor.mChangeData[filename]?.[key];
+    const pluralSource = existingChange || props.item;
+    if (pluralSource.isPlural !== undefined) {
+        newContent.isPlural = pluralSource.isPlural;
+    }
+    if (pluralSource.pluralVarIndex !== undefined) {
+        newContent.pluralVarIndex = pluralSource.pluralVarIndex;
+    }
+    if (pluralSource.pluralCategory) {
+        newContent.pluralCategory = pluralSource.pluralCategory;
+    }
+
     mEditor.mChangeData[filename][key] = newContent;
 }
 

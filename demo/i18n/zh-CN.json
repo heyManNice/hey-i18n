@@ -10,5 +10,9 @@
     "This sentence will stay English.": {
         "texts": ["这句话会保持英文。"],
         "varIndexes": []
+    },
+    " apples": {
+        "texts": ["", " 个苹果"],
+        "varIndexes": [0]
     }
 }

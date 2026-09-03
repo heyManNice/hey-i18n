@@ -26,29 +26,47 @@ class AssetsService {
         return JSON.parse(fileContent) as Record<string, MessageValue>;
     }
 
+    // 确保一个分支的 texts 长度比 varIndexes 大 1，避免前端展示/运行时拼接错位
+    private normalizeMessageBranch(item: { texts: string[]; varIndexes?: number[] }) {
+        const targetLen = (item.varIndexes?.length ?? 0) + 1;
+        const diff = targetLen - item.texts.length;
+
+        if (diff > 0) {
+            // texts 不够，补空字符串
+            item.texts.push(...Array(diff).fill(''));
+        } else if (diff < 0) {
+            // texts 太多，把多余的合并到最后一个片段
+            const extra = item.texts.slice(targetLen).join('');
+            item.texts = item.texts.slice(0, targetLen);
+            item.texts[targetLen - 1] += extra;
+        }
+    }
+
     // 保存翻译文件
     public saveI18nFile(filename: string, content: Record<string, MessageValue>) {
         const filePath = this.getFilePath(filename);
         // 需要删除的键
         const needDeleteKeys: string[] = [];
-        // 应该确保 content 中texts的长度比varIndexes的长度大1，否则可能会导致前端展示错误
         for (const key in content) {
             const item = content[key];
-            const targetLen = (item.varIndexes?.length ?? 0) + 1;
-            const diff = targetLen - item.texts.length;
+            this.normalizeMessageBranch(item);
 
-            if (diff > 0) {
-                // texts 不够，补空字符串
-                item.texts.push(...Array(diff).fill(''));
-            } else if (diff < 0) {
-                // texts 太多，把多余的合并到最后一个片段
-                const extra = item.texts.slice(targetLen).join('');
-                item.texts = item.texts.slice(0, targetLen);
-                item.texts[targetLen - 1] += extra;
+            // 复数条目：条件分支也各自归一化；other（顶层）为空不代表要删除
+            if (item.isPlural && item.pluralCategory) {
+                for (const branch of Object.values(item.pluralCategory)) {
+                    if (branch) {
+                        this.normalizeMessageBranch(branch);
+                    }
+                }
             }
 
             // 如果没有变量，并且texts只有一个元素而且还是空字符串，说明内容被清空了，应该删除这个键
-            if ((item.varIndexes?.length ?? 0) === 0 && item.texts.length === 1 && item.texts[0] === '') {
+            if (
+                !item.isPlural &&
+                (item.varIndexes?.length ?? 0) === 0 &&
+                item.texts.length === 1 &&
+                item.texts[0] === ''
+            ) {
                 needDeleteKeys.push(key);
             }
         }

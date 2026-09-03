@@ -1,5 +1,30 @@
 import { messages, currentLocale, sourcesLocale } from './locales';
-import type { MessageValue } from './locales';
+import type { MessageValue, PluralCategories } from './locales';
+
+// 复数分发：按 pluralVarIndex 对应的数值选择 pluralCategory 中的分支。
+// 顶层 texts/varIndexes 即 other 分支；没有命中类别或类别缺失时回退到顶层。
+function resolveMessageValue(messageValue: MessageValue, values: any[]): MessageValue {
+    if (!messageValue.isPlural || messageValue.pluralVarIndex === undefined || !messageValue.pluralCategory) {
+        return messageValue;
+    }
+
+    const pluralValue = values[messageValue.pluralVarIndex];
+    if (typeof pluralValue !== 'number' || Number.isNaN(pluralValue)) {
+        return messageValue;
+    }
+
+    try {
+        const category = new Intl.PluralRules(currentLocale).select(pluralValue) as PluralCategories | 'other';
+        if (category === 'other') {
+            return messageValue;
+        }
+        const selected = messageValue.pluralCategory[category];
+        return selected || messageValue;
+    } catch {
+        // 当前语言不受 Intl.PluralRules 支持时按 other 处理
+        return messageValue;
+    }
+}
 
 function formatTranslation(messageValue: MessageValue, values: any[]): string {
     const texts = messageValue.texts;
@@ -36,7 +61,7 @@ export default function translate(strings: TemplateStringsArray, ...values: any[
         try {
             const messageValue = messages[key];
             if (messageValue) {
-                return formatTranslation(messageValue, values);
+                return formatTranslation(resolveMessageValue(messageValue, values), values);
             }
         } catch (e) {
             console.error(
